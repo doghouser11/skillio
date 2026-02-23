@@ -1,0 +1,19 @@
+# Skillio Platform Dependencies
+# Core Python dependencies for the standalone platform
+
+# Standard library modules used:
+# - sqlite3 (built-in)
+# - json (built-in)
+# - hashlib (built-in)
+# - uuid (built-in)
+# - http.server (built-in)
+# - urllib.parse (built-in)
+# - http.cookies (built-in)
+# - datetime (built-in)
+
+# No external dependencies required for the standalone version!
+# The platform is built using only Python standard library.
+
+# For production deployment, you may want to add:
+# gunicorn==21.2.0  # WSGI server
+# python-dotenv==1.0.0  # Environment variables
