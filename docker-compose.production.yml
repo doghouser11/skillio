@@ -3,13 +3,15 @@ version: '3.8'
 services:
   skillio-web:
     build: .
-    ports:
-      - "8080:8080"
+    # махни ports:
     environment:
       - PYTHON_ENV=production
     volumes:
-      - ./activities.db:/app/activities.db
+      volumes:
+  - skillio_db:/app/activities.db
     restart: unless-stopped
+    volumes:
+  skillio_db:
     healthcheck:
       test: ["CMD", "python3", "-c", "import http.client; conn=http.client.HTTPConnection('localhost:8080'); conn.request('GET', '/'); r=conn.getresponse(); exit(0 if r.status==200 else 1)"]
       interval: 30s
