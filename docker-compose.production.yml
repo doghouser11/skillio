@@ -3,8 +3,7 @@ version: '3.8'
 services:
   skillio-web:
     build: .
-    ports:
-      - "8080:8080"
+    # махни ports:
     environment:
       - PYTHON_ENV=production
     volumes:
