@@ -593,7 +593,6 @@ class SkillioHandler(BaseHTTPRequestHandler):
                 </div>
             </div>
             
-            {f'''
             <!-- Rating Modal -->
             <div id="ratingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
                 <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;">
@@ -621,7 +620,6 @@ class SkillioHandler(BaseHTTPRequestHandler):
                     </form>
                 </div>
             </div>
-            ''' if user and user['role'] == 'parent' else ''}
         </div>
         '''
         
@@ -1244,7 +1242,6 @@ class SkillioHandler(BaseHTTPRequestHandler):
             
             <!-- User Stats -->
             <div class="grid grid-4">
-                {f'''
                 <div class="card" style="text-align: center; background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); color: white;">
                     <div style="font-size: 2.5rem; font-weight: bold;">{stats.get('ratings_given', 0)}</div>
                     <div>Дадени оценки</div>
@@ -1295,7 +1292,6 @@ class SkillioHandler(BaseHTTPRequestHandler):
                     <div style="font-size: 2.5rem; font-weight: bold;">98%</div>
                     <div>Активност</div>
                 </div>
-                ''' if user['role'] == 'admin' else ''}
             </div>
             
             <!-- Main Dashboard -->
@@ -1326,7 +1322,6 @@ class SkillioHandler(BaseHTTPRequestHandler):
                 </div>
                 
                 <div class="card">
-                    {f'''
                     <h2><i class="fas fa-heart"></i> Моите оценки</h2>
                     <p>Вие сте дали <strong>{stats.get('ratings_given', 0)}</strong> оценки до момента.</p>
                     <div style="margin-top: 2rem;">
@@ -1383,7 +1378,6 @@ class SkillioHandler(BaseHTTPRequestHandler):
                             <li><a href="#">Модериране на отзиви</a></li>
                         </ul>
                     </div>
-                    ''' if user['role'] == 'admin' else ''}
                 </div>
             </div>
             
