@@ -7,6 +7,7 @@ import sqlite3
 import json
 import hashlib
 import uuid
+import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 from http.cookies import SimpleCookie
@@ -2147,9 +2148,11 @@ def main():
     # Setup database
     setup_ratings_table()
     
-    server_address = ('', 8080)
+    # Get port from environment or default to 8080
+    port = int(os.environ.get('PORT', 8080))
+    server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, SkillioHandler)
-    print("🚀 Complete Skillio Platform running at http://localhost:8080")
+    print(f"🚀 Complete Skillio Platform running at http://0.0.0.0:{port}")
     print("🔗 All pages connected: Home, Activities, Agencies, About")
     print("⭐ Rating system enabled for parents")
     print("👤 Enhanced user profiles with role-based features")
