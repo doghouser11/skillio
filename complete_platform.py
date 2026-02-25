@@ -3231,15 +3231,25 @@ class SkillioHandler(BaseHTTPRequestHandler):
         <div class="card">
             <h2><i class="fas fa-star"></i> Вашите агенции ({len(user_agencies)})</h2>
             
-            """ + ('<div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;"><i class="fas fa-building" style="font-size: 2rem; margin-bottom: 1rem;"></i><p>Все още не управлявате нито една агенция</p><p><small>Можете да заявите ownership на съществуваща агенция отдолу</small></p></div>' if len(user_agencies) == 0 else '') + """
-            
-            {''.join([f'''
+        </div>'''
+        
+        # Add user agencies HTML
+        if len(user_agencies) == 0:
+            html_content += '''
+            <div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;">
+                <i class="fas fa-building" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <p>Все още не управлявате нито една агенция</p>
+                <p><small>Можете да заявите ownership на съществуваща агенция отдолу</small></p>
+            </div>'''
+        else:
+            for agency in user_agencies:
+                verified_icon = '<i class="fas fa-check-circle" style="color: #27ae60; margin-left: 0.5rem;" title="Верифицирана"></i>' if agency[7] else ''
+                html_content += f'''
             <div class="agency-item" style="border: 1px solid #e1e5e9; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; background: #f8f9fa;">
                 <div style="display: flex; justify-content: space-between; align-items: start;">
                     <div style="flex: 1;">
                         <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">
-                            {agency[1]} 
-                            """ + ('<i class="fas fa-check-circle" style="color: #27ae60; margin-left: 0.5rem;" title="Верифицирана"></i>' if agency[7] else '') + """
+                            {agency[1]} {verified_icon}
                         </h3>
                         <p style="color: #7f8c8d; margin-bottom: 1rem;"><i class="fas fa-map-marker-alt"></i> {agency[3]}</p>
                         <p style="color: #555; line-height: 1.4;">{agency[2] or 'Няма описание'}</p>
@@ -3264,8 +3274,9 @@ class SkillioHandler(BaseHTTPRequestHandler):
                         </button>
                     </div>
                 </div>
-            </div>
-            ''' for agency in user_agencies])}
+            </div>'''
+        
+        html_content += '''
         </div>
         
         <!-- Available Agencies to Claim -->
@@ -3273,12 +3284,18 @@ class SkillioHandler(BaseHTTPRequestHandler):
             <h2><i class="fas fa-hand-paper"></i> Заявете ownership на агенция</h2>
             <p style="color: #7f8c8d; margin-bottom: 2rem;">Ако вашата агенция е в системата, но не я управлявате, можете да заявите ownership</p>
             
-            {'''<div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;">
+        </div>'''
+        
+        # Add available agencies HTML
+        if len(available_agencies) == 0:
+            html_content += '''
+            <div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;">
                 <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem; color: #2ecc71;"></i>
                 <p>Няма налични агенции за заявяване в момента</p>
-            </div>''' if len(available_agencies) == 0 else ''}
-            
-            {''.join([f'''
+            </div>'''
+        else:
+            for agency in available_agencies:
+                html_content += f'''
             <div class="claim-item" style="border: 1px solid #e1e5e9; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; background: white;">
                 <div style="display: flex; justify-content: space-between; align-items: start;">
                     <div style="flex: 1;">
@@ -3302,8 +3319,9 @@ class SkillioHandler(BaseHTTPRequestHandler):
                         </button>
                     </div>
                 </div>
-            </div>
-            ''' for agency in available_agencies])}
+            </div>'''
+        
+        html_content += '''
         </div>
     </div>'''
     
