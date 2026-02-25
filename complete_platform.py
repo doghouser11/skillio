@@ -276,7 +276,12 @@ class SkillioHandler(BaseHTTPRequestHandler):
         elif path == '/add-teacher':
             self.serve_add_teacher_page()
         elif path == '/manage-agency':
-            self.serve_agency_management_page()
+            self.send_response(503)
+            self.send_header('Content-type', 'text/html; charset=utf-8')
+            self.add_security_headers()
+            self.end_headers()
+            self.wfile.write('<h1>503 Service Temporarily Unavailable</h1><p>Agency management is being updated. Please try again later.</p>'.encode('utf-8'))
+            return
         elif path == '/api/activities':
             self.serve_activities_api()
         elif path == '/api/schools':
@@ -3226,11 +3231,7 @@ class SkillioHandler(BaseHTTPRequestHandler):
         <div class="card">
             <h2><i class="fas fa-star"></i> Вашите агенции ({len(user_agencies)})</h2>
             
-            {'''<div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;">
-                <i class="fas fa-building" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                <p>Все още не управлявате нито една агенция</p>
-                <p><small>Можете да заявите ownership на съществуваща агенция отдолу</small></p>
-            </div>''' if len(user_agencies) == 0 else ''}
+            """ + ('<div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;"><i class="fas fa-building" style="font-size: 2rem; margin-bottom: 1rem;"></i><p>Все още не управлявате нито една агенция</p><p><small>Можете да заявите ownership на съществуваща агенция отдолу</small></p></div>' if len(user_agencies) == 0 else '') + """
             
             {''.join([f'''
             <div class="agency-item" style="border: 1px solid #e1e5e9; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; background: #f8f9fa;">
@@ -3238,7 +3239,7 @@ class SkillioHandler(BaseHTTPRequestHandler):
                     <div style="flex: 1;">
                         <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">
                             {agency[1]} 
-                            {f'<i class="fas fa-check-circle" style="color: #27ae60; margin-left: 0.5rem;" title="Верифицирана"></i>' if agency[7] else ''}
+                            """ + ('<i class="fas fa-check-circle" style="color: #27ae60; margin-left: 0.5rem;" title="Верифицирана"></i>' if agency[7] else '') + """
                         </h3>
                         <p style="color: #7f8c8d; margin-bottom: 1rem;"><i class="fas fa-map-marker-alt"></i> {agency[3]}</p>
                         <p style="color: #555; line-height: 1.4;">{agency[2] or 'Няма описание'}</p>
