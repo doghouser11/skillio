@@ -2129,15 +2129,23 @@ class SkillioHandler(BaseHTTPRequestHandler):
             pending_submissions = cursor.fetchall()
             conn.close()
             
-            body_content += f'''
+            # Build moderation panel HTML
+            moderation_html = f'''
             
             <!-- Admin Moderation Panel -->
             <div class="card">
                 <h2><i class="fas fa-clipboard-check"></i> Модериране на предложения ({len(pending_submissions)})</h2>
-                
-                {'<div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;"><i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem; color: #2ecc71;"></i><p>Няма чакащи предложения за одобрение</p></div>' if len(pending_submissions) == 0 else ''}
-                
-                {''.join([f'''
+                '''
+            
+            if len(pending_submissions) == 0:
+                moderation_html += '''
+                <div style="color: #7f8c8d; padding: 2rem; text-align: center; border: 2px dashed #e1e5e9; border-radius: 10px;">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 1rem; color: #2ecc71;"></i>
+                    <p>Няма чакащи предложения за одобрение</p>
+                </div>'''
+            else:
+                for sub in pending_submissions:
+                    moderation_html += f'''
                 <div class="submission-item" style="border: 1px solid #e1e5e9; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; background: #f8f9fa;">
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                         <div>
@@ -2172,10 +2180,13 @@ class SkillioHandler(BaseHTTPRequestHandler):
                             <i class="fas fa-times"></i> Отхвърли
                         </button>
                     </div>
-                </div>
-                ''' for sub in pending_submissions])}
+                </div>'''
+            
+            moderation_html += '''
             </div>
             '''
+            
+            body_content += moderation_html
         
         body_content += f'''
             
