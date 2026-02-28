@@ -26,7 +26,9 @@ export const schoolsAPI = {
 export const leadsAPI = {
   getAll: (params?: any) => api.get('/leads', { params }),
   getMy: () => api.get('/leads/my'),
-  getSchool: () => api.get('/leads/school'), // ТОВА ТЪРСЕШЕ ПОСЛЕДНО
+  getSchool: () => api.get('/leads/school'),
+  // ТОВА Е ПОСЛЕДНАТА ГРЕШКА:
+  updateStatus: (id: any, status: string) => api.patch(`/leads/${id}/status`, { status }),
 };
 
 export const reviewsAPI = {
