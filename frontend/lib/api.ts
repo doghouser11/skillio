@@ -11,7 +11,6 @@ const api = axios.create({
 
 export default api;
 
-// Добавяме поддръжка за параметри (params), за да не дава Type Error
 export const activitiesAPI = {
   getAll: (params?: any) => api.get('/activities', { params }),
   getOne: (id: any) => api.get(`/activities/${id}`),
@@ -20,6 +19,8 @@ export const activitiesAPI = {
 export const schoolsAPI = {
   getAll: (params?: any) => api.get('/schools', { params }),
   getOne: (id: any) => api.get(`/schools/${id}`),
+  // ТАЗИ ФУНКЦИЯ ЛИПСВАШЕ:
+  verify: (id: any) => api.post(`/schools/${id}/verify`),
 };
 
 export const neighborhoodsAPI = {
@@ -34,7 +35,6 @@ export const reviewsAPI = {
   getAll: (params?: any) => api.get('/reviews', { params }),
 };
 
-// ДОБАВЯМЕ ЛИПСВАЩИЯ authAPI
 export const authAPI = {
   login: (data: any) => api.post('/auth/login', data),
   register: (data: any) => api.post('/auth/register', data),
