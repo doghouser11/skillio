@@ -9,36 +9,23 @@ const api = axios.create({
 
 export default api;
 
-export const activitiesAPI = {
-  getAll: (params?: any) => api.get('/activities', { params }),
-  getOne: (id: any) => api.get(`/activities/${id}`),
-  verify: (id: any) => api.post(`/activities/${id}/verify`),
-  getMy: () => api.get('/activities/my'),
-};
+const generateResource = (endpoint: string) => ({
+  getAll: (params?: any) => api.get(endpoint, { params }),
+  getOne: (id: any) => api.get(`${endpoint}/${id}`),
+  getMy: () => api.get(`${endpoint}/my`),
+  getSchool: () => api.get(`${endpoint}/school`),
+  create: (data: any) => api.post(endpoint, data),
+  update: (id: any, data: any) => api.put(`${endpoint}/${id}`, data),
+  updateStatus: (id: any, status: string) => api.patch(`${endpoint}/${id}/status`, { status }),
+  verify: (id: any) => api.post(`${endpoint}/${id}/verify`),
+  delete: (id: any) => api.delete(`${endpoint}/${id}`),
+});
 
-export const schoolsAPI = {
-  getAll: (params?: any) => api.get('/schools', { params }),
-  getOne: (id: any) => api.get(`/schools/${id}`),
-  verify: (id: any) => api.post(`/schools/${id}/verify`),
-  getMy: () => api.get('/schools/my'),
-};
-
-export const leadsAPI = {
-  getAll: (params?: any) => api.get('/leads', { params }),
-  getMy: () => api.get('/leads/my'),
-  getSchool: () => api.get('/leads/school'),
-  // ТОВА Е ПОСЛЕДНАТА ГРЕШКА:
-  updateStatus: (id: any, status: string) => api.patch(`/leads/${id}/status`, { status }),
-};
-
-export const reviewsAPI = {
-  getAll: (params?: any) => api.get('/reviews', { params }),
-  getMy: () => api.get('/reviews/my'),
-};
-
-export const neighborhoodsAPI = {
-  getAll: (params?: any) => api.get('/neighborhoods', { params }),
-};
+export const activitiesAPI = generateResource('/activities');
+export const schoolsAPI = generateResource('/schools');
+export const leadsAPI = generateResource('/leads');
+export const reviewsAPI = generateResource('/reviews');
+export const neighborhoodsAPI = generateResource('/neighborhoods');
 
 export const authAPI = {
   login: (data: any) => api.post('/auth/login', data),
