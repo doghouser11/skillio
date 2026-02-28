@@ -15,12 +15,14 @@ export const activitiesAPI = {
   getAll: (params?: any) => api.get('/activities', { params }),
   getOne: (id: any) => api.get(`/activities/${id}`),
   verify: (id: any) => api.post(`/activities/${id}/verify`),
+  getMy: () => api.get('/activities/my'),
 };
 
 export const schoolsAPI = {
   getAll: (params?: any) => api.get('/schools', { params }),
   getOne: (id: any) => api.get(`/schools/${id}`),
   verify: (id: any) => api.post(`/schools/${id}/verify`),
+  getMy: () => api.get('/schools/my'), // Ето това търси сега
 };
 
 export const neighborhoodsAPI = {
@@ -29,12 +31,12 @@ export const neighborhoodsAPI = {
 
 export const leadsAPI = {
   getAll: (params?: any) => api.get('/leads', { params }),
-  getMy: () => api.get('/leads/my'), // Добавено
+  getMy: () => api.get('/leads/my'),
 };
 
 export const reviewsAPI = {
   getAll: (params?: any) => api.get('/reviews', { params }),
-  getMy: () => api.get('/reviews/my'), // Добавено
+  getMy: () => api.get('/reviews/my'),
 };
 
 export const authAPI = {
