@@ -14,12 +14,13 @@ export default api;
 export const activitiesAPI = {
   getAll: (params?: any) => api.get('/activities', { params }),
   getOne: (id: any) => api.get(`/activities/${id}`),
+  // ДОБАВИ ТОЗИ РЕД:
+  verify: (id: any) => api.post(`/activities/${id}/verify`),
 };
 
 export const schoolsAPI = {
   getAll: (params?: any) => api.get('/schools', { params }),
   getOne: (id: any) => api.get(`/schools/${id}`),
-  // ТАЗИ ФУНКЦИЯ ЛИПСВАШЕ:
   verify: (id: any) => api.post(`/schools/${id}/verify`),
 };
 
