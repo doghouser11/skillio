@@ -2,19 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Трябва да укажем, че файловете са в папка frontend/
-COPY frontend/package*.json ./
-
-# Сега npm install ще намери package.json в /app/
+# Тъй като Base Directory е /frontend, файловете са в текущата папка
+COPY package*.json ./
 RUN npm install
 
-# Копираме всичко останало от папка frontend в текущата работна директория (/app)
-COPY frontend/ .
+# Копираме всичко от /frontend в /app
+COPY . .
 
-# Билдваме Next.js
+# Билдваме
 RUN npm run build
 
 EXPOSE 3000
 
-# Стартираме сървъра правилно
+# Правилно стартиране
 CMD ["npx", "next", "start", "-p", "3000", "-H", "0.0.0.0"]
