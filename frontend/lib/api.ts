@@ -14,7 +14,6 @@ export default api;
 export const activitiesAPI = {
   getAll: (params?: any) => api.get('/activities', { params }),
   getOne: (id: any) => api.get(`/activities/${id}`),
-  // ДОБАВИ ТОЗИ РЕД:
   verify: (id: any) => api.post(`/activities/${id}/verify`),
 };
 
@@ -30,10 +29,12 @@ export const neighborhoodsAPI = {
 
 export const leadsAPI = {
   getAll: (params?: any) => api.get('/leads', { params }),
+  getMy: () => api.get('/leads/my'), // Добавено
 };
 
 export const reviewsAPI = {
   getAll: (params?: any) => api.get('/reviews', { params }),
+  getMy: () => api.get('/reviews/my'), // Добавено
 };
 
 export const authAPI = {
