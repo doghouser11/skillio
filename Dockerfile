@@ -1,33 +1,14 @@
-# Skillio Platform - Production Dockerfile
-FROM python:3.11-slim
+FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Create non-root user for security
-RUN adduser --disabled-password --gecos '' --uid 1000 skillio && \
-    chown -R skillio:skillio /app
-USER skillio
+COPY package*.json ./
+RUN npm install
 
-# Copy application files
-COPY --chown=skillio:skillio . .
+COPY . .
 
-# Create data directory for SQLite database
-RUN mkdir -p /app/data
+RUN npm run build
 
-# Ensure database is writable
-RUN touch /app/activities.db && chmod 664 /app/activities.db
+EXPOSE 3000
 
-# Expose port
-EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD python3 -c "import http.client; conn=http.client.HTTPConnection('localhost:8080'); conn.request('GET', '/'); r=conn.getresponse(); exit(0 if r.status==200 else 1)"
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PYTHON_ENV=production
-
-# Run the application
-CMD ["python3", "complete_platform.py"]
+CMD ["npm", "start"]
