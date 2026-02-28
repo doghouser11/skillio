@@ -3,11 +3,13 @@ import Link from 'next/link';
 export default function HomePage() {
   return (
     <div className="max-w-6xl mx-auto">
+      {/* TEST MARKER */}
+      <h1 className="bg-yellow-400 text-black text-center text-4xl p-10">
+        АКО ВИЖДАШ ТОВА, ЗНАЧИ Е ПРАВИЛНИЯТ КОД!
+      </h1>
+
       {/* Hero Section */}
       <div className="text-center py-16">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          Find Perfect Activities for Your Child
-        </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           Discover extracurricular activities, connect with schools, and help your child 
           explore their interests in a safe and engaging environment.
