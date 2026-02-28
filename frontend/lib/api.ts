@@ -9,28 +9,34 @@ const api = axios.create({
   },
 });
 
-// Експортираме базовия обект по подразбиране
 export default api;
 
-// Дефинираме и експортираме липсващите обекти, които Next.js търси:
+// Добавяме поддръжка за параметри (params), за да не дава Type Error
 export const activitiesAPI = {
-  getAll: () => api.get('/activities'),
+  getAll: (params?: any) => api.get('/activities', { params }),
   getOne: (id: any) => api.get(`/activities/${id}`),
 };
 
 export const schoolsAPI = {
-  getAll: () => api.get('/schools'),
+  getAll: (params?: any) => api.get('/schools', { params }),
   getOne: (id: any) => api.get(`/schools/${id}`),
 };
 
 export const neighborhoodsAPI = {
-  getAll: () => api.get('/neighborhoods'),
+  getAll: (params?: any) => api.get('/neighborhoods', { params }),
 };
 
 export const leadsAPI = {
-  getAll: () => api.get('/leads'),
+  getAll: (params?: any) => api.get('/leads', { params }),
 };
 
 export const reviewsAPI = {
-  getAll: () => api.get('/reviews'),
+  getAll: (params?: any) => api.get('/reviews', { params }),
+};
+
+// ДОБАВЯМЕ ЛИПСВАЩИЯ authAPI
+export const authAPI = {
+  login: (data: any) => api.post('/auth/login', data),
+  register: (data: any) => api.post('/auth/register', data),
+  me: () => api.get('/auth/me'),
 };
