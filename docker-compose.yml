@@ -21,8 +21,7 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
-    ports:
-      - "8000:8000"
+    # ПРЕМАХНИ ports:, за да не се кара с проксито
     labels:
       - "coolify.managed=true"
       - "coolify.proxy.port=8000"
