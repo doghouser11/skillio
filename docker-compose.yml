@@ -21,7 +21,9 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
-    # Премахнахме ports:, защото Coolify ползва собствено прокси
+    # Указваме на Coolify вътрешния порт на Python (FastAPI)
+    labels:
+      - "coolify.proxy.port=8000"
     environment:
       DATABASE_URL: postgresql://activities_user:activities_pass@postgres:5432/activities_db
       JWT_SECRET_KEY: your-jwt-secret-key-change-in-production
@@ -36,6 +38,9 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
+    # Указваме на Coolify вътрешния порт на Next.js
+    labels:
+      - "coolify.proxy.port=3000"
     environment:
       NEXT_PUBLIC_API_URL: https://api.skillio.live
     depends_on:
