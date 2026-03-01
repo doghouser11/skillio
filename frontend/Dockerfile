@@ -2,21 +2,22 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Инсталираме необходимите системни библиотеки
+# Системни зависимости
 RUN apk add --no-cache libc6-compat
 
-# ВАЖНО: Тъй като context е ".", пътищата трябва да включват "frontend/"
-COPY frontend/package.json frontend/package-lock.json* ./
+# Копираме файловете за конфигурация
+COPY frontend/package*.json ./
 
-# Оптимизирана инсталация
-RUN npm ci --network-timeout=100000 --prefer-offline --no-audit
+# Вместо npm ci, ще ползваме стандартен install, но с ограничения за RAM
+# --no-package-lock помага, ако има разминавания в версиите на темплейта
+RUN npm install --network-timeout=100000 --prefer-offline --no-audit
 
-# Копираме целия код на фронтенда в работната директория
+# Копираме останалия код
 COPY frontend/ ./
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Билдваме
+# Билдваме (тук е най-големият риск за RAM паметта)
 RUN npm run build
 
 EXPOSE 3000
