@@ -1,6 +1,25 @@
 import Link from 'next/link';
 
-export default function HomePage() {
+// Функция за извикване на реалните данни от Python бекенда
+async function getActivities() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+  try {
+    const res = await fetch(`${apiUrl}/activities`, { 
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) return [];
+    return res.json();
+  } catch (error) {
+    console.error("Backend connection failed:", error);
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  // Вземаме данните от бекенда преди рендериране
+  const activities = await getActivities();
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Hero Section */}
@@ -12,6 +31,22 @@ export default function HomePage() {
           Discover extracurricular activities, connect with schools, and help your child 
           explore their interests in a safe and engaging environment.
         </p>
+        
+        {/* СЕКЦИЯ ЗА РЕАЛНИ ДАННИ (Добавена под Hero) */}
+        {activities.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6">Latest Activities from Backend:</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {activities.slice(0, 3).map((activity: any) => (
+                <div key={activity.id} className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition">
+                  <h3 className="font-bold text-blue-600">{activity.title || activity.name}</h3>
+                  <p className="text-gray-500 text-sm line-clamp-2">{activity.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-center space-x-4">
           <Link
             href="/activities"
@@ -28,7 +63,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Features Grid */}
+      {/* Features Grid - Запазваме го, за да не се губи структурата */}
       <div className="grid md:grid-cols-3 gap-8 py-16">
         <div className="text-center p-6">
           <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -81,7 +116,7 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* How It Works */}
+      {/* How It Works Section */}
       <div className="py-16">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
           How It Works
