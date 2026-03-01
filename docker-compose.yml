@@ -17,18 +17,20 @@ services:
     networks:
       - skillio_network
 
-  backend:
+    backend:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
-    # Тези етикети казват на Coolify точно как да настрои проксито за API-то
+    # ТОВА ЩЕ ОТВОРИ ПОРТА ДИРЕКТНО:
+    ports:
+      - "8000:8000"
     labels:
       - "coolify.managed=true"
       - "coolify.proxy.port=8000"
-      - "coolify.proxy.http=true"
-      - "coolify.proxy.domain=api.skillio.live"
     environment:
       DATABASE_URL: postgresql://activities_user:activities_pass@postgres:5432/activities_db
+      # ... останалите променливи
+
       JWT_SECRET_KEY: your-jwt-secret-key-change-in-production
       JWT_ALGORITHM: HS256
       JWT_EXPIRE_MINUTES: 1440
