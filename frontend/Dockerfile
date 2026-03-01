@@ -1,18 +1,26 @@
 FROM node:18-alpine
+
 WORKDIR /app
 
-# Копираме package.json
-COPY package*.json ./
-# Използваме --force за npm install, за да избегнем стари версии
-RUN npm install --force
+# Инсталираме само най-необходимото за билда
+RUN apk add --no-cache libc6-compat
 
-# Копираме кода
+# Копираме само файловете за зависимостите
+COPY package.json package-lock.json* ./
+
+# Оптимизирана инсталация за слаби сървъри
+# --network-timeout спира прекъсванията, --prefer-offline пести ресурси
+RUN npm ci --network-timeout=100000 --prefer-offline --no-audit
+
+# Копираме останалия код
 COPY . .
 
-# ИЗТРИВАМЕ КЕША НА NEXT ПРЕДИ БИЛДА
-RUN rm -rf .next
+# Изключваме телеметрията на Next.js (пести малко RAM)
+ENV NEXT_TELEMETRY_DISABLED=1
 
+# Билдваме приложението
 RUN npm run build
 
 EXPOSE 3000
-CMD ["npx", "next", "start", "-p", "3000", "-H", "0.0.0.0"]
+
+CMD ["npm", "start"]
