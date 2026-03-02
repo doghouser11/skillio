@@ -15,7 +15,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - skillio_network
+      - coolify
 
   backend:
     build:
@@ -26,6 +26,7 @@ services:
       - "coolify.proxy.port=8000"
       - "traefik.enable=true"
       - "traefik.http.routers.backend-${COOLIFY_RESOURCE_UUID}.rule=Host(`api.skillio.live`)"
+      - "traefik.http.services.backend-${COOLIFY_RESOURCE_UUID}.loadbalancer.server.port=8000"
     environment:
       DATABASE_URL: postgresql://activities_user:activities_pass@postgres:5432/activities_db
       JWT_SECRET_KEY: your-jwt-secret-key-change-in-production
@@ -35,7 +36,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - skillio_network
+      - coolify
 
   frontend:
     build:
@@ -46,17 +47,18 @@ services:
       - "coolify.proxy.port=3000"
       - "traefik.enable=true"
       - "traefik.http.routers.frontend-${COOLIFY_RESOURCE_UUID}.rule=Host(`skillio.live`)"
+      - "traefik.http.services.frontend-${COOLIFY_RESOURCE_UUID}.loadbalancer.server.port=3000"
     environment:
       NEXT_PUBLIC_API_URL: https://api.skillio.live
     depends_on:
       backend:
         condition: service_started
     networks:
-      - skillio_network
+      - coolify
 
 volumes:
   postgres_data:
 
 networks:
-  skillio_network:
-    driver: bridge
+  coolify:
+    external: true
