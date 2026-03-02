@@ -1,62 +1,65 @@
-version: '3.8'
+version: "3.9"
 
 services:
   postgres:
     image: postgres:15
+    restart: unless-stopped
     environment:
       POSTGRES_USER: activities_user
       POSTGRES_PASSWORD: activities_pass
       POSTGRES_DB: activities_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U activities_user -d activities_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
     networks:
-      - skillio_network
+      - internal
 
   backend:
     build:
       context: .
-      dockerfile: ./backend/Dockerfile
-    labels:
-      - "coolify.managed=true"
-      - "coolify.proxy.port=8000"
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend-${COOLIFY_RESOURCE_UUID}.rule=Host(`api.skillio.live`)"
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://activities_user:activities_pass@postgres:5432/activities_db
-      JWT_SECRET_KEY: your-jwt-secret-key-change-in-production
-      JWT_ALGORITHM: HS256
-      JWT_EXPIRE_MINUTES: 1440
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     networks:
-      - skillio_network
+      - internal
+      - coolify
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=Host(`api.skillio.live`)
+      - traefik.http.routers.backend.entrypoints=websecure
+      - traefik.http.routers.backend.tls=true
+      - traefik.http.routers.backend.tls.certresolver=letsencrypt
+      - traefik.http.services.backend.loadbalancer.server.port=8000
 
   frontend:
     build:
       context: .
-      dockerfile: ./frontend/Dockerfile
-    labels:
-      - "coolify.managed=true"
-      - "coolify.proxy.port=3000"
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend-${COOLIFY_RESOURCE_UUID}.rule=Host(`skillio.live`)"
-    environment:
-      NEXT_PUBLIC_API_URL: https://api.skillio.live
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
     depends_on:
-      backend:
-        condition: service_started
+      - backend
     networks:
-      - skillio_network
+      - coolify
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=Host(`skillio.live`)
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls=true
+      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
+      - traefik.http.services.frontend.loadbalancer.server.port=3000
 
 volumes:
   postgres_data:
 
 networks:
-  skillio_network:
+  internal:
     driver: bridge
+  coolify:
+    external: true
