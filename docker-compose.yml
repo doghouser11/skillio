@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  postgres:
+  database_skillio:
     image: postgres:15
     restart: unless-stopped
     environment:
@@ -20,9 +20,9 @@ services:
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://admin_skillio:m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN@postgres:5432/activities_db
+      DATABASE_URL: postgresql://admin_skillio:m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN@database_skillio:5432/activities_db
     depends_on:
-      - postgres
+      - database_skillio
     networks:
       - internal
       - coolify
