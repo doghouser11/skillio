@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN
       POSTGRES_DB: activities_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_new_data:/var/lib/postgresql/data
     networks:
       - internal
 
@@ -56,7 +56,7 @@ services:
       - traefik.http.services.frontend.loadbalancer.server.port=3000
 
 volumes:
-  postgres_data:
+  postgres_new_data:
 
 networks:
   internal:
