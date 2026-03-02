@@ -5,7 +5,7 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
-      POSTGRES_USER: activities_user
+      POSTGRES_USER: admin_skillio
       POSTGRES_PASSWORD: m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN
       POSTGRES_DB: activities_db
     volumes:
@@ -19,7 +19,7 @@ services:
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://activities_user:m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN@postgres:5432/activities_db
+      DATABASE_URL: postgresql://admin_skillio:m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN@postgres:5432/activities_db
     depends_on:
       - postgres
     networks:
