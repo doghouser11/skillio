@@ -10,7 +10,7 @@ services:
       POSTGRES_DB: activities_db
       POSTGRES_HOST_AUTH_METHOD: trust 
     volumes:
-      - db_reset_v7:/var/lib/postgresql/data
+      - db_final_reset_v9:/var/lib/postgresql/data # СИНХРОНИЗИРАНО ИМЕ
     networks:
       - internal
 
@@ -27,7 +27,7 @@ services:
       - internal
       - coolify
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -57,7 +57,7 @@ services:
       - traefik.http.services.frontend.loadbalancer.server.port=3000
 
 volumes:
-  db_final_reset:
+  db_final_reset_v9: # ТРЯБВА ДА Е СЪЩОТО КАТО ГОРЕ
 
 networks:
   internal:
