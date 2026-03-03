@@ -2,22 +2,25 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Инсталираме системни зависимости за компилиране на някои Python пакети
+# System dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Копираме requirements.txt от подпапката backend
+# Install Python dependencies
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копираме цялото съдържание на папка backend в работната директория /app
+# Copy backend source
 COPY backend/ .
 
-# Добавяме текущата директория към PYTHONPATH, за да може Python да намери папка "app"
+# Set PYTHONPATH
 ENV PYTHONPATH=/app
 
-# Стартираме миграциите и сървъра чрез "python -m", което е по-стабилно в Docker
-CMD ["sh", "-c", "python -m alembic upgrade head && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# Expose port (good practice for Traefik visibility)
+EXPOSE 8000
+
+# Start migrations (if fail, continue) then start server
+CMD ["sh", "-c", "python -m alembic upgrade head || echo 'Migration failed, continuing...' && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"]
