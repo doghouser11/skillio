@@ -41,8 +41,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend 
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       - NEXT_PUBLIC_API_URL=https://api.skillio.live
