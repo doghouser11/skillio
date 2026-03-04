@@ -7,8 +7,8 @@ import Navbar from '@/components/Navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Children Activities Marketplace',
-  description: 'Find and manage extracurricular activities for children',
+  title: 'Skillio - Детски дейности и курсове',
+  description: 'Намерете най-добрите извънкласни дейности за вашето дете в България',
 };
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="bg" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
           <div className="min-h-screen bg-gray-50">

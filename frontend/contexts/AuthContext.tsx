@@ -28,6 +28,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // 🔥 КРИТИЧНО: Проверяваме дали сме в браузъра преди localStorage достъп
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     // Check if user is logged in on app start
     const token = localStorage.getItem('token');
     if (token) {
@@ -54,7 +60,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await authAPI.login({ email, password });
       const { access_token } = response.data;
       
-      localStorage.setItem('token', access_token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', access_token);
+      }
       
       // Decode token to get user info
       const payload = JSON.parse(atob(access_token.split('.')[1]));
@@ -85,7 +93,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+    }
     setUser(null);
   };
 
