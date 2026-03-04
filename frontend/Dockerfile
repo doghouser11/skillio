@@ -15,6 +15,9 @@ RUN npm install --network-timeout=100000 --prefer-offline --no-audit
 # Копираме останалия код
 COPY frontend/ ./
 
+# 🔥 КРИТИЧНО: Build-time environment variable за API URL
+ARG NEXT_PUBLIC_API_URL=https://api.skillio.live
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Билдваме (тук е най-големият риск за RAM паметта)
