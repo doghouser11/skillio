@@ -39,29 +39,6 @@ services:
       - traefik.http.routers.backend.tls.certresolver=letsencrypt
       - traefik.http.services.backend.loadbalancer.server.port=8000
 
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: https://api.skillio.live
-    restart: unless-stopped
-    environment:
-      - NEXT_PUBLIC_API_URL=https://api.skillio.live
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
-    depends_on:
-      - backend
-    networks:
-      - coolify
-      - internal
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.frontend.rule=Host(`skillio.live`)
-      - traefik.http.routers.frontend.entrypoints=websecure
-      - traefik.http.routers.frontend.tls=true
-      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
-      - traefik.http.services.frontend.loadbalancer.server.port=3000
-
 volumes:
   db_final_reset_v9:
 
