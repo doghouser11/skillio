@@ -25,7 +25,7 @@ export default async function HomePage() {
       {/* Hero Section */}
       <div className="text-center py-16">
         <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          Find Perfect Activities for Your Child
+          <h1>HELLO FROM CLOUD V2 - [07:27]</h1>
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           Discover extracurricular activities, connect with schools, and help your child 
