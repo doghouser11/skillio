@@ -1,132 +1,191 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { activitiesAPI, neighborhoodsAPI } from '@/lib/api';
-import ActivityCard from '@/components/ActivityCard';
-import ActivityFilters from '@/components/ActivityFilters';
+import { activitiesAPI } from '../../lib/api';
 
 interface Activity {
   id: string;
   title: string;
   description: string;
   category: string;
-  age_min: number;
-  age_max: number;
-  price_monthly: number;
-  school: {
-    id: string;
-    name: string;
-    city: string;
-    verified: boolean;
-  };
-}
-
-interface Neighborhood {
-  id: string;
-  name: string;
-  city: string;
+  age_min?: number;
+  age_max?: number;
+  price_monthly?: number;
+  school?: any;
+  verified: boolean;
 }
 
 export default function ActivitiesPage() {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [neighborhoods, setNeighborhoods] = useState<Neighborhood[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    city: '',
-    neighborhood_id: '',
     category: '',
     age_min: '',
     age_max: '',
+    price_max: ''
   });
 
   useEffect(() => {
-    fetchNeighborhoods();
-  }, []);
-
-  useEffect(() => {
-    fetchActivities();
+    loadActivities();
   }, [filters]);
 
-  const fetchActivities = async () => {
+  const loadActivities = async () => {
     try {
       setLoading(true);
-      const params = Object.fromEntries(
-        Object.entries(filters).filter(([_, value]) => value !== '')
-      );
-      
-      const response = await activitiesAPI.getAll(params);
+      const response = await activitiesAPI.getAll(filters);
       setActivities(response.data);
     } catch (error) {
-      console.error('Error fetching activities:', error);
+      console.error('Error loading activities:', error);
+      setActivities([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchNeighborhoods = async () => {
-    try {
-      const response = await neighborhoodsAPI.getAll();
-      setNeighborhoods(response.data);
-    } catch (error) {
-      console.error('Error fetching neighborhoods:', error);
-    }
-  };
-
-  const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
-  };
-
-  if (loading && activities.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-gray-600">Loading activities...</div>
-      </div>
-    );
-  }
+  const categories = ['Спорт', 'Изкуство', 'Музика', 'Програмиране', 'Роботика', 'Танци', 'Театър', 'Езици'];
 
   return (
-    <div>
+    <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Find Activities for Your Child
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Всички дейности
         </h1>
-        <p className="text-gray-600">
-          Browse through verified extracurricular activities and programs
+        <p className="text-xl text-gray-600">
+          Намерете перфектната дейност за вашето дете
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar */}
-        <div className="lg:col-span-1">
-          <ActivityFilters
-            filters={filters}
-            neighborhoods={neighborhoods}
-            onFiltersChange={handleFilterChange}
-          />
-        </div>
-
-        {/* Activities Grid */}
-        <div className="lg:col-span-3">
-          {loading ? (
-            <div className="text-center py-8">
-              <div className="text-gray-600">Loading...</div>
-            </div>
-          ) : activities.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-gray-500 mb-4">No activities found</div>
-              <p className="text-sm text-gray-400">
-                Try adjusting your filters or check back later for new activities
-              </p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {activities.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
+      {/* Filters */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+        <h3 className="text-lg font-semibold mb-4">Филтри</h3>
+        <div className="grid md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Категория
+            </label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              value={filters.category}
+              onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
+            >
+              <option value="">Всички категории</option>
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
               ))}
-            </div>
-          )}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              От възраст
+            </label>
+            <input
+              type="number"
+              min="0"
+              max="18"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="4"
+              value={filters.age_min}
+              onChange={(e) => setFilters(prev => ({ ...prev, age_min: e.target.value }))}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              До възраст
+            </label>
+            <input
+              type="number"
+              min="0"
+              max="18"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="12"
+              value={filters.age_max}
+              onChange={(e) => setFilters(prev => ({ ...prev, age_max: e.target.value }))}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Макс. цена (лв./мес)
+            </label>
+            <input
+              type="number"
+              min="0"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="100"
+              value={filters.price_max}
+              onChange={(e) => setFilters(prev => ({ ...prev, price_max: e.target.value }))}
+            />
+          </div>
         </div>
       </div>
+
+      {/* Activities Grid */}
+      {loading ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
+                <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : activities.length > 0 ? (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {activities.map((activity) => (
+            <div key={activity.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="font-bold text-xl text-gray-900 line-clamp-2">
+                  {activity.title}
+                </h3>
+                {activity.verified && (
+                  <span className="text-green-500 text-sm ml-2">✓</span>
+                )}
+              </div>
+
+              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                {activity.description}
+              </p>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    {activity.category}
+                  </span>
+                  <span className="text-gray-600 font-medium">
+                    {activity.price_monthly ? `${activity.price_monthly} лв./мес` : 'Безплатно'}
+                  </span>
+                </div>
+
+                {(activity.age_min || activity.age_max) && (
+                  <div className="text-sm text-gray-500">
+                    Възраст: {activity.age_min && `от ${activity.age_min}г`} {activity.age_max && `до ${activity.age_max}г`}
+                  </div>
+                )}
+
+                <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                  Разгледай детайли
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <div className="text-gray-400 text-6xl mb-4">🔍</div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            Няма намерени дейности
+          </h3>
+          <p className="text-gray-600">
+            Опитайте с различни филтри или проверете отново по-късно
+          </p>
+        </div>
+      )}
     </div>
   );
 }
