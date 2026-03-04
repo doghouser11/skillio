@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from typing import List, Optional
 import uuid
 from app.database.base import get_db
@@ -21,21 +21,22 @@ def get_activities(
     price_min: Optional[float] = Query(None),
     price_max: Optional[float] = Query(None),
     include_unverified: bool = Query(False),
-    current_user: Optional[User] = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """Get all activities with optional filters. Only verified activities and schools shown by default."""
     query = db.query(Activity).filter(Activity.active == True)
     
-    # Only show verified activities from verified schools for public listings
-    if not include_unverified or (current_user and current_user.role != UserRole.ADMIN):
+    # For public access, only show verified activities 
+    if not include_unverified:
         query = query.filter(Activity.verified == True)
-        query = query.join(School, Activity.school_id == School.id, isouter=True)
+        # Also join with schools to ensure school is verified (if activity has school)
+        query = query.outerjoin(School, Activity.school_id == School.id)
+        # Show activities that either have no school OR have a verified school
         query = query.filter(
-            and_(
-                Activity.school_id.is_(None),  # Parent submissions
-                School.verified == True  # Or verified schools
-            ).or_(Activity.school_id.is_(None))
+            or_(
+                Activity.school_id.is_(None),  # Parent submissions (no school)
+                School.verified == True        # Or activities from verified schools
+            )
         )
     
     # Apply filters
