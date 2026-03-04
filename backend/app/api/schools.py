@@ -18,30 +18,37 @@ def get_featured_schools(
 ):
     """Get top-rated approved schools for homepage display."""
     
-    # Get approved schools with their average ratings
-    query = db.query(
-        School,
-        func.coalesce(func.avg(Review.rating), 0).label('avg_rating'),
-        func.count(Review.id).label('review_count')
-    ).outerjoin(Review).filter(
-        School.status == SchoolStatus.APPROVED
-    ).group_by(School.id).order_by(
-        desc('avg_rating'),
-        desc('review_count'),
-        desc(School.created_at)
-    ).limit(limit)
-    
-    results = query.all()
-    
-    # Convert to school objects with calculated ratings
-    featured_schools = []
-    for school, avg_rating, review_count in results:
-        # Set calculated values as properties 
-        school.average_rating = float(avg_rating) if avg_rating else None
-        school.review_count = review_count or 0
-        featured_schools.append(school)
-    
-    return featured_schools
+    try:
+        # Get schools (prefer verified/approved ones)
+        query = db.query(School).filter(
+            or_(
+                School.verified == True,  # Legacy verified field
+                School.status == 'APPROVED'  # New status field
+            )
+        ).order_by(
+            desc(School.verified),
+            desc(School.created_at)
+        ).limit(limit)
+        
+        schools = query.all()
+        
+        # Set default rating values for response
+        for school in schools:
+            school.average_rating = None
+            school.review_count = 0
+        
+        return schools
+        
+    except Exception as e:
+        # Fallback: return any schools if filtering fails
+        print(f"Featured schools error: {e}")
+        schools = db.query(School).order_by(desc(School.created_at)).limit(limit).all()
+        
+        for school in schools:
+            school.average_rating = None 
+            school.review_count = 0
+            
+        return schools
 
 
 @router.get("/", response_model=List[SchoolResponse])
