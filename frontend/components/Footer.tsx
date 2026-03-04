@@ -147,15 +147,15 @@ export default function Footer() {
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
               © {currentYear} Skillio. Всички права запазени. Направено в България 🇧🇬
             </div>
-            <div className="flex space-x-6 text-sm">
+            <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0 text-sm">
               <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
                 Условия за ползване
               </a>
               <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
                 Политика за поверителност
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
-                Контакт
+              <a href="mailto:nikol_bg_93@proton.me" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
+                📧 nikol_bg_93@proton.me
               </a>
             </div>
           </div>

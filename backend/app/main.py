@@ -12,7 +12,11 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=[
+        "http://localhost:3000",           # Development
+        "https://skillio-three.vercel.app", # Production Vercel
+        "https://skillio.live",            # Production custom domain (future)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
