@@ -1,14 +1,47 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import and_
+from sqlalchemy import and_, func, desc
 from typing import List, Optional
 import uuid
 from app.database.base import get_db
 from app.schemas.schemas import SchoolCreate, SchoolResponse
-from app.models.models import School, User, UserRole
+from app.models.models import School, User, UserRole, SchoolStatus, Review
 from app.core.auth import get_current_user, get_current_school, get_current_admin
 
 router = APIRouter(prefix="/schools", tags=["Schools"])
+
+
+@router.get("/featured", response_model=List[SchoolResponse])
+def get_featured_schools(
+    limit: int = Query(6, le=20),
+    db: Session = Depends(get_db)
+):
+    """Get top-rated approved schools for homepage display."""
+    
+    # Get approved schools with their average ratings
+    query = db.query(
+        School,
+        func.coalesce(func.avg(Review.rating), 0).label('avg_rating'),
+        func.count(Review.id).label('review_count')
+    ).outerjoin(Review).filter(
+        School.status == SchoolStatus.APPROVED
+    ).group_by(School.id).order_by(
+        desc('avg_rating'),
+        desc('review_count'),
+        desc(School.created_at)
+    ).limit(limit)
+    
+    results = query.all()
+    
+    # Convert to school objects with calculated ratings
+    featured_schools = []
+    for school, avg_rating, review_count in results:
+        # Set calculated values as properties 
+        school.average_rating = float(avg_rating) if avg_rating else None
+        school.review_count = review_count or 0
+        featured_schools.append(school)
+    
+    return featured_schools
 
 
 @router.get("/", response_model=List[SchoolResponse])

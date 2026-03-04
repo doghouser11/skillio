@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
 import uuid
-from app.models.models import UserRole, ActivitySource, LeadStatus
+from app.models.models import UserRole, ActivitySource, LeadStatus, SchoolStatus
 
 
 # User schemas
@@ -63,6 +63,7 @@ class SchoolCreate(BaseModel):
     description: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None
+    website: Optional[str] = None
     city: str
     address: Optional[str] = None
     neighborhood_id: Optional[uuid.UUID] = None
@@ -76,18 +77,27 @@ class SchoolResponse(BaseModel):
     description: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None
+    website: Optional[str] = None
     city: str
     address: Optional[str] = None
     neighborhood_id: Optional[uuid.UUID] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
-    verified: bool
+    verified: bool  # Legacy field
+    status: SchoolStatus  # New approval status
     created_by: uuid.UUID
     created_at: datetime
     neighborhood: Optional[NeighborhoodResponse] = None
+    average_rating: Optional[float] = None
+    review_count: int = 0
     
     class Config:
         from_attributes = True
+
+
+class SchoolApproval(BaseModel):
+    status: SchoolStatus
+    admin_note: Optional[str] = None
 
 
 # Activity schemas

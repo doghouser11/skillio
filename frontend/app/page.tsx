@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ExternalLink, Star, Users } from 'lucide-react';
 
 async function getActivities() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
@@ -19,8 +20,29 @@ async function getActivities() {
   }
 }
 
+async function getFeaturedSchools() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+  try {
+    const res = await fetch(`${apiUrl}/api/schools/featured`, {
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) {
+      console.error('Featured Schools API Error:', res.status, res.statusText);
+      return [];
+    }
+    return res.json();
+  } catch (error) {
+    console.error("Featured schools fetch failed:", error);
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const activities = await getActivities();
+  const [activities, featuredSchools] = await Promise.all([
+    getActivities(),
+    getFeaturedSchools()
+  ]);
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -62,7 +84,11 @@ export default async function HomePage() {
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
               {activities.slice(0, 6).map((activity: any) => (
-                <div key={activity.id} className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 hover:border-blue-200">
+                <Link 
+                  key={activity.id} 
+                  href={`/activities/${activity.id}`}
+                  className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 hover:border-blue-200 block"
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <h3 className="font-bold text-lg text-blue-600 mb-2 line-clamp-2">
@@ -88,7 +114,7 @@ export default async function HomePage() {
                       Възраст: {activity.age_min && `от ${activity.age_min}г`} {activity.age_max && `до ${activity.age_max}г`}
                     </div>
                   )}
-                </div>
+                </Link>
               ))}
             </div>
             
@@ -98,6 +124,117 @@ export default async function HomePage() {
                 className="text-blue-500 hover:text-blue-600 font-semibold text-lg transition-colors duration-200"
               >
                 Вижте всички дейности →
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Featured Schools */}
+        {featuredSchools.length > 0 && (
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              Топ агенции и учители
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {featuredSchools.slice(0, 6).map((school: any) => (
+                <div key={school.id} className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 hover:border-green-200">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-bold text-lg text-green-600 line-clamp-1">
+                          {school.name}
+                        </h3>
+                        {school.website && (
+                          <a 
+                            href={school.website} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-gray-400 hover:text-green-600 transition-colors"
+                            title="Посети сайт"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
+                      
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                        {school.description || 'Професионални услуги за вашето дете'}
+                      </p>
+                      
+                      {/* Rating and location */}
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center space-x-1">
+                          {school.average_rating > 0 ? (
+                            <>
+                              <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                              <span className="font-medium text-gray-700">
+                                {school.average_rating.toFixed(1)}
+                              </span>
+                              <span className="text-gray-500">
+                                ({school.review_count})
+                              </span>
+                            </>
+                          ) : (
+                            <span className="text-gray-400 text-xs">Нови</span>
+                          )}
+                        </div>
+                        
+                        <span className="text-gray-500 font-medium">
+                          {school.city}
+                        </span>
+                      </div>
+
+                      {/* Contact info */}
+                      <div className="mt-3 space-y-1">
+                        {school.phone && (
+                          <a 
+                            href={`tel:${school.phone}`}
+                            className="text-xs text-blue-600 hover:underline block"
+                          >
+                            📞 {school.phone}
+                          </a>
+                        )}
+                        {school.email && (
+                          <a 
+                            href={`mailto:${school.email}`}
+                            className="text-xs text-blue-600 hover:underline block"
+                          >
+                            ✉️ {school.email}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Action buttons */}
+                  <div className="flex space-x-2 mt-4">
+                    <Link
+                      href={`/schools/${school.id}`}
+                      className="flex-1 bg-green-100 hover:bg-green-200 text-green-800 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-center"
+                    >
+                      Детайли
+                    </Link>
+                    {school.website && (
+                      <a
+                        href={school.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-center"
+                      >
+                        Сайт
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-8">
+              <Link 
+                href="/schools"
+                className="text-green-500 hover:text-green-600 font-semibold text-lg transition-colors duration-200"
+              >
+                Вижте всички агенции →
               </Link>
             </div>
           </div>

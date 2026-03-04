@@ -25,6 +25,12 @@ class LeadStatus(str, enum.Enum):
     CLOSED = "closed"
 
 
+class SchoolStatus(str, enum.Enum):
+    PENDING = "pending"
+    APPROVED = "approved" 
+    REJECTED = "rejected"
+
+
 class User(Base):
     __tablename__ = "users"
     
@@ -63,12 +69,14 @@ class School(Base):
     description = Column(Text)
     phone = Column(String)
     email = Column(String)
+    website = Column(String)  # External website URL
     city = Column(String, nullable=False)
     address = Column(String)
     neighborhood_id = Column(UUID(as_uuid=True), ForeignKey("neighborhoods.id"))
     lat = Column(Float)
     lng = Column(Float)
-    verified = Column(Boolean, default=False)
+    verified = Column(Boolean, default=False)  # Legacy field, use status instead
+    status = Column(Enum(SchoolStatus), default=SchoolStatus.PENDING)  # New approval status
     created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
@@ -77,6 +85,23 @@ class School(Base):
     created_by_user = relationship("User", back_populates="created_schools")
     activities = relationship("Activity", back_populates="school")
     reviews = relationship("Review", back_populates="school")
+    
+    @property
+    def average_rating(self):
+        """Calculate average rating from reviews"""
+        if not self.reviews:
+            return None
+        return sum(review.rating for review in self.reviews) / len(self.reviews)
+    
+    @property
+    def review_count(self):
+        """Count total reviews"""
+        return len(self.reviews)
+    
+    @property
+    def is_approved(self):
+        """Check if school is approved"""
+        return self.status == SchoolStatus.APPROVED
 
 
 class Activity(Base):
