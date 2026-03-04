@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
 
 const api = axios.create({
   baseURL: API_URL,
   headers: { 'Content-Type': 'application/json' },
+  timeout: 10000,
 });
 
 export default api;
@@ -21,14 +22,15 @@ const generateResource = (endpoint: string) => ({
   delete: (id: any) => api.delete(`${endpoint}/${id}`),
 });
 
-export const activitiesAPI = generateResource('/activities');
-export const schoolsAPI = generateResource('/schools');
-export const leadsAPI = generateResource('/leads');
-export const reviewsAPI = generateResource('/reviews');
-export const neighborhoodsAPI = generateResource('/neighborhoods');
+// All with /api prefix for backend compatibility
+export const activitiesAPI = generateResource('/api/activities');
+export const schoolsAPI = generateResource('/api/schools');
+export const leadsAPI = generateResource('/api/leads');
+export const reviewsAPI = generateResource('/api/reviews');
+export const neighborhoodsAPI = generateResource('/api/neighborhoods');
 
 export const authAPI = {
-  login: (data: any) => api.post('/auth/login', data),
-  register: (data: any) => api.post('/auth/register', data),
-  me: () => api.get('/auth/me'),
+  login: (data: any) => api.post('/api/auth/login', data),
+  register: (data: any) => api.post('/api/auth/register', data),
+  me: () => api.get('/api/auth/me'),
 };

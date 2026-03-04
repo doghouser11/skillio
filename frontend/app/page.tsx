@@ -1,14 +1,17 @@
 import Link from 'next/link';
 
-// Функция за извикване на реалните данни от Python бекенда
 async function getActivities() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
   try {
-    const res = await fetch(`${apiUrl}/activities`, { 
+    // 🔥 КРИТИЧНО: Добавен /api prefix
+    const res = await fetch(`${apiUrl}/api/activities`, { 
       cache: 'no-store',
       headers: { 'Accept': 'application/json' }
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.error('API Error:', res.status, res.statusText);
+      return [];
+    }
     return res.json();
   } catch (error) {
     console.error("Backend connection failed:", error);
@@ -17,138 +20,174 @@ async function getActivities() {
 }
 
 export default async function HomePage() {
-  // Вземаме данните от бекенда преди рендериране
   const activities = await getActivities();
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       {/* Hero Section */}
-      <div className="text-center py-16">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          <h1>HELLO FROM CLOUD V2 - [07:27]</h1>
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          Discover extracurricular activities, connect with schools, and help your child 
-          explore their interests in a safe and engaging environment.
-        </p>
-        
-        {/* СЕКЦИЯ ЗА РЕАЛНИ ДАННИ (Добавена под Hero) */}
+      <div className="text-center py-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+            Открийте перфектната 
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block mt-2">
+              дейност за детето си
+            </span>
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+            Свържете се с най-добрите училища и учители в България. 
+            Помогнете на детето си да развие талантите си в безопасна и вдъхновяваща среда.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <Link
+              href="/activities"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              Разгледай дейности
+            </Link>
+            <Link
+              href="/register"
+              className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200"
+            >
+              Регистрация за родители
+            </Link>
+          </div>
+        </div>
+
+        {/* Featured Activities */}
         {activities.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6">Latest Activities from Backend:</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {activities.slice(0, 3).map((activity: any) => (
-                <div key={activity.id} className="p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition">
-                  <h3 className="font-bold text-blue-600">{activity.title || activity.name}</h3>
-                  <p className="text-gray-500 text-sm line-clamp-2">{activity.description}</p>
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              Популярни дейности в момента
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {activities.slice(0, 6).map((activity: any) => (
+                <div key={activity.id} className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-200 border border-gray-100 hover:border-blue-200">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg text-blue-600 mb-2 line-clamp-2">
+                        {activity.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-3 mb-3">
+                        {activity.description}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
+                      {activity.category}
+                    </span>
+                    <span className="text-gray-500 font-medium">
+                      {activity.price_monthly ? `${activity.price_monthly} лв./мес` : 'Безплатно'}
+                    </span>
+                  </div>
+                  
+                  {(activity.age_min || activity.age_max) && (
+                    <div className="mt-3 text-xs text-gray-500">
+                      Възраст: {activity.age_min && `от ${activity.age_min}г`} {activity.age_max && `до ${activity.age_max}г`}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
+            
+            <div className="mt-8">
+              <Link 
+                href="/activities"
+                className="text-blue-500 hover:text-blue-600 font-semibold text-lg transition-colors duration-200"
+              >
+                Вижте всички дейности →
+              </Link>
+            </div>
           </div>
         )}
-
-        <div className="flex justify-center space-x-4">
-          <Link
-            href="/activities"
-            className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600"
-          >
-            Browse Activities
-          </Link>
-          <Link
-            href="/register"
-            className="border border-blue-500 text-blue-500 px-8 py-3 rounded-lg text-lg hover:bg-blue-50"
-          >
-            Join as Parent
-          </Link>
-        </div>
       </div>
 
-      {/* Features Grid - Запазваме го, за да не се губи структурата */}
-      <div className="grid md:grid-cols-3 gap-8 py-16">
-        <div className="text-center p-6">
-          <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🎯</span>
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Find Activities</h3>
-          <p className="text-gray-600">
-            Browse activities by location, age group, and category. 
-            Filter to find exactly what your child needs.
-          </p>
-        </div>
+      {/* Features Grid */}
+      <div className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl mx-4">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">
+            Защо родителите избират Skillio?
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-blue-400 to-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-200 group-hover:scale-110">
+                <span className="text-3xl text-white">🎯</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Персонализирано търсене</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Филтрирайте по местоположение, възраст, категория и цена. 
+                Намерете точно това, което търсите за вашето дете.
+              </p>
+            </div>
 
-        <div className="text-center p-6">
-          <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🏫</span>
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Trusted Schools</h3>
-          <p className="text-gray-600">
-            All schools are verified by our team. Read reviews from other 
-            parents to make informed decisions.
-          </p>
-        </div>
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-200 group-hover:scale-110">
+                <span className="text-3xl text-white">🏫</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Проверени партньори</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Всички училища и учители са внимателно проверени от нашия екип. 
+                Четете отзиви от други родители.
+              </p>
+            </div>
 
-        <div className="text-center p-6">
-          <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">📞</span>
+            <div className="text-center group">
+              <div className="bg-gradient-to-br from-purple-400 to-purple-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-200 group-hover:scale-110">
+                <span className="text-3xl text-white">📞</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Директна връзка</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Изпратете запитване директно до училищата. 
+                Те ще се свържат с вас с подробности и свободни места.
+              </p>
+            </div>
           </div>
-          <h3 className="text-xl font-semibold mb-2">Easy Contact</h3>
-          <p className="text-gray-600">
-            Send interest requests directly to schools. They&apos;ll contact you 
-            with availability and next steps.
-          </p>
         </div>
       </div>
 
       {/* CTA for Schools */}
-      <div className="bg-gray-100 rounded-lg p-8 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Are You a School or Activity Provider?
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Join our platform to showcase your activities and connect with parents 
-          looking for quality extracurricular programs.
-        </p>
-        <Link
-          href="/register?role=school"
-          className="bg-green-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-green-600 inline-block"
-        >
-          Register Your School
-        </Link>
+      <div className="py-20 px-4">
+        <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-12 text-white shadow-xl">
+          <h2 className="text-4xl font-bold mb-6">
+            Имате училище или организирате курсове?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Присъединете се към нашата платформа и се свържете с родители, 
+            които търсят качествени извънкласни програми за своите деца.
+          </p>
+          <Link
+            href="/register?role=school"
+            className="bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl inline-block"
+          >
+            Регистрирайте училището си
+          </Link>
+        </div>
       </div>
 
-      {/* How It Works Section */}
-      <div className="py-16">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-          How It Works
-        </h2>
-        <div className="grid md:grid-cols-4 gap-8">
-          <div className="text-center">
-            <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">
-              1
-            </div>
-            <h4 className="font-semibold mb-2">Browse</h4>
-            <p className="text-sm text-gray-600">Find activities by location and age</p>
-          </div>
-          <div className="text-center">
-            <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">
-              2
-            </div>
-            <h4 className="font-semibold mb-2">Contact</h4>
-            <p className="text-sm text-gray-600">Send interest request to schools</p>
-          </div>
-          <div className="text-center">
-            <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">
-              3
-            </div>
-            <h4 className="font-semibold mb-2">Connect</h4>
-            <p className="text-sm text-gray-600">Schools respond with details</p>
-          </div>
-          <div className="text-center">
-            <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mx-auto mb-4 text-sm font-bold">
-              4
-            </div>
-            <h4 className="font-semibold mb-2">Enroll</h4>
-            <p className="text-sm text-gray-600">Start your child&apos;s journey</p>
+      {/* How It Works */}
+      <div className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">
+            Как работи?
+          </h2>
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              { step: "1", title: "Търсете", desc: "Намерете дейности по местоположение и възраст" },
+              { step: "2", title: "Сравнете", desc: "Прегледайте детайли, цени и отзиви" },
+              { step: "3", title: "Свържете се", desc: "Изпратете запитване към училищата" },
+              { step: "4", title: "Започнете", desc: "Вашето дете започва новото си приключение" }
+            ].map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold shadow-lg">
+                  {item.step}
+                </div>
+                <h4 className="font-bold text-lg mb-2 text-gray-900">{item.title}</h4>
+                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
