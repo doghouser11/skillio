@@ -4,18 +4,18 @@ import { ExternalLink, Star, Users } from 'lucide-react';
 async function getActivities() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
   try {
-    // 🔥 КРИТИЧНО: Добавен /api prefix
-    const res = await fetch(`${apiUrl}/api/activities`, { 
+    // Emergency endpoint - bypass CORS issues
+    const res = await fetch(`${apiUrl}/api/emergency/activities`, { 
       cache: 'no-store',
       headers: { 'Accept': 'application/json' }
     });
     if (!res.ok) {
-      console.error('API Error:', res.status, res.statusText);
+      console.error('Emergency API Error:', res.status, res.statusText);
       return [];
     }
     return res.json();
   } catch (error) {
-    console.error("Backend connection failed:", error);
+    console.error("Emergency backend connection failed:", error);
     return [];
   }
 }
@@ -23,17 +23,18 @@ async function getActivities() {
 async function getFeaturedSchools() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
   try {
-    const res = await fetch(`${apiUrl}/api/schools/featured`, {
+    // Emergency endpoint - bypass CORS issues  
+    const res = await fetch(`${apiUrl}/api/emergency/schools`, {
       cache: 'no-store',
       headers: { 'Accept': 'application/json' }
     });
     if (!res.ok) {
-      console.error('Featured Schools API Error:', res.status, res.statusText);
+      console.error('Emergency Schools API Error:', res.status, res.statusText);
       return [];
     }
     return res.json();
   } catch (error) {
-    console.error("Featured schools fetch failed:", error);
+    console.error("Emergency schools fetch failed:", error);
     return [];
   }
 }

@@ -30,7 +30,13 @@ export const reviewsAPI = generateResource('/api/reviews');
 export const neighborhoodsAPI = generateResource('/api/neighborhoods');
 
 export const authAPI = {
-  login: (data: any) => api.post('/api/auth/login', data),
-  register: (data: any) => api.post('/api/auth/register', data),
+  login: (data: any) => api.post('/api/emergency/login', data),
+  register: (data: any) => api.post('/api/emergency/register', data),
   me: () => api.get('/api/auth/me'),
+};
+
+// Emergency endpoints for data
+export const emergencyAPI = {
+  schools: () => api.get('/api/emergency/schools'),  
+  activities: () => api.get('/api/emergency/activities'),
 };
