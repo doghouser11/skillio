@@ -45,34 +45,56 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Hero Section - Mobile Optimized */}
-      <div className="text-center py-12 sm:py-16 lg:py-20 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Hero Section - Headspace Inspired */}
+      <div className="text-center pt-16 pb-20 px-6">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight">
-            Открийте перфектната 
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block mt-1 sm:mt-2">
-              дейност за детето си
+          {/* Soft Badge */}
+          <div className="inline-flex items-center px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium mb-8">
+            🌱 Доверено от над 500+ семейства
+          </div>
+          
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-slate-800 mb-6 leading-[1.1] tracking-tight">
+            Намерете перфектната
+            <span className="block text-emerald-600 font-normal">
+              дейност за вашето дете
             </span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-12 leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
-            Свържете се с най-добрите училища и учители в България. 
-            Помогнете на детето си да развие талантите си в безопасна и вдъхновяваща среда.
+          
+          <p className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
+            Опростете търсенето на качествени извънкласни дейности. 
+            Свържете се директно с проверени училища и учители.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <Link
               href="/activities"
-              className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
+              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-center min-w-[200px]"
             >
-              Разгледай дейности
+              Започнете сега
             </Link>
             <Link
-              href="/register"
-              className="w-full sm:w-auto border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-200 text-center"
+              href="/schools"
+              className="w-full sm:w-auto text-slate-600 hover:text-emerald-600 px-8 py-4 text-lg font-medium transition-all duration-300 text-center underline underline-offset-4"
             >
-              Регистрация за родители
+              Разгледайте училища
             </Link>
+          </div>
+          
+          {/* Trust indicators */}
+          <div className="flex flex-wrap justify-center items-center gap-8 text-slate-400 text-sm">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+              Проверени училища
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+              Безопасна платформа
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+              Директна връзка
+            </span>
           </div>
         </div>
 
@@ -241,88 +263,127 @@ export default async function HomePage() {
         )}
       </div>
 
-      {/* Features Grid */}
-      <div className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl mx-4">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">
-            Защо родителите избират Skillio?
-          </h2>
+      {/* Benefits Section - Headspace Style */}
+      <div className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl sm:text-4xl font-light text-slate-800 mb-6">
+              Защо майките ни избират?
+            </h2>
+            <p className="text-lg text-slate-600 font-light max-w-2xl mx-auto">
+              Опростяваме процеса, за да имате повече време за важното
+            </p>
+          </div>
           
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center group">
-              <div className="bg-gradient-to-br from-blue-400 to-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-200 group-hover:scale-110">
-                <span className="text-3xl text-white">🎯</span>
+          <div className="space-y-20">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="lg:w-1/2 text-center lg:text-left">
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
+                  <span className="text-2xl">🔍</span>
+                </div>
+                <h3 className="text-2xl font-normal text-slate-800 mb-4">
+                  Намерете бързо и лесно
+                </h3>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Без безкрайни търсения и телефонни обаждания. 
+                  Всичко на едно място - филтрирайте по възраст, местоположение и бюджет.
+                </p>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Персонализирано търсене</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Филтрирайте по местоположение, възраст, категория и цена. 
-                Намерете точно това, което търсите за вашето дете.
-              </p>
+              <div className="lg:w-1/2">
+                <div className="w-full h-64 bg-emerald-50 rounded-3xl flex items-center justify-center">
+                  <span className="text-6xl text-emerald-300">🎯</span>
+                </div>
+              </div>
             </div>
 
-            <div className="text-center group">
-              <div className="bg-gradient-to-br from-green-400 to-green-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-200 group-hover:scale-110">
-                <span className="text-3xl text-white">🏫</span>
+            <div className="flex flex-col lg:flex-row-reverse items-center gap-12">
+              <div className="lg:w-1/2 text-center lg:text-left">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto lg:mx-0 mb-6">
+                  <span className="text-2xl">✅</span>
+                </div>
+                <h3 className="text-2xl font-normal text-slate-800 mb-4">
+                  Спокойствие и сигурност
+                </h3>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Всички училища и учители са проверени. Четете отзиви от други майки 
+                  и направете информиран избор.
+                </p>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Проверени партньори</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Всички училища и учители са внимателно проверени от нашия екип. 
-                Четете отзиви от други родители.
-              </p>
+              <div className="lg:w-1/2">
+                <div className="w-full h-64 bg-slate-50 rounded-3xl flex items-center justify-center">
+                  <span className="text-6xl text-slate-300">🛡️</span>
+                </div>
+              </div>
             </div>
 
-            <div className="text-center group">
-              <div className="bg-gradient-to-br from-purple-400 to-purple-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-all duration-200 group-hover:scale-110">
-                <span className="text-3xl text-white">📞</span>
+            <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="lg:w-1/2 text-center lg:text-left">
+                <h3 className="text-2xl font-normal text-slate-800 mb-4">
+                  Директна връзка
+                </h3>
+                <p className="text-slate-600 leading-relaxed font-light">
+                  Изпратете запитване с 1 клик. Училището ще се свърже с вас директно 
+                  за подробности и свободни места.
+                </p>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Директна връзка</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Изпратете запитване директно до училищата. 
-                Те ще се свържат с вас с подробности и свободни места.
-              </p>
+              <div className="lg:w-1/2">
+                <div className="w-full h-64 bg-blue-50 rounded-3xl flex items-center justify-center">
+                  <span className="text-6xl text-blue-300">💬</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* CTA for Schools */}
-      <div className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-12 text-white shadow-xl">
-          <h2 className="text-4xl font-bold mb-6">
-            Имате училище или организирате курсове?
+      {/* CTA for Schools - Soft Style */}
+      <div className="py-24 bg-slate-50">
+        <div className="max-w-3xl mx-auto text-center px-6">
+          <h2 className="text-3xl sm:text-4xl font-light text-slate-800 mb-6">
+            Предлагате дейности за деца?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Присъединете се към нашата платформа и се свържете с родители, 
-            които търсят качествени извънкласни програми за своите деца.
+          <p className="text-lg text-slate-600 mb-10 font-light leading-relaxed">
+            Свържете се с родители, които активно търсят качествени програми 
+            за своите деца
           </p>
           <Link
             href="/register?role=school"
-            className="bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl inline-block"
+            className="inline-flex items-center px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Регистрирайте училището си
+            Присъединете се безплатно
+            <span className="ml-2">→</span>
           </Link>
         </div>
       </div>
 
-      {/* How It Works */}
-      <div className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">
-            Как работи?
-          </h2>
-          <div className="grid md:grid-cols-4 gap-8">
+      {/* How It Works - Minimal */}
+      <div className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl sm:text-4xl font-light text-slate-800 mb-4">
+              Как работи?
+            </h2>
+            <p className="text-lg text-slate-600 font-light">
+              Три прости стъпки до идеалната дейност
+            </p>
+          </div>
+          
+          <div className="space-y-16">
             {[
-              { step: "1", title: "Търсете", desc: "Намерете дейности по местоположение и възраст" },
-              { step: "2", title: "Сравнете", desc: "Прегледайте детайли, цени и отзиви" },
-              { step: "3", title: "Свържете се", desc: "Изпратете запитване към училищата" },
-              { step: "4", title: "Започнете", desc: "Вашето дете започва новото си приключение" }
+              { emoji: "🔍", title: "Търсете и филтрирайте", desc: "Намерете дейности по локация, възраст и интереси на детето си" },
+              { emoji: "💬", title: "Свържете се директно", desc: "Изпратете запитване с 1 клик - без формуляри и телефонни обаждания" },
+              { emoji: "🎉", title: "Започвайте", desc: "Детето ви започва новото си приключение в проверена и безопасна среда" }
             ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold shadow-lg">
-                  {item.step}
+              <div key={index} className="flex flex-col md:flex-row items-center gap-8">
+                <div className="md:w-1/3 text-center">
+                  <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-3xl">{item.emoji}</span>
+                  </div>
                 </div>
-                <h4 className="font-bold text-lg mb-2 text-gray-900">{item.title}</h4>
-                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+                <div className="md:w-2/3 text-center md:text-left">
+                  <h3 className="text-xl font-normal text-slate-800 mb-3">{item.title}</h3>
+                  <p className="text-slate-600 font-light leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
