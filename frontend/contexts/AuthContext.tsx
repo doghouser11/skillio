@@ -84,10 +84,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (email: string, password: string, role: string) => {
     try {
+      console.log('🔥 REGISTRATION: Calling authAPI.register with emergency endpoint');
       await authAPI.register({ email, password, role });
+      console.log('✅ REGISTRATION: Success!');
       // After registration, automatically log in
       await login(email, password);
     } catch (error: any) {
+      console.error('❌ REGISTRATION ERROR:', error);
       throw new Error(error.response?.data?.detail || 'Registration failed');
     }
   };
