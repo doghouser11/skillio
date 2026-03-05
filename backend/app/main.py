@@ -15,7 +15,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",           # Development
         "https://skillio-three.vercel.app", # Production Vercel
-        "https://skillio.live",            # Production custom domain (future)
+        "https://skillio.live",            # Production custom domain
+        "https://www.skillio.live",        # Production with www
     ],
     allow_credentials=True,
     allow_methods=["*"],
