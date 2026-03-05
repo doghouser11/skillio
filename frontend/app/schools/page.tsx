@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { schoolsAPI } from '@/lib/supabase-api';
+// Using emergency data instead of Supabase for now
 import Link from 'next/link';
 
 interface School {
@@ -36,13 +36,28 @@ export default function SchoolsPage() {
 
   const loadSchools = async () => {
     try {
-      console.log('🔍 Loading schools...');
+      console.log('🔍 Loading schools from emergency endpoint...');
       setLoading(true);
-      const filters = cityFilter ? { city: cityFilter } : {};
-      console.log('📊 Filters:', filters);
-      const response = await schoolsAPI.getAll(filters);
-      console.log('✅ API Response:', response);
-      setSchools(response.data);
+      
+      // Using emergency backend endpoint
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+      const response = await fetch(`${API_URL}/api/emergency/schools`, {
+        headers: { 'Accept': 'application/json' }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch schools');
+      
+      let schoolsData = await response.json();
+      
+      // Filter by city if needed
+      if (cityFilter) {
+        schoolsData = schoolsData.filter((school: School) => 
+          school.city.toLowerCase() === cityFilter.toLowerCase()
+        );
+      }
+      
+      console.log('✅ Schools loaded:', schoolsData);
+      setSchools(schoolsData);
     } catch (error) {
       console.error('❌ Error loading schools:', error);
       setSchools([]);
