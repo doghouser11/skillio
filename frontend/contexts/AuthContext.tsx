@@ -1,7 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { authAPI } from '../lib/api';
+import { supabase } from '../lib/supabase';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
   id: string;
@@ -15,7 +16,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, role: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isParent: boolean;
   isSchool: boolean;
   isAdmin: boolean;
@@ -28,78 +29,78 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 🔥 КРИТИЧНО: Проверяваме дали сме в браузъра преди localStorage достъп
-    if (typeof window === 'undefined') {
-      setLoading(false);
-      return;
-    }
-
-    // Check if user is logged in on app start
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Decode JWT to get user info (simple decode, not verification)
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        // Note: In real app, you'd validate the token with the backend
-        // For now, we'll just trust the stored token
-        setUser({
-          id: payload.sub || 'unknown',
-          email: payload.sub || 'unknown',
-          role: 'parent', // Default role, should come from backend
-          created_at: new Date().toISOString(),
-        });
-      } catch (error) {
-        localStorage.removeItem('token');
+    // Get initial session
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await updateUserState(session.user);
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+
+    getInitialSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          await updateUserState(session.user);
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
+  const updateUserState = async (supabaseUser: SupabaseUser) => {
+    // Get user metadata from Supabase user_metadata
+    const role = supabaseUser.user_metadata?.role || 'parent';
+    
+    const userData: User = {
+      id: supabaseUser.id,
+      email: supabaseUser.email!,
+      role: role as 'parent' | 'school' | 'admin',
+      created_at: supabaseUser.created_at,
+    };
+    
+    setUser(userData);
+  };
+
   const login = async (email: string, password: string) => {
-    try {
-      const response = await authAPI.login({ email, password });
-      const { access_token } = response.data;
-      
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('token', access_token);
-      }
-      
-      // Decode token to get user info
-      const payload = JSON.parse(atob(access_token.split('.')[1]));
-      
-      // Note: In a real app, you'd call an endpoint to get full user data
-      // For now, we'll create a user object from the token
-      const userData: User = {
-        id: payload.sub || 'unknown',
-        email: email,
-        role: 'parent', // Default, should come from backend
-        created_at: new Date().toISOString(),
-      };
-      
-      setUser(userData);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.detail || 'Login failed');
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw new Error(error.message);
     }
   };
 
   const register = async (email: string, password: string, role: string) => {
-    try {
-      console.log('🔥 REGISTRATION: Calling authAPI.register with emergency endpoint');
-      await authAPI.register({ email, password, role });
-      console.log('✅ REGISTRATION: Success!');
-      // After registration, automatically log in
-      await login(email, password);
-    } catch (error: any) {
-      console.error('❌ REGISTRATION ERROR:', error);
-      throw new Error(error.response?.data?.detail || 'Registration failed');
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          role: role, // Store role in user_metadata
+        },
+      },
+    });
+
+    if (error) {
+      throw new Error(error.message);
     }
   };
 
-  const logout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      throw new Error(error.message);
     }
-    setUser(null);
   };
 
   const isParent = user?.role === 'parent';

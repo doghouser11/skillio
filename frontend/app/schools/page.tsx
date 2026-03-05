@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { schoolsAPI } from '../../lib/api';
+import { schoolsAPI } from '@/lib/supabase-api';
 import Link from 'next/link';
 
 interface School {
@@ -21,26 +21,67 @@ export default function SchoolsPage() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [cityFilter, setCityFilter] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    loadSchools();
-  }, [cityFilter]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    // Only load schools after component is mounted (client-side)
+    if (mounted) {
+      loadSchools();
+    }
+  }, [cityFilter, mounted]);
 
   const loadSchools = async () => {
     try {
+      console.log('🔍 Loading schools...');
       setLoading(true);
       const filters = cityFilter ? { city: cityFilter } : {};
+      console.log('📊 Filters:', filters);
       const response = await schoolsAPI.getAll(filters);
+      console.log('✅ API Response:', response);
       setSchools(response.data);
     } catch (error) {
-      console.error('Error loading schools:', error);
+      console.error('❌ Error loading schools:', error);
       setSchools([]);
     } finally {
+      console.log('🏁 Loading complete');
       setLoading(false);
     }
   };
 
   const cities = ['София', 'Пловдив', 'Варна', 'Бургас', 'Русе', 'Стара Загора', 'Плевен', 'Добрич'];
+
+  // Prevent hydration mismatch - show loading on server
+  if (!mounted) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Партньорски училища
+          </h1>
+          <p className="text-xl text-gray-600">
+            Проверени образователни институции в цяла България
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

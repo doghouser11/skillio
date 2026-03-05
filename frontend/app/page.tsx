@@ -1,40 +1,62 @@
 import Link from 'next/link';
 import { ExternalLink, Star, Users } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 async function getActivities() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
   try {
-    // Emergency endpoint - bypass CORS issues
-    const res = await fetch(`${apiUrl}/api/emergency/activities`, { 
-      cache: 'no-store',
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!res.ok) {
-      console.error('Emergency API Error:', res.status, res.statusText);
+    const { data, error } = await supabase
+      .from('activities')
+      .select('*')
+      .eq('active', true)
+      .limit(6)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Supabase activities error:', error);
       return [];
     }
-    return res.json();
+    
+    return data || [];
   } catch (error) {
-    console.error("Emergency backend connection failed:", error);
+    console.error("Activities fetch failed:", error);
     return [];
   }
 }
 
 async function getFeaturedSchools() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
   try {
-    // Emergency endpoint - bypass CORS issues  
-    const res = await fetch(`${apiUrl}/api/emergency/schools`, {
-      cache: 'no-store',
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!res.ok) {
-      console.error('Emergency Schools API Error:', res.status, res.statusText);
+    const { data, error } = await supabase
+      .from('schools')
+      .select(`
+        *,
+        reviews(rating)
+      `)
+      .eq('verified', true)
+      .limit(6)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Supabase schools error:', error);
       return [];
     }
-    return res.json();
+    
+    // Calculate average rating for each school
+    const schoolsWithRating = data?.map(school => {
+      const ratings = school.reviews?.map((r: any) => r.rating) || [];
+      const averageRating = ratings.length > 0 
+        ? ratings.reduce((sum: number, rating: number) => sum + rating, 0) / ratings.length 
+        : 0;
+      
+      return {
+        ...school,
+        average_rating: parseFloat(averageRating.toFixed(1)),
+        review_count: ratings.length
+      };
+    }) || [];
+    
+    return schoolsWithRating;
   } catch (error) {
-    console.error("Emergency schools fetch failed:", error);
+    console.error("Schools fetch failed:", error);
     return [];
   }
 }

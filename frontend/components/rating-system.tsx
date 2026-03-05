@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Star, User, MessageSquare } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 interface Review {
   id: string
@@ -31,8 +32,6 @@ interface NewReview {
   comment: string
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live'
-
 export function RatingSystem({ 
   schoolId, 
   reviews, 
@@ -53,25 +52,29 @@ export function RatingSystem({
     
     setSubmitting(true)
     try {
-      const response = await fetch(`${API_BASE_URL}/api/reviews`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // TODO: Add authentication headers
-        },
-        body: JSON.stringify({
+      // Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      if (authError || !user) {
+        console.error('User not authenticated')
+        return
+      }
+
+      // Insert review into Supabase
+      const { error } = await supabase
+        .from('reviews')
+        .insert({
           school_id: schoolId,
+          parent_id: user.id,
           rating: newReview.rating,
           comment: newReview.comment || null
         })
-      })
 
-      if (response.ok) {
+      if (!error) {
         setNewReview({ rating: 0, comment: '' })
         setIsAddingReview(false)
         if (onReviewAdded) onReviewAdded()
       } else {
-        console.error('Failed to submit review')
+        console.error('Failed to submit review:', error)
       }
     } catch (error) {
       console.error('Error submitting review:', error)
