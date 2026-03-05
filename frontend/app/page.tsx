@@ -46,30 +46,30 @@ export default async function HomePage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Hero Section */}
-      <div className="text-center py-20 px-4">
+      {/* Hero Section - Mobile Optimized */}
+      <div className="text-center py-12 sm:py-16 lg:py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight">
             Открийте перфектната 
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block mt-2">
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block mt-1 sm:mt-2">
               дейност за детето си
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-8 sm:mb-12 leading-relaxed max-w-3xl mx-auto px-2 sm:px-0">
             Свържете се с най-добрите училища и учители в България. 
             Помогнете на детето си да развие талантите си в безопасна и вдъхновяваща среда.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-12 sm:mb-16">
             <Link
               href="/activities"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
             >
               Разгледай дейности
             </Link>
             <Link
               href="/register"
-              className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200"
+              className="w-full sm:w-auto border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-200 text-center"
             >
               Регистрация за родители
             </Link>
