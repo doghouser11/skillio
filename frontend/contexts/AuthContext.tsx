@@ -1,8 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { authAPI } from '../lib/api';
 
 interface User {
   id: string;
@@ -29,78 +28,74 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        await updateUserState(session.user);
-      }
+    // 🔥 КРИТИЧНО: Проверяваме дали сме в браузъра преди localStorage достъп
+    if (typeof window === 'undefined') {
       setLoading(false);
-    };
+      return;
+    }
 
-    getInitialSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          await updateUserState(session.user);
-        } else {
-          setUser(null);
-        }
-        setLoading(false);
+    // Check if user is logged in on app start
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Decode JWT to get user info (simple decode, not verification)
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUser({
+          id: payload.sub || 'unknown',
+          email: payload.sub || 'unknown',
+          role: 'parent', // Default role, should come from backend
+          created_at: new Date().toISOString(),
+        });
+      } catch (error) {
+        localStorage.removeItem('token');
       }
-    );
-
-    return () => subscription.unsubscribe();
+    }
+    setLoading(false);
   }, []);
 
-  const updateUserState = async (supabaseUser: SupabaseUser) => {
-    // Get user metadata from Supabase user_metadata
-    const role = supabaseUser.user_metadata?.role || 'parent';
-    
-    const userData: User = {
-      id: supabaseUser.id,
-      email: supabaseUser.email!,
-      role: role as 'parent' | 'school' | 'admin',
-      created_at: supabaseUser.created_at,
-    };
-    
-    setUser(userData);
-  };
-
   const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      throw new Error(error.message);
+    try {
+      const response = await authAPI.login({ email, password });
+      const { access_token } = response.data;
+      
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', access_token);
+      }
+      
+      // Decode token to get user info
+      const payload = JSON.parse(atob(access_token.split('.')[1]));
+      
+      const userData: User = {
+        id: payload.sub || 'unknown',
+        email: email,
+        role: 'parent', // Default, should come from backend
+        created_at: new Date().toISOString(),
+      };
+      
+      setUser(userData);
+    } catch (error: any) {
+      throw new Error(error.response?.data?.detail || 'Login failed');
     }
   };
 
   const register = async (email: string, password: string, role: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          role: role, // Store role in user_metadata
-        },
-      },
-    });
-
-    if (error) {
-      throw new Error(error.message);
+    try {
+      console.log('🔥 REGISTRATION: Calling authAPI.register with emergency endpoint');
+      await authAPI.register({ email, password, role });
+      console.log('✅ REGISTRATION: Success!');
+      // After registration, automatically log in
+      await login(email, password);
+    } catch (error: any) {
+      console.error('❌ REGISTRATION ERROR:', error);
+      throw new Error(error.response?.data?.detail || 'Registration failed');
     }
   };
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw new Error(error.message);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
     }
+    setUser(null);
   };
 
   const isParent = user?.role === 'parent';

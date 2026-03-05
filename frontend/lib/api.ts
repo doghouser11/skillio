@@ -26,11 +26,27 @@ export const reviewsAPI = {
   create: (data: any) => Promise.resolve({ data: null }),
 };
 
+// EMERGENCY AUTH - Compatible with emergency backend endpoints
+import axios from 'axios';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+
+const api = axios.create({
+  baseURL: API_URL,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 10000,
+});
+
 export const authAPI = {
-  // These are handled by Supabase Auth in AuthContext
-  login: () => Promise.reject('Use Supabase Auth via AuthContext'),
-  register: () => Promise.reject('Use Supabase Auth via AuthContext'),
-  me: () => Promise.reject('Use Supabase Auth via AuthContext'),
+  login: (data: any) => {
+    console.log('🔥 LOGIN: Calling', API_URL + '/api/emergency/login');
+    return api.post('/api/emergency/login', data);
+  },
+  register: (data: any) => {
+    console.log('🔥 REGISTER: Calling', API_URL + '/api/emergency/register');
+    return api.post('/api/emergency/register', data);
+  },
+  me: () => api.get('/api/auth/me'),
 };
 
 // Legacy compatibility - all APIs now use Supabase
