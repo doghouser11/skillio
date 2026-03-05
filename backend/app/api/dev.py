@@ -31,24 +31,24 @@ def seed_test_data(db: Session = Depends(get_db)):
         
         db.flush()  # Get IDs
         
-        # Create test users
+        # Create test users (using string literals to avoid enum issues)
         admin_user = User(
             id=uuid.uuid4(),
             email="admin@skillio.live",
             password_hash="$2b$12$test_hash",
-            role=UserRole.ADMIN
+            role="admin"
         )
         school_user = User(
             id=uuid.uuid4(),
             email="school@skillio.live", 
             password_hash="$2b$12$test_hash",
-            role=UserRole.SCHOOL
+            role="school"
         )
         parent_user = User(
             id=uuid.uuid4(),
             email="parent@skillio.live",
             password_hash="$2b$12$test_hash", 
-            role=UserRole.PARENT
+            role="parent"
         )
         
         db.add_all([admin_user, school_user, parent_user])
@@ -93,7 +93,7 @@ def seed_test_data(db: Session = Depends(get_db)):
             school = School(
                 **s_data,
                 verified=True,
-                status=SchoolStatus.APPROVED,
+                status="approved",
                 created_by=school_user.id
             )
             schools.append(school)
@@ -165,7 +165,7 @@ def seed_test_data(db: Session = Depends(get_db)):
                 active=True,
                 verified=True,
                 created_by=school_user.id,
-                source=ActivitySource.SCHOOL
+                source="school"
             )
             db.add(activity)
         
