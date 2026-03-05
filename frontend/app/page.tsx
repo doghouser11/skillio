@@ -49,11 +49,6 @@ export default async function HomePage() {
       {/* Hero Section - Headspace Inspired */}
       <div className="text-center pt-16 pb-20 px-6">
         <div className="max-w-4xl mx-auto">
-          {/* Soft Badge */}
-          <div className="inline-flex items-center px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium mb-8">
-            🌱 Доверено от над 500+ семейства
-          </div>
-          
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-slate-800 mb-6 leading-[1.1] tracking-tight">
             Намерете перфектната
             <span className="block text-emerald-600 font-normal">
@@ -61,9 +56,14 @@ export default async function HomePage() {
             </span>
           </h1>
           
+          <p className="text-xl sm:text-2xl text-emerald-700 mb-6 leading-relaxed max-w-3xl mx-auto font-normal">
+            Свързваме семейства с качествени извънкласни дейности. 
+            Просто, безопасно, ефективно.
+          </p>
+          
           <p className="text-lg sm:text-xl text-slate-600 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
-            Опростете търсенето на качествени извънкласни дейности. 
-            Свържете се директно с проверени училища и учители.
+            От танци и спорт до програмиране и езици - открийте подходящия 
+            учител, треньор или студио за вашето дете.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -77,7 +77,7 @@ export default async function HomePage() {
               href="/schools"
               className="w-full sm:w-auto text-slate-600 hover:text-emerald-600 px-8 py-4 text-lg font-medium transition-all duration-300 text-center underline underline-offset-4"
             >
-              Разгледайте училища
+              Разгледайте специалисти
             </Link>
           </div>
           
@@ -85,7 +85,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap justify-center items-center gap-8 text-slate-400 text-sm">
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
-              Проверени училища
+              Проверени специалисти
             </span>
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
@@ -305,7 +305,7 @@ export default async function HomePage() {
                   Спокойствие и сигурност
                 </h3>
                 <p className="text-slate-600 leading-relaxed font-light">
-                  Всички училища и учители са проверени. Четете отзиви от други майки 
+                  Всички учители, треньори и студиа са проверени. Четете отзиви от други майки 
                   и направете информиран избор.
                 </p>
               </div>
@@ -322,7 +322,7 @@ export default async function HomePage() {
                   Директна връзка
                 </h3>
                 <p className="text-slate-600 leading-relaxed font-light">
-                  Изпратете запитване с 1 клик. Училището ще се свърже с вас директно 
+                  Изпратете запитване с 1 клик. Учителят или студиото ще се свърже с вас директно 
                   за подробности и свободни места.
                 </p>
               </div>

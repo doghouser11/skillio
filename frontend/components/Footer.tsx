@@ -28,7 +28,7 @@ export default function Footer() {
               Дейности
             </Link>
             <Link href="/schools" className="text-slate-400 hover:text-emerald-400 transition-colors duration-300">
-              Училища
+              Специалисти
             </Link>
             <Link href="/about" className="text-slate-400 hover:text-emerald-400 transition-colors duration-300">
               За нас

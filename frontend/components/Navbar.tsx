@@ -30,7 +30,7 @@ export default function Navbar() {
               href="/schools" 
               className="text-slate-600 hover:text-emerald-600 font-normal transition-colors duration-300 px-4 py-2 rounded-full hover:bg-emerald-50"
             >
-              Училища
+              Специалисти
             </Link>
             <Link 
               href="/about" 
