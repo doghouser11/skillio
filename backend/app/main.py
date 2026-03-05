@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import auth, activities, schools, leads, neighborhoods, reviews, admin, dev, migrate, temp_seed, working_seed
+from app.api import auth, activities, schools, leads, neighborhoods, reviews, admin, dev, migrate, temp_seed, working_seed, debug
 
 # Create FastAPI app
 app = FastAPI(
@@ -34,6 +34,7 @@ app.include_router(dev.router, prefix="/api")
 app.include_router(migrate.router, prefix="/api")
 app.include_router(temp_seed.router, prefix="/api")
 app.include_router(working_seed.router, prefix="/api")
+app.include_router(debug.router, prefix="/api")
 
 
 @app.get("/")
