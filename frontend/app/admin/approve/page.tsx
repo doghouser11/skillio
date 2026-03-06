@@ -37,7 +37,7 @@ export default function AdminApprovePage() {
         {
           id: '1',
           email: 'school@example.com',
-          full_name: 'Тест Училище',
+          full_name: 'Тест Организация',
           role: 'school',
           phone: '+359888123456',
           verified: false,

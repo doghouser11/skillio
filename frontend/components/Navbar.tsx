@@ -56,7 +56,7 @@ export default function Navbar() {
                   <div className="hidden sm:block">
                     <div className="text-slate-700 font-medium">{user.email.split('@')[0]}</div>
                     <div className="text-xs text-slate-500">
-                      {user.role === 'parent' ? 'Родител' : user.role === 'school' ? 'Училище' : 'Админ'}
+                      {user.role === 'parent' ? 'Родител' : user.role === 'school' ? 'Организация' : 'Админ'}
                     </div>
                   </div>
                 </div>

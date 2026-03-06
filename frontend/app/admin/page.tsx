@@ -54,9 +54,21 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      console.log('📊 Loading admin stats with emergency data...');
+      console.log('📊 Loading admin stats from real API...');
       
-      // Emergency mock stats for admin dashboard
+      // Try real admin API first
+      try {
+        const { adminAPI } = await import('@/lib/api');
+        const response = await adminAPI.getStats();
+        setStats(response.data);
+        setLoading(false);
+        console.log('✅ Real admin stats loaded');
+        return;
+      } catch (apiError) {
+        console.log('📊 Real API failed, using emergency fallback:', apiError);
+      }
+      
+      // Emergency fallback mock stats
       const mockStats: AdminStats = {
         users: {
           total: 25,
@@ -65,32 +77,32 @@ export default function AdminDashboard() {
           new_this_week: 3
         },
         schools: {
-          total: 1,
-          pending: 0,
-          approved: 1,
-          new_this_week: 1
+          total: 12,
+          pending: 3,
+          approved: 9,
+          new_this_week: 2
         },
         activities: {
-          total: 1,
-          pending: 0,
-          approved: 1,
-          new_this_week: 1
+          total: 24,
+          pending: 5,
+          approved: 19,
+          new_this_week: 3
         },
         leads: {
-          total: 8,
-          this_week: 3,
-          conversion_rate: 65
+          total: 18,
+          this_week: 4,
+          conversion_rate: 28
         },
         reviews: {
           total: 15,
-          average_rating: 4.3,
-          this_week: 4
+          average_rating: 4.5,
+          this_week: 2
         }
       };
 
       setStats(mockStats);
       setLoading(false);
-      console.log('✅ Admin stats loaded');
+      console.log('✅ Emergency admin stats loaded');
     } catch (error: any) {
       console.error('Error fetching admin stats:', error);
       setLoading(false);
@@ -147,7 +159,7 @@ export default function AdminDashboard() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Училища</CardTitle>
+              <CardTitle className="text-sm font-medium">Организации</CardTitle>
               <School className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
@@ -208,7 +220,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button variant="outline" className="justify-start">
                 <CheckCircle className="h-4 w-4 mr-2" />
-                Одобряване на училища
+                Одобряване на организации
               </Button>
               <Button variant="outline" className="justify-start">
                 <Activity className="h-4 w-4 mr-2" />

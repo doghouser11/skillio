@@ -83,7 +83,7 @@ export default function RegisterPage() {
                   }`}
                 >
                   <div className="text-2xl mb-2">🏫</div>
-                  <div className="font-medium">Училище</div>
+                  <div className="font-medium">Организация</div>
                 </button>
               </div>
             </div>

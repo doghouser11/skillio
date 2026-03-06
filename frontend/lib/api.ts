@@ -35,6 +35,10 @@ export const schoolsAPI = {
   create: (data: any) => Promise.resolve({ data: null }),
   update: (id: any, data: any) => Promise.resolve({ data: null }),
   delete: (id: any) => Promise.resolve({ data: null }),
+  // ADMIN FUNCTIONS - Real API integration  
+  verify: async (schoolId: string) => {
+    return api.put(`/api/admin/schools/${schoolId}/approve`);
+  },
 };
 
 // Emergency activities API
@@ -51,6 +55,10 @@ export const activitiesAPI = {
   create: (data: any) => Promise.resolve({ data: null }),
   update: (id: any, data: any) => Promise.resolve({ data: null }),
   delete: (id: any) => Promise.resolve({ data: null }),
+  // ADMIN FUNCTIONS - Real API integration
+  verify: async (activityId: string) => {
+    return api.put(`/api/admin/activities/${activityId}/verify`, { verified: true });
+  },
 };
 
 // Placeholder APIs for future implementation
@@ -75,6 +83,19 @@ export const neighborhoodsAPI = {
 export const emergencyAPI = {
   schools: () => fetch(`${API_URL}/api/emergency/schools`).then(r => r.json()),  
   activities: () => fetch(`${API_URL}/api/emergency/activities`).then(r => r.json()),
+};
+
+// ADMIN API - Real backend integration  
+export const adminAPI = {
+  getStats: () => api.get('/api/admin/stats'),
+  getPendingSchools: () => api.get('/api/admin/schools/pending'),
+  getAllSchools: (params?: any) => api.get('/api/admin/schools', { params }),
+  approveSchool: (schoolId: string, approval: { status: string }) => 
+    api.put(`/api/admin/schools/${schoolId}/approve`, approval),
+  getAllActivities: (params?: any) => api.get('/api/admin/activities', { params }),
+  verifyActivity: (activityId: string, verified: boolean = true) => 
+    api.put(`/api/admin/activities/${activityId}/verify`, { verified }),
+  getAllLeads: (params?: any) => api.get('/api/admin/leads', { params }),
 };
 
 // Legacy compatibility

@@ -158,7 +158,7 @@ export default function SubmitActivityPage() {
           <h3 className="font-semibold text-blue-800 mb-2">💡 Защо да предложите дейност?</h3>
           <ul className="text-blue-700 text-sm space-y-1">
             <li>• Помогнете на други родители да открият качествени дейности</li>
-            <li>• Подкрепете местните училища и преподаватели</li>
+            <li>• Подкрепете местните организации и преподаватели</li>
             <li>• Създайте по-силна общност за деца в България</li>
             <li>• Имейл и телефон са незадължителни - споделете колкото информация имате</li>
           </ul>
@@ -269,12 +269,12 @@ export default function SubmitActivityPage() {
 
           {/* School Information */}
           <div>
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">🏫 Информация за училището</h3>
+            <h3 className="text-lg font-semibold text-slate-800 mb-4">🏫 Информация за организацията</h3>
             
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Име на училището *
+                  Име на организацията *
                 </label>
                 <input
                   type="text"

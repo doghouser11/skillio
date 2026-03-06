@@ -134,10 +134,10 @@ export default function SchoolDashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-800 mb-2">
-            🏫 Училищен дашборд
+            🏫 Организационен дашборд
           </h1>
           <p className="text-slate-600">
-            Управлявайте дейностите и запитванията на вашето училище
+            Управлявайте дейностите и запитванията на вашата организация
           </p>
         </div>
 
@@ -158,7 +158,7 @@ export default function SchoolDashboard() {
           >
             <div className="text-3xl mb-3">🏫</div>
             <h3 className="font-semibold text-slate-900 mb-2">Профил</h3>
-            <p className="text-sm text-slate-600">Училищни данни</p>
+            <p className="text-sm text-slate-600">Организационни данни</p>
           </Link>
 
           <div className="bg-white p-6 rounded-lg shadow-md text-center border border-slate-200">
@@ -242,7 +242,7 @@ export default function SchoolDashboard() {
                 <div className="text-4xl mb-4">🎯</div>
                 <h3 className="font-medium text-slate-800 mb-2">Няма дейности</h3>
                 <p className="text-slate-600 mb-4">
-                  Все още не сте добавили дейности за вашето училище
+                  Все още не сте добавили дейности за вашата организация
                 </p>
                 <Link 
                   href="/school/add-activity" 

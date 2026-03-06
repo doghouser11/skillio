@@ -262,13 +262,13 @@ export default function ParentDashboard() {
                 <div className="text-4xl mb-4">⭐</div>
                 <h3 className="font-medium text-slate-800 mb-2">Няма отзиви</h3>
                 <p className="text-slate-600 mb-4">
-                  Все още не сте оставили отзиви за училища
+                  Все още не сте оставили отзиви за организации
                 </p>
                 <Link 
                   href="/schools" 
                   className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
-                  Разгледайте училища
+                  Разгледайте организации
                 </Link>
               </div>
             ) : (

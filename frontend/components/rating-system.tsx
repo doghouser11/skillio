@@ -115,7 +115,7 @@ export function RatingSystem({
           )}
         </CardTitle>
         <CardDescription>
-          Вижте какво казват другите родители за това училище
+          Вижте какво казват другите родители за тази организация
         </CardDescription>
       </CardHeader>
 
@@ -160,7 +160,7 @@ export function RatingSystem({
                   <Textarea
                     value={newReview.comment}
                     onChange={(e) => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
-                    placeholder="Споделете вашето мнение за училището..."
+                    placeholder="Споделете вашето мнение за организацията..."
                     rows={3}
                   />
                 </div>
@@ -219,7 +219,7 @@ export function RatingSystem({
         {reviews.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             <MessageSquare className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-            <p>Все още няма отзиви за това училище</p>
+            <p>Все още няма отзиви за тази организация</p>
             <p className="text-sm">Бъдете първите, които ще споделят мнение!</p>
           </div>
         )}

@@ -52,7 +52,7 @@ export default function AboutPage() {
           </div>
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
             <div className="text-4xl font-bold text-purple-600 mb-2">200+</div>
-            <div className="text-gray-600 font-medium">Партньорски училища</div>
+            <div className="text-gray-600 font-medium">Партньорски организации</div>
           </div>
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
             <div className="text-4xl font-bold text-green-600 mb-2">5000+</div>
@@ -73,7 +73,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Няма информация</h3>
                 <p className="text-gray-600">
-                  Преди не можеше да провериш учители и училища. Разчиташе на препоръки от приятели.
+                  Преди не можеше да провериш учители и организации. Разчиташе на препоръки от приятели.
                 </p>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Реални отзиви</h3>
                 <p className="text-gray-600">
-                  Сега четеш истински мнения от други родители за всяко училище и активност.
+                  Сега четеш истински мнения от други родители за всяка организация и активност.
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function AboutPage() {
                 <div className="bg-white rounded-xl p-4 shadow-sm">
                   <div className="text-2xl mb-2">🔍</div>
                   <h4 className="font-semibold text-gray-900">Проверени партньори</h4>
-                  <p className="text-sm text-gray-600">Всяко училище преминава през одит</p>
+                  <p className="text-sm text-gray-600">Всяка организация преминава през одит</p>
                 </div>
               </div>
               <div className="text-center">

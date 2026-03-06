@@ -75,7 +75,7 @@ export default function SchoolsPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Партньорски училища
+            Партньорски организации
           </h1>
           <p className="text-xl text-gray-600">
             Проверени образователни институции в цяла България
@@ -102,7 +102,7 @@ export default function SchoolsPage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Партньорски училища
+          Партньорски организации
         </h1>
         <p className="text-xl text-gray-600">
           Проверени образователни институции в цяла България
@@ -223,12 +223,12 @@ export default function SchoolsPage() {
         <div className="text-center py-12">
           <div className="text-gray-400 text-6xl mb-4">🏫</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            Няма намерени училища
+            Няма намерени организации
           </h3>
           <p className="text-gray-600 mb-6">
             {cityFilter 
-              ? `Няма регистрирани училища в ${cityFilter}`
-              : 'Все още няма регистрирани училища'
+              ? `Няма регистрирани организации в ${cityFilter}`
+              : 'Все още няма регистрирани организации'
             }
           </p>
           <Link
@@ -236,7 +236,7 @@ export default function SchoolsPage() {
             className="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
           >
             <span className="mr-2">🏫</span>
-            Регистрирайте училището си
+            Регистрирайте организацията си
           </Link>
         </div>
       )}
@@ -244,7 +244,7 @@ export default function SchoolsPage() {
       {/* Call to action */}
       <div className="mt-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-8 text-white text-center">
         <h2 className="text-3xl font-bold mb-4">
-          Имате училище или организирате курсове?
+          Имате организация или организирате курсове?
         </h2>
         <p className="text-xl mb-6 opacity-90">
           Присъединете се към нашата мрежа от партньори и достигнете до повече семейства.
