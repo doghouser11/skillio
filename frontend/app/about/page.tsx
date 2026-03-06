@@ -1,62 +1,119 @@
 export default function AboutPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <div className="text-center mb-16">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          За <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Skillio</span>
+    <div className="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 max-w-full overflow-x-hidden">
+      <div className="text-center mb-12 md:mb-16">
+        <h1 className="text-4xl md:text-5xl font-semibold text-[#1A1A1A] mb-6">
+          За <span className="text-[#2D5A27]">Skillio</span>
         </h1>
       </div>
 
       <div className="space-y-16">
         {/* Origin Story */}
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-8 border border-amber-100">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="comic-card p-6 md:p-8" style={{backgroundColor: '#FDF6EC'}}>
+          <h2 className="text-2xl md:text-3xl font-semibold text-[#1A1A1A] mb-6 text-center">
             Как започна всичко
           </h2>
           <div className="prose max-w-none">
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              <span className="text-2xl font-serif text-amber-600">"</span>
+            <p className="text-base md:text-lg text-[#1A1A1A] leading-relaxed mb-6">
+              <span className="text-2xl font-serif text-[#FFB1B1]">"</span>
               Започна от един лош контакт. Получих препоръка за треньор по тенис. 
               Оказа се разочарование. Нямаше къде да проверя реални мнения. Нямаше структура.
             </p>
-            <p className="text-lg text-gray-700 leading-relaxed text-center font-semibold">
+            <p className="text-base md:text-lg text-[#1A1A1A] leading-relaxed text-center font-semibold">
               Така се роди Skillio.
-              <span className="text-2xl font-serif text-amber-600">"</span>
+              <span className="text-2xl font-serif text-[#FFB1B1]">"</span>
             </p>
           </div>
         </div>
 
         {/* Mission */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+        <div className="comic-card p-6 md:p-8" style={{backgroundColor: 'white'}}>
+          <h2 className="text-2xl md:text-3xl font-semibold text-[#1A1A1A] mb-6 text-center">
             Мисия
           </h2>
-          <p className="text-lg text-gray-700 text-center max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-[#1A1A1A] text-center max-w-2xl mx-auto leading-relaxed">
             Skillio свързва родители с качествени извънкласни дейности — 
-            на база <span className="font-semibold text-blue-600">прозрачност</span>, 
-            <span className="font-semibold text-purple-600"> реални отзиви</span> и 
-            <span className="font-semibold text-green-600"> локalno търсене</span>.
+            на база <span className="font-semibold text-[#2D5A27]">прозрачност</span>, 
+            <span className="font-semibold text-[#FFB1B1]"> реални отзиви</span> и 
+            <span className="font-semibold text-[#2D5A27]"> локално търсене</span>.
           </p>
           <div className="mt-6 text-center">
-            <span className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-lg font-semibold">
-              Безплатно - винаги
+            <span className="inline-block bg-[#2D5A27] text-white px-6 py-3 rounded-full text-lg font-semibold border-2 border-black">
+              Безплатно - винаги ✨
             </span>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-            <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
-            <div className="text-gray-600 font-medium">Дейности</div>
+        {/* Mission & Progress */}
+        <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-3xl p-8 border-2 border-black">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-[#1A1A1A] mb-4">
+              Градим Skillio заедно 🤝
+            </h2>
+            <p className="text-xl text-[#1A1A1A] max-w-3xl mx-auto leading-relaxed">
+              Нашата мисия е да свържем всяко дете с неговия талант. 
+              Виж колко близо сме до целта:
+            </p>
           </div>
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-            <div className="text-4xl font-bold text-purple-600 mb-2">200+</div>
-            <div className="text-gray-600 font-medium">Партньорски организации</div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Activities Progress */}
+            <div className="bg-white rounded-3xl p-6 border-2 border-black shadow-lg">
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-2">🌱</div>
+                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Дейности</h3>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">24 / 500</div>
+                <div className="text-sm text-gray-600">цели за годината</div>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
+                <div 
+                  className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
+                  style={{width: '4.8%'}}
+                ></div>
+              </div>
+              <div className="text-center text-xs text-gray-500 mt-2">Растем всеки ден!</div>
+            </div>
+
+            {/* Organizations Progress */}
+            <div className="bg-white rounded-3xl p-6 border-2 border-black shadow-lg">
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-2">🏫</div>
+                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Партньори</h3>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">12 / 200</div>
+                <div className="text-sm text-gray-600">цели за годината</div>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
+                <div 
+                  className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
+                  style={{width: '6%'}}
+                ></div>
+              </div>
+              <div className="text-center text-xs text-gray-500 mt-2">Качествени връзки</div>
+            </div>
+
+            {/* Families Progress */}
+            <div className="bg-white rounded-3xl p-6 border-2 border-black shadow-lg">
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-2">❤️</div>
+                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Семейства</h3>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">86 / 5000</div>
+                <div className="text-sm text-gray-600">цели за годината</div>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
+                <div 
+                  className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
+                  style={{width: '1.7%'}}
+                ></div>
+              </div>
+              <div className="text-center text-xs text-gray-500 mt-2">Общността расте!</div>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-            <div className="text-4xl font-bold text-green-600 mb-2">5000+</div>
-            <div className="text-gray-600 font-medium">Щастливи семейства</div>
+
+          <div className="text-center mt-8">
+            <div className="inline-flex items-center gap-3 bg-[#FFB1B1] px-6 py-3 rounded-3xl border-2 border-black">
+              <span className="text-2xl">🏔️</span>
+              <span className="font-bold text-[#1A1A1A]">Изкачваме планината заедно!</span>
+            </div>
           </div>
         </div>
 
