@@ -4,25 +4,32 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Digital Comic Color Palette */
+    --comic-forest: #2D5A27;      /* Deep Forest Green - Primary */
+    --comic-cream: #FDF6EC;       /* Creamy Sand - Secondary */  
+    --comic-coral: #FFB1B1;       /* Soft Coral - Accent */
+    --comic-ink: #1A1A1A;         /* Ink Black - Text */
+    
+    /* Updated Design System Colors */
+    --background: 252 248 228;      /* FDF6EC - Creamy Sand */
+    --foreground: 0 0% 10%;         /* 1A1A1A - Ink Black */
+    --card: 0 0% 100%;              /* White cards */
+    --card-foreground: 0 0% 10%;    /* Ink Black text */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 117 36% 25%;         /* 2D5A27 - Forest Green */  
+    --primary-foreground: 0 0% 98%; /* White text on green */
+    --secondary: 252 248 228;       /* FDF6EC - Cream */
+    --secondary-foreground: 0 0% 10%; 
+    --muted: 252 248 228;           /* FDF6EC - Cream */
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 70% 85%;            /* FFB1B1 - Soft Coral */
+    --accent-foreground: 0 0% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
+    --border: 0 0% 10%;             /* Black borders for comic look */
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 117 36% 25%;            /* Forest green focus rings */
   }
 
   .dark {
@@ -48,12 +55,14 @@
   }
   
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Quicksand', system-ui, sans-serif;
     scroll-behavior: smooth;
   }
   
   body {
     @apply bg-background text-foreground antialiased;
+    background-color: #FDF6EC; /* Creamy Sand background */
+    color: #1A1A1A; /* Ink Black text */
   }
 }
 
@@ -70,6 +79,52 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  
+  /* Comic Style Components */
+  .comic-card {
+    @apply bg-white rounded-3xl border border-solid border-black shadow-lg;
+    box-shadow: 4px 4px 0px rgba(26, 26, 26, 0.1);
+  }
+  
+  .comic-button {
+    @apply bg-[#2D5A27] text-white font-medium rounded-3xl border-2 border-black transition-all duration-200;
+    box-shadow: 3px 3px 0px rgba(26, 26, 26, 0.8);
+  }
+  
+  .comic-button:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px rgba(26, 26, 26, 0.8);
+  }
+  
+  .comic-button:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+  }
+  
+  .comic-navbar {
+    @apply bg-white/80 backdrop-blur-md border border-black rounded-3xl;
+    box-shadow: 0px 4px 12px rgba(26, 26, 26, 0.1);
+  }
+  
+  .comic-hero-title {
+    @apply text-6xl md:text-7xl font-bold text-[#1A1A1A] leading-tight;
+    text-shadow: 3px 3px 0px #FFB1B1;
+  }
+  
+  .comic-accent {
+    @apply text-[#2D5A27] relative;
+  }
+  
+  .comic-accent::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #FFB1B1;
+    border-radius: 2px;
   }
 }
 
