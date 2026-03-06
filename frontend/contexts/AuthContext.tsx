@@ -56,10 +56,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       const response = await authAPI.login({ email, password });
-      const { access_token } = response.data;
+      const { access_token, refresh_token } = response.data;
       
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', access_token);
+        if (refresh_token) {
+          localStorage.setItem('refresh_token', refresh_token);
+        }
       }
       
       // Decode token to get user info
@@ -67,26 +70,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const userData: User = {
         id: payload.sub || 'unknown',
-        email: email,
+        email: payload.sub || email,
         role: payload.role || 'parent', // Get role from JWT token
         created_at: new Date().toISOString(),
       };
       
       setUser(userData);
+      console.log('🔐 Secure login successful:', userData.email, 'Role:', userData.role);
     } catch (error: any) {
+      console.error('🚨 Login failed:', error.response?.data?.detail || error.message);
       throw new Error(error.response?.data?.detail || 'Login failed');
     }
   };
 
   const register = async (email: string, password: string, role: string) => {
     try {
-      console.log('🔥 REGISTRATION: Calling authAPI.register with emergency endpoint');
+      console.log('🔐 SECURE REGISTRATION: Calling secure auth endpoint');
       await authAPI.register({ email, password, role });
-      console.log('✅ REGISTRATION: Success!');
+      console.log('✅ SECURE REGISTRATION: Success!');
       // After registration, automatically log in
       await login(email, password);
     } catch (error: any) {
-      console.error('❌ REGISTRATION ERROR:', error);
+      console.error('🚨 REGISTRATION ERROR:', error);
       throw new Error(error.response?.data?.detail || 'Registration failed');
     }
   };
@@ -94,8 +99,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
     }
     setUser(null);
+    console.log('🔐 Secure logout completed');
   };
 
   const isParent = user?.role === 'parent';

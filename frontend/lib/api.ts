@@ -11,14 +11,24 @@ const api = axios.create({
 
 export const authAPI = {
   login: (data: any) => {
-    console.log('🔥 LOGIN: Calling', API_URL + '/api/emergency/login');
-    return api.post('/api/emergency/login', data);
+    console.log('🔐 SECURE LOGIN: Calling', API_URL + '/api/auth/login');
+    return api.post('/api/auth/login', data);
   },
   register: (data: any) => {
-    console.log('🔥 REGISTER: Calling', API_URL + '/api/emergency/register');
-    return api.post('/api/emergency/register', data);
+    console.log('🔐 SECURE REGISTER: Calling', API_URL + '/api/auth/register');
+    return api.post('/api/auth/register', data);
   },
-  me: () => api.get('/api/auth/me'),
+  me: () => {
+    const token = localStorage.getItem('token');
+    return api.get('/api/auth/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  },
+  refresh: (refreshToken: string) => {
+    return api.post('/api/auth/refresh', { refresh_token: refreshToken });
+  },
 };
 
 // Emergency schools API
@@ -85,17 +95,31 @@ export const emergencyAPI = {
   activities: () => fetch(`${API_URL}/api/emergency/activities`).then(r => r.json()),
 };
 
-// ADMIN API - Real backend integration  
+// ADMIN API - Secure backend integration with auth headers
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 export const adminAPI = {
-  getStats: () => api.get('/api/admin/stats'),
-  getPendingSchools: () => api.get('/api/admin/schools/pending'),
-  getAllSchools: (params?: any) => api.get('/api/admin/schools', { params }),
+  getStats: () => api.get('/api/admin/stats', { headers: getAuthHeaders() }),
+  getPendingSchools: () => api.get('/api/admin/schools/pending', { headers: getAuthHeaders() }),
+  getAllSchools: (params?: any) => api.get('/api/admin/schools', { params, headers: getAuthHeaders() }),
   approveSchool: (schoolId: string, approval: { status: string }) => 
-    api.put(`/api/admin/schools/${schoolId}/approve`, approval),
-  getAllActivities: (params?: any) => api.get('/api/admin/activities', { params }),
+    api.put(`/api/admin/schools/${schoolId}/approve`, approval, { headers: getAuthHeaders() }),
+  getAllActivities: (params?: any) => api.get('/api/admin/activities', { params, headers: getAuthHeaders() }),
   verifyActivity: (activityId: string, verified: boolean = true) => 
-    api.put(`/api/admin/activities/${activityId}/verify`, { verified }),
-  getAllLeads: (params?: any) => api.get('/api/admin/leads', { params }),
+    api.put(`/api/admin/activities/${activityId}/verify`, { verified }, { headers: getAuthHeaders() }),
+  getAllLeads: (params?: any) => api.get('/api/admin/leads', { params, headers: getAuthHeaders() }),
+};
+
+// ADMIN SETUP API - One-time setup for master admin
+export const adminSetupAPI = {
+  createMasterAdmin: (data: { email: string; password: string; confirm_password: string }) =>
+    api.post('/api/admin-setup/create-master-admin', data),
+  resetMasterPassword: (data: { email: string; password: string; confirm_password: string }) =>
+    api.post('/api/admin-setup/reset-master-password', data),
+  getStatus: () => api.get('/api/admin-setup/status'),
 };
 
 // Legacy compatibility

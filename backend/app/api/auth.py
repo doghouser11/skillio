@@ -52,9 +52,9 @@ def login(login_data: LoginRequest, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Create tokens
-    access_token = create_access_token(data={"sub": user.email})
-    refresh_token = create_refresh_token(data={"sub": user.email})
+    # Create tokens with role information
+    access_token = create_access_token(data={"sub": user.email, "role": user.role.value})
+    refresh_token = create_refresh_token(data={"sub": user.email, "role": user.role.value})
     
     # Store refresh token in database
     user.refresh_token = refresh_token
@@ -87,9 +87,9 @@ def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
                 detail="Invalid refresh token"
             )
         
-        # Create new tokens
-        new_access_token = create_access_token(data={"sub": user.email})
-        new_refresh_token = create_refresh_token(data={"sub": user.email})
+        # Create new tokens with role information
+        new_access_token = create_access_token(data={"sub": user.email, "role": user.role.value})
+        new_refresh_token = create_refresh_token(data={"sub": user.email, "role": user.role.value})
         
         # Update stored refresh token
         user.refresh_token = new_refresh_token
