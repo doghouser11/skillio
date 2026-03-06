@@ -114,7 +114,7 @@ class Activity(Base):
     category = Column(String, nullable=False)
     age_min = Column(Integer, nullable=False)
     age_max = Column(Integer, nullable=False)
-    price_monthly = Column(Float)
+    price_monthly = Column(String)  # Changed from Float to String for flexible pricing
     active = Column(Boolean, default=True)
     verified = Column(Boolean, default=False)
     created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)

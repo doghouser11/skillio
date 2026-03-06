@@ -160,6 +160,7 @@ export default function SubmitActivityPage() {
             <li>• Помогнете на други родители да открият качествени дейности</li>
             <li>• Подкрепете местните училища и преподаватели</li>
             <li>• Създайте по-силна общност за деца в България</li>
+            <li>• Имейл и телефон са незадължителни - споделете колкото информация имате</li>
           </ul>
         </div>
 
@@ -257,7 +258,7 @@ export default function SubmitActivityPage() {
                     value={formData.price_monthly}
                     onChange={handleInputChange}
                     className="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="напр. 80"
+                    placeholder="напр. 80-120 лв, По договаряне, Безплатно"
                   />
                 </div>
               </div>
@@ -289,7 +290,7 @@ export default function SubmitActivityPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Телефон *
+                    Телефон
                   </label>
                   <input
                     type="tel"
@@ -298,12 +299,11 @@ export default function SubmitActivityPage() {
                     onChange={handleInputChange}
                     className="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="напр. +359888123456"
-                    required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Имейл *
+                    Имейл
                   </label>
                   <input
                     type="email"
@@ -312,7 +312,6 @@ export default function SubmitActivityPage() {
                     onChange={handleInputChange}
                     className="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="напр. info@school.bg"
-                    required
                   />
                 </div>
               </div>

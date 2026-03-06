@@ -195,7 +195,7 @@ def emergency_activities():
             "description": "Професионални тенис уроци с модерно оборудване за деца от 4 до 14 години",
             "age_min": 4,
             "age_max": 14,
-            "price_monthly": 150.0,
+            "price_monthly": "150 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -211,7 +211,7 @@ def emergency_activities():
             "description": "Футболно обучение по системата на ПФК Левски за момчета и момичета",
             "age_min": 5,
             "age_max": 16,
-            "price_monthly": 120.0,
+            "price_monthly": "120 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -227,7 +227,7 @@ def emergency_activities():
             "description": "Безопасно обучение по плуване с топла вода за деца и бебета",
             "age_min": 1,
             "age_max": 18,
-            "price_monthly": 100.0,
+            "price_monthly": "100 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -243,7 +243,7 @@ def emergency_activities():
             "description": "Развитие на скорост, сила и координация чрез игри и тренировки",
             "age_min": 6,
             "age_max": 14,
-            "price_monthly": 90.0,
+            "price_monthly": "90 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -259,7 +259,7 @@ def emergency_activities():
             "description": "Тенис уроци за деца в красивата природна среда на Борисовата градина",
             "age_min": 3,
             "age_max": 16,
-            "price_monthly": 140.0,
+            "price_monthly": "140 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -271,11 +271,11 @@ def emergency_activities():
         {
             "id": "real-activity-6",
             "title": "Модерни танци за деца",
-            "category": "Танци",
+            "category": "Танци", 
             "description": "Динамични танци за развитие на координацията, ритъм и увереност",
             "age_min": 3,
             "age_max": 15,
-            "price_monthly": 90.0,
+            "price_monthly": "80-120 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -291,7 +291,7 @@ def emergency_activities():
             "description": "Танци и движение за най-малките в забавна и творческа атмосфера",
             "age_min": 2,
             "age_max": 15,
-            "price_monthly": 85.0,
+            "price_monthly": "85 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -307,7 +307,7 @@ def emergency_activities():
             "description": "Cambridge сертификати с native преподаватели в малки групи",
             "age_min": 7,
             "age_max": 18,
-            "price_monthly": 130.0,
+            "price_monthly": "130 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -323,7 +323,7 @@ def emergency_activities():
             "description": "Роботика с LEGO Education за развитие на логика и STEM умения",
             "age_min": 6,
             "age_max": 11,
-            "price_monthly": 160.0,
+            "price_monthly": "160 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -339,7 +339,7 @@ def emergency_activities():
             "description": "Програмиране, 3D моделиране и инженерство за бъдещето",
             "age_min": 6,
             "age_max": 16,
-            "price_monthly": 170.0,
+            "price_monthly": "170 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -355,7 +355,7 @@ def emergency_activities():
             "description": "Музикално образование с пиано, китара, пеене и солфеж от ранна възраст",
             "age_min": 3,
             "age_max": 16,
-            "price_monthly": 110.0,
+            "price_monthly": "110 лв",
             "active": True,
             "verified": True,
             "school": {
@@ -371,7 +371,7 @@ def emergency_activities():
             "description": "Творчество чрез рисуване и керамика с различни техники и материали",
             "age_min": 6,
             "age_max": 16,
-            "price_monthly": 85.0,
+            "price_monthly": "По договаряне",
             "active": True,
             "verified": True,
             "school": {

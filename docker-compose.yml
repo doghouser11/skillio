@@ -20,7 +20,7 @@ services:
       dockerfile: backend/Dockerfile
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://admin_skillio:m3TFDKicG40ftJ1zY6rZTQpIbEw3sV9lqVYPwsAJTn1Qa3ujuxx6QeBQqQBy4oaN@database_skillio:5432/activities_db
+      DATABASE_URL: postgresql://postgres:YOnWXWdCRPRG3dQQ@db.hulqbgfllkxjfnmgjupq.supabase.co:5432/postgres
     depends_on:
       - database_skillio
     networks:

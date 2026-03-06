@@ -108,7 +108,7 @@ class ActivityCreate(BaseModel):
     category: str
     age_min: int
     age_max: int
-    price_monthly: Optional[float] = None
+    price_monthly: Optional[str] = None  # Changed to string for flexible pricing (e.g., "50-100 лв", "По договаряне")
     source: ActivitySource
 
 
@@ -120,7 +120,7 @@ class ActivityResponse(BaseModel):
     category: str
     age_min: int
     age_max: int
-    price_monthly: Optional[float] = None
+    price_monthly: Optional[str] = None  # Changed to string for flexible pricing (e.g., "50-100 лв", "По договаряне")
     active: bool
     verified: bool
     created_by: uuid.UUID
