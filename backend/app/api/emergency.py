@@ -410,13 +410,18 @@ def emergency_login(user: EmergencyLogin):
     # If user doesn't exist, create them automatically
     if user.email not in emergency_users:
         password_hash = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt()).decode()
+        
+        # Admin users (special emails get admin role)
+        admin_emails = ["admin@skillio.live", "kirchev@gmail.com", "admin@test.bg"]
+        role = "admin" if user.email in admin_emails else "parent"
+        
         emergency_users[user.email] = {
             "id": str(uuid.uuid4()),
             "email": user.email,
             "password_hash": password_hash,
-            "role": "parent"  # Default role
+            "role": role
         }
-        print(f"🆕 AUTO-CREATED user: {user.email}")
+        print(f"🆕 AUTO-CREATED user: {user.email} (role: {role})")
         
     stored_user = emergency_users[user.email]
     

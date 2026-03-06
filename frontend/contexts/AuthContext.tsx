@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser({
           id: payload.sub || 'unknown',
           email: payload.sub || 'unknown',
-          role: 'parent', // Default role, should come from backend
+          role: payload.role || 'parent', // Get role from JWT token
           created_at: new Date().toISOString(),
         });
       } catch (error) {
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userData: User = {
         id: payload.sub || 'unknown',
         email: email,
-        role: 'parent', // Default, should come from backend
+        role: payload.role || 'parent', // Get role from JWT token
         created_at: new Date().toISOString(),
       };
       
