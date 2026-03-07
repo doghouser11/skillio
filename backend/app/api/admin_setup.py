@@ -44,6 +44,13 @@ def create_master_admin(admin_data: MasterAdminCreate, db: Session = Depends(get
             detail="Password must be at least 12 characters long for security"
         )
     
+    # Bcrypt limit check
+    if len(admin_data.password.encode('utf-8')) > 72:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password cannot be longer than 72 bytes"
+        )
+    
     # Only allow the specified master admin email
     if admin_data.email != "nikol_bg_93@proton.me":
         raise HTTPException(
@@ -106,6 +113,13 @@ def reset_master_admin_password(admin_data: MasterAdminCreate, db: Session = Dep
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Password must be at least 12 characters long for security"
+        )
+    
+    # Bcrypt limit check
+    if len(admin_data.password.encode('utf-8')) > 72:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password cannot be longer than 72 bytes"
         )
     
     # Find and update the master admin
