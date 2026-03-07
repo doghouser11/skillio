@@ -4,32 +4,24 @@
 
 @layer base {
   :root {
-    /* Digital Comic Color Palette */
-    --comic-forest: #2D5A27;      /* Deep Forest Green - Primary */
-    --comic-cream: #FDF6EC;       /* Creamy Sand - Secondary */  
-    --comic-coral: #FFB1B1;       /* Soft Coral - Accent */
-    --comic-ink: #1A1A1A;         /* Ink Black - Text */
+    /* Clean Minimalist Color Palette */
+    --primary-green: #2D5A27;      /* Main Green */
+    --light-gray: #f8f9fa;         /* Light Gray */
+    --white: #ffffff;              /* Pure White */
+    --dark-text: #1a1a1a;          /* Dark Text */
     
-    /* Updated Design System Colors */
-    --background: 252 248 228;      /* FDF6EC - Creamy Sand */
-    --foreground: 0 0% 10%;         /* 1A1A1A - Ink Black */
-    --card: 0 0% 100%;              /* White cards */
-    --card-foreground: 0 0% 10%;    /* Ink Black text */
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    --primary: 117 36% 25%;         /* 2D5A27 - Forest Green */  
-    --primary-foreground: 0 0% 98%; /* White text on green */
-    --secondary: 252 248 228;       /* FDF6EC - Cream */
+    /* Design System Colors */
+    --background: 248 249 250;      /* Light Gray Background */
+    --foreground: 0 0% 10%;         /* Dark Text */
+    --card: 0 0% 100%;              /* White Cards */
+    --card-foreground: 0 0% 10%;    /* Dark Text on Cards */
+    --primary: 117 36% 25%;         /* Green Primary */  
+    --primary-foreground: 0 0% 98%; /* White on Green */
+    --secondary: 248 249 250;       /* Light Gray */
     --secondary-foreground: 0 0% 10%; 
-    --muted: 252 248 228;           /* FDF6EC - Cream */
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 70% 85%;            /* FFB1B1 - Soft Coral */
-    --accent-foreground: 0 0% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 0 0% 10%;             /* Black borders for comic look */
-    --input: 214.3 31.8% 91.4%;
-    --ring: 117 36% 25%;            /* Forest green focus rings */
+    --border: 0 0% 90%;             /* Light Borders */
+    --input: 0 0% 96%;              /* Input Background */
+    --ring: 117 36% 25%;            /* Green Focus */
   }
 
   .dark {
@@ -61,8 +53,8 @@
   
   body {
     @apply bg-background text-foreground antialiased;
-    background-color: #FDF6EC; /* Creamy Sand background */
-    color: #1A1A1A; /* Ink Black text */
+    background-color: #f8f9fa; /* Light Gray Background */
+    color: #1a1a1a; /* Dark Text */
   }
 }
 
@@ -81,23 +73,20 @@
     overflow: hidden;
   }
   
-  /* Comic Style Components */
-  .comic-card {
-    @apply bg-white rounded-3xl border border-solid border-black shadow-lg;
-    box-shadow: 4px 4px 0px rgba(26, 26, 26, 0.1);
+  /* Clean Style Components */
+  .clean-card {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm;
   }
   
-  .comic-button {
-    @apply bg-[#2D5A27] text-white font-medium rounded-3xl border-2 border-black transition-all duration-200;
-    box-shadow: 3px 3px 0px rgba(26, 26, 26, 0.8);
+  .clean-button {
+    @apply bg-[#2D5A27] text-white font-medium rounded-lg px-6 py-3 transition-colors duration-200;
   }
   
-  .comic-button:hover {
-    transform: translate(1px, 1px);
-    box-shadow: 2px 2px 0px rgba(26, 26, 26, 0.8);
+  .clean-button:hover {
+    @apply bg-[#234a1f];
   }
   
-  .comic-button:active {
+  .clean-button:active {
     transform: translate(3px, 3px);
     box-shadow: none;
   }

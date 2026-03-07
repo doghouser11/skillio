@@ -46,21 +46,11 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="min-h-screen max-w-full overflow-x-hidden" style={{backgroundColor: '#FDF6EC'}}>
-      {/* Hero Section - Digital Comic Style */}
-      <div className="text-center pt-16 md:pt-20 pb-16 md:pb-24 px-4 md:px-6 relative overflow-hidden">
-        {/* Background Decorative Elements - Hidden on mobile */}
-        <div className="absolute inset-0 pointer-events-none hidden md:block">
-          <div className="absolute top-20 left-10">
-            <Sparkles className="w-8 h-8 text-[#FFB1B1] stroke-2" />
-          </div>
-          <div className="absolute top-40 right-16">
-            <Target className="w-12 h-12 text-[#2D5A27] stroke-2" />
-          </div>
-          <div className="absolute bottom-40 left-20">
-            <Zap className="w-10 h-10 text-[#FFB1B1] stroke-2" />
-          </div>
-        </div>
+    <div className="min-h-screen max-w-full overflow-x-hidden bg-gray-50">
+      {/* Hero Section - Clean Style */}
+      <div className="text-center pt-16 md:pt-20 pb-16 md:pb-24 px-4 md:px-6 bg-white">
+        
+        
         
         <div className="max-w-4xl mx-auto relative z-10">
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold text-[#1A1A1A] leading-tight mb-8">
@@ -82,15 +72,15 @@ export default async function HomePage() {
           <div className="flex flex-col gap-4 md:flex-row md:gap-6 justify-center items-center mb-12 md:mb-16">
             <Link
               href="/activities"
-              className="comic-button w-full md:w-auto px-8 md:px-12 py-4 md:py-6 text-lg md:text-xl font-semibold text-center"
+              className="clean-button w-full md:w-auto px-8 py-3 text-lg font-semibold text-center"
             >
-              🚀 Започнете сега
+              Започнете сега
             </Link>
             <Link
               href="/schools"
-              className="w-full md:w-auto text-[#2D5A27] hover:text-[#1A1A1A] px-6 md:px-8 py-4 md:py-6 text-lg md:text-xl font-semibold transition-all duration-300 text-center border-2 border-[#2D5A27] rounded-3xl hover:bg-[#2D5A27] hover:text-white"
+              className="w-full md:w-auto text-[#2D5A27] hover:text-white bg-white border-2 border-[#2D5A27] px-6 py-3 text-lg font-semibold transition-colors duration-200 text-center rounded-lg hover:bg-[#2D5A27]"
             >
-              👩‍🏫 Вижте организации
+              Вижте организации
             </Link>
           </div>
           
@@ -112,7 +102,7 @@ export default async function HomePage() {
         </div>
 
         {/* Featured Activities */}
-        {activities.length > 0 && (
+        {activities.length > 0 ? (
           <div className="mb-16 md:mb-20 px-4 md:px-6">
             <h2 className="text-3xl md:text-5xl font-semibold text-[#1A1A1A] mb-8 md:mb-12 text-center">
               🌟 Популярни дейности
@@ -122,7 +112,7 @@ export default async function HomePage() {
                 <Link 
                   key={activity.id} 
                   href={`/activities/${activity.id}`}
-                  className="comic-card p-8 hover:shadow-xl transition-all duration-300 block relative group hover:-translate-y-2"
+                  className="clean-card p-6 hover:shadow-md transition-all duration-200 block relative group"
                 >
                   {/* Heart Icon */}
                   <div className="absolute top-6 right-6">
@@ -159,10 +149,21 @@ export default async function HomePage() {
             <div className="mt-12 text-center">
               <Link 
                 href="/activities"
-                className="comic-button px-10 py-4 text-xl font-semibold inline-flex items-center gap-3"
+                className="clean-button px-10 py-4 text-xl font-semibold"
               >
-                Вижте всички дейности <Sparkles className="w-6 h-6" />
+                Вижте всички дейности
               </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-16 md:mb-20 px-4 md:px-6">
+            <div className="clean-card p-12 text-center max-w-2xl mx-auto">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                В момента няма активни дейности
+              </h2>
+              <p className="text-gray-600 text-lg">
+                Бъдете първи и добавете вашата дейност!
+              </p>
             </div>
           </div>
         )}
@@ -175,7 +176,7 @@ export default async function HomePage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
               {featuredSchools.slice(0, 6).map((school: any) => (
-                <div key={school.id} className="comic-card p-8 hover:shadow-xl transition-all duration-300 relative group hover:-translate-y-2">
+                <div key={school.id} className="clean-card p-6 hover:shadow-md transition-all duration-200 relative group">
                   {/* Heart Icon */}
                   <div className="absolute top-6 right-6">
                     <Heart className="w-6 h-6 text-[#FFB1B1] group-hover:fill-current transition-all duration-200" />
@@ -248,22 +249,20 @@ export default async function HomePage() {
                   </div>
                   
                   {/* Action buttons */}
-                  <div className="flex space-x-3">
-                    <Link
-                      href={`/schools/${school.id}`}
-                      className="flex-1 bg-[#FFB1B1] hover:bg-[#ff9999] text-[#1A1A1A] px-4 py-3 rounded-3xl text-base font-bold transition-colors text-center border-2 border-black"
-                    >
-                      Детайли
-                    </Link>
-                    {school.website && (
+                  <div className="flex justify-center">
+                    {school.website ? (
                       <a
                         href={school.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 bg-[#2D5A27] hover:bg-[#1f3d1a] text-white px-4 py-3 rounded-3xl text-base font-bold transition-colors text-center border-2 border-black"
+                        className="clean-button px-6 py-3 text-base font-semibold"
                       >
-                        Сайт
+                        Посети сайт
                       </a>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        Няма налична информация
+                      </div>
                     )}
                   </div>
                 </div>

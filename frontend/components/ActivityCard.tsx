@@ -91,7 +91,7 @@ export default function ActivityCard({ activity }: ActivityCardProps) {
           </span>
           {activity.price_monthly && (
             <span className="ml-4 text-sm font-medium text-green-600">
-              ${activity.price_monthly}/month
+              {activity.price_monthly}€/мес
             </span>
           )}
         </div>
