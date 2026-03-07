@@ -28,7 +28,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def get_password_hash(password: str) -> str:
     """Hash a password."""
-    return pwd_context.hash(password[:72])
+    # Гарантираме, че подаваме чист низ и го режем до 72 символа за безопасност
+    safe_password = str(password)[:72]
+    return pwd_context.hash(safe_password)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
