@@ -60,7 +60,7 @@ def create_master_admin(admin_data: MasterAdminCreate, db: Session = Depends(get
         )
     
     # Create master admin user
-    hashed_password = get_password_hash(admin_data.password[:72])
+    hashed_password = get_password_hash(admin_data.password)
     master_admin = User(
         id=uuid.uuid4(),
         email=admin_data.email,
@@ -121,7 +121,7 @@ def reset_master_admin_password(admin_data: MasterAdminCreate, db: Session = Dep
         )
     
     # Update password
-    master_admin.password_hash = get_password_hash(admin_data.password[:72])
+    master_admin.password_hash = get_password_hash(admin_data.password)
     db.commit()
     
     return {
