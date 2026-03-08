@@ -103,7 +103,6 @@ def create_school(
         website=school_data.website,
         city=school_data.city,
         address=school_data.address,
-        neighborhood_id=school_data.neighborhood_id,
         lat=school_data.lat,
         lng=school_data.lng,
         created_by=current_user.id,

@@ -72,7 +72,7 @@ class School(Base):
     website = Column(String)  # External website URL
     city = Column(String, nullable=False)
     address = Column(String)
-    neighborhood_id = Column(UUID(as_uuid=True), ForeignKey("neighborhoods.id"))
+    # neighborhood_id = Column(UUID(as_uuid=True), ForeignKey("neighborhoods.id"))
     lat = Column(Float)
     lng = Column(Float)
     verified = Column(Boolean, default=False)  # Legacy field, use status instead
