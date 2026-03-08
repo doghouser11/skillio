@@ -17,21 +17,22 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=UserResponse)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    """Register a new user — simplified with error logging."""
+    """Register a new user."""
     try:
+        print(f"DEBUG: Registering user {user_data.email}")
+        
         if db.query(User).filter(User.email == user_data.email).first():
             raise HTTPException(status_code=400, detail="Email already registered")
         
-        hashed = get_password_hash(user_data.password)
-        print(f"🔐 REGISTER: email={user_data.email}, role={user_data.role.value}, hash_len={len(hashed) if hashed else 'NULL'}")
         db_user = User(
             email=user_data.email,
-            password_hash=hashed,
-            role=user_data.role
+            password_hash=get_password_hash(user_data.password),
+            role=str(user_data.role.value)  # plain string: 'parent'
         )
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
+        print(f"DEBUG: User {user_data.email} registered OK")
         return db_user
     except HTTPException:
         raise
