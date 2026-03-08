@@ -5,6 +5,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timedelta
 from app.database.base import get_db
+from app.api.schools import school_to_dict
 from app.schemas.schemas import (
     UserResponse, SchoolResponse, SchoolApproval, 
     ActivityResponse, LeadResponse
@@ -115,7 +116,7 @@ def get_user_details(
 
 
 # School Approval Management  
-@router.get("/schools/pending", response_model=List[SchoolResponse])
+@router.get("/schools/pending", )
 def get_pending_schools(
     current_admin: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
@@ -124,10 +125,10 @@ def get_pending_schools(
     schools = db.query(School).filter(
         School.status == SchoolStatus.PENDING
     ).order_by(School.created_at).all()
-    return schools
+    return [school_to_dict(s) for s in schools]
 
 
-@router.get("/schools", response_model=List[SchoolResponse])
+@router.get("/schools", )
 def get_all_schools(
     status: Optional[SchoolStatus] = Query(None),
     limit: int = Query(50, le=100),
@@ -142,7 +143,7 @@ def get_all_schools(
         query = query.filter(School.status == status)
         
     schools = query.offset(offset).limit(limit).all()
-    return schools
+    return [school_to_dict(s) for s in schools]
 
 
 @router.put("/schools/{school_id}/approve")

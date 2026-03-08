@@ -11,7 +11,19 @@ from app.core.auth import get_current_user, get_current_school, get_current_admi
 router = APIRouter(prefix="/schools", tags=["Schools"])
 
 
-@router.get("/featured", response_model=List[SchoolResponse])
+def school_to_dict(s):
+    return {
+        "id": str(s.id), "name": s.name, "description": s.description,
+        "phone": s.phone, "email": s.email, "website": s.website,
+        "city": s.city, "address": s.address, "neighborhood": getattr(s, 'neighborhood', None),
+        "lat": s.lat, "lng": s.lng, "verified": s.verified,
+        "status": s.status.value if s.status else "PENDING",
+        "created_by": str(s.created_by) if s.created_by else None,
+        "created_at": str(s.created_at) if s.created_at else None,
+    }
+
+
+@router.get("/featured", )
 def get_featured_schools(
     limit: int = Query(6, le=20),
     db: Session = Depends(get_db)
@@ -37,7 +49,7 @@ def get_featured_schools(
             school.average_rating = None
             school.review_count = 0
         
-        return schools
+        return [school_to_dict(s) for s in schools]
         
     except Exception as e:
         # Fallback: return any schools if filtering fails
@@ -48,10 +60,10 @@ def get_featured_schools(
             school.average_rating = None 
             school.review_count = 0
             
-        return schools
+        return [school_to_dict(s) for s in schools]
 
 
-@router.get("/", response_model=List[SchoolResponse])
+@router.get("/", )
 def get_schools(
     city: Optional[str] = Query(None),
     neighborhood_id: Optional[uuid.UUID] = Query(None),
@@ -72,10 +84,10 @@ def get_schools(
         query = query.filter(School.verified == True)
     
     schools = query.all()
-    return schools
+    return [school_to_dict(s) for s in schools]
 
 
-@router.get("/{school_id}", response_model=SchoolResponse)
+@router.get("/{school_id}", )
 def get_school(school_id: uuid.UUID, db: Session = Depends(get_db)):
     """Get a specific school."""
     school = db.query(School).filter(School.id == school_id).first()
@@ -84,7 +96,7 @@ def get_school(school_id: uuid.UUID, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="School not found"
         )
-    return school
+    return school_to_dict(school)
 
 
 @router.post("/")
@@ -116,7 +128,7 @@ def create_school(
     return {"id": str(db_school.id), "name": db_school.name, "city": db_school.city, "status": "pending"}
 
 
-@router.get("/my/school", response_model=SchoolResponse)
+@router.get("/my/school", )
 def get_my_school(
     current_user: User = Depends(get_current_school),
     db: Session = Depends(get_db)
@@ -128,7 +140,7 @@ def get_my_school(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="School not found"
         )
-    return school
+    return school_to_dict(school)
 
 
 @router.put("/{school_id}/verify")
@@ -180,4 +192,4 @@ def update_school(
     db.commit()
     db.refresh(school)
     
-    return school
+    return school_to_dict(school)
