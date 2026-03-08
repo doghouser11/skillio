@@ -20,7 +20,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/activities" className="text-gray-600 hover:text-green-700 text-sm font-medium">Дейности</Link>
             <Link href="/schools" className="text-gray-600 hover:text-green-700 text-sm font-medium">Организации</Link>
-            <Link href="/about" className="text-gray-600 hover:text-green-700 text-sm font-medium">За нас</Link>
+            <Link href="/about" className="text-gray-600 hover:text-green-700 text-sm font-medium">Защо?</Link>
           </div>
 
           {/* User area */}
@@ -48,6 +48,7 @@ export default function Navbar() {
         <div className="md:hidden border-t border-gray-100 py-2 flex justify-center space-x-6">
           <Link href="/activities" className="text-gray-600 hover:text-green-700 text-sm font-medium">Дейности</Link>
           <Link href="/schools" className="text-gray-600 hover:text-green-700 text-sm font-medium">Организации</Link>
+          <Link href="/about" className="text-gray-600 hover:text-green-700 text-sm font-medium">Защо?</Link>
           {user && isParent && <Link href="/add-organization" className="text-green-700 text-sm font-medium">➕ Добави</Link>}
           {user && <Link href="/profile/settings" className="text-gray-600 text-sm font-medium">⚙️ Профил</Link>}
         </div>
