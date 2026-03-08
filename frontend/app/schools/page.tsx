@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+const API = 'https://api.skillio.live';
 
 const CATEGORIES = [
   { name: 'Всички', slug: '' },

@@ -47,7 +47,7 @@ export function RatingSystem({
     
     setSubmitting(true)
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live'
+      const API = 'https://api.skillio.live'
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
       const res = await fetch(`${API}/api/reviews`, {
         method: 'POST',

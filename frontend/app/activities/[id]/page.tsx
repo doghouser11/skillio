@@ -42,7 +42,7 @@ export default function ActivityDetailsPage() {
     const fetchActivity = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/activities/${activityId}`)
+        const response = await fetch(`https://api.skillio.live/api/activities/${activityId}`)
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)

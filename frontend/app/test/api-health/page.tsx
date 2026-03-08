@@ -16,7 +16,7 @@ export default function APIHealthTestPage() {
     results: any[]
   } | null>(null)
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live'
+  const API_BASE_URL = 'https://api.skillio.live'
 
   const runQuickPing = async () => {
     setLoading(true)

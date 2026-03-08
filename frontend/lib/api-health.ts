@@ -23,7 +23,7 @@ interface APIStatus {
   }
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live'
+const API_BASE_URL = 'https://api.skillio.live'
 
 /**
  * Check if a single endpoint is accessible

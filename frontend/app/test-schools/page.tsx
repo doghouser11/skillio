@@ -14,7 +14,7 @@ export default function TestSchoolsPage() {
       try {
         console.log('🔥 TEST: Calling emergency schools endpoint...');
         
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+        const API_URL = 'https://api.skillio.live';
         const response = await fetch(`${API_URL}/api/emergency/schools`, {
           headers: { 'Accept': 'application/json' }
         });
@@ -79,7 +79,7 @@ export default function TestSchoolsPage() {
       <div className="mt-8 p-4 bg-gray-50 rounded">
         <h3 className="font-semibold mb-2">Debug Info:</h3>
         <pre className="text-xs text-gray-600">
-          API URL: {process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live'}{'\n'}
+          API URL: {'https://api.skillio.live'}{'\n'}
           Endpoint: /api/emergency/schools{'\n'}
           Status: {loading ? 'Loading' : error ? 'Error' : 'Success'}{'\n'}
           Schools count: {data.length}

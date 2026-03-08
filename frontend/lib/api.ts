@@ -1,7 +1,7 @@
 // EMERGENCY API - Compatible with emergency backend endpoints
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+const API_URL = 'https://api.skillio.live';
 
 const api = axios.create({
   baseURL: API_URL,
