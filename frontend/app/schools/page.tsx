@@ -123,8 +123,13 @@ export default function SchoolsPage() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`${API}/api/emergency/schools`, { headers: { Accept: 'application/json' } });
-        if (res.ok) setSchools(await res.json());
+        const res = await fetch(`${API}/api/schools/`, { headers: { Accept: 'application/json' } });
+        if (res.ok) {
+          const data = await res.json();
+          // Sort newest first
+          data.sort((a: any, b: any) => (b.created_at || '').localeCompare(a.created_at || ''));
+          setSchools(data);
+        }
       } catch {} finally { setLoading(false); }
     })();
   }, []);
