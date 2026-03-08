@@ -22,9 +22,11 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
         if db.query(User).filter(User.email == user_data.email).first():
             raise HTTPException(status_code=400, detail="Email already registered")
         
+        hashed = get_password_hash(user_data.password)
+        print(f"🔐 REGISTER: email={user_data.email}, role={user_data.role.value}, hash_len={len(hashed) if hashed else 'NULL'}")
         db_user = User(
             email=user_data.email,
-            password_hash=get_password_hash(user_data.password),
+            password_hash=hashed,
             role=user_data.role
         )
         db.add(db_user)
