@@ -250,7 +250,7 @@ export default function SubmitActivityPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Цена (лв/месец)
+                    Цена (€/месец)
                   </label>
                   <input
                     type="text"
@@ -258,7 +258,7 @@ export default function SubmitActivityPage() {
                     value={formData.price_monthly}
                     onChange={handleInputChange}
                     className="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="напр. 80-120 лв, По договаряне, Безплатно"
+                    placeholder="напр. 80-120 €, По договаряне, Безплатно"
                   />
                 </div>
               </div>

@@ -1,259 +1,131 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-// Using emergency data instead of Supabase for now
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+
+const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+
+const CATEGORIES = [
+  { name: 'Всички', slug: '' },
+  { name: 'Спорт на открито', slug: 'outdoor-sports' },
+  { name: 'Закрит спорт', slug: 'indoor-sports' },
+  { name: 'Езици', slug: 'languages' },
+  { name: 'Природни науки', slug: 'science' },
+  { name: 'Изкуство', slug: 'art' },
+  { name: 'Музика и танци', slug: 'music-dance' },
+];
 
 interface School {
   id: string;
   name: string;
   description?: string;
   city: string;
-  address?: string;
   phone?: string;
   email?: string;
   website?: string;
   verified: boolean;
-  activities_count?: number;
+  category?: string;
 }
 
 export default function SchoolsPage() {
+  const searchParams = useSearchParams();
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState(searchParams.get('category') || '');
   const [cityFilter, setCityFilter] = useState('');
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    loadSchools();
   }, []);
-
-  useEffect(() => {
-    // Only load schools after component is mounted (client-side)
-    if (mounted) {
-      loadSchools();
-    }
-  }, [cityFilter, mounted]);
 
   const loadSchools = async () => {
     try {
-      console.log('🔍 Loading schools from emergency endpoint...');
-      setLoading(true);
-      
-      // Using emergency backend endpoint
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
-      const response = await fetch(`${API_URL}/api/emergency/schools`, {
-        headers: { 'Accept': 'application/json' }
-      });
-      
-      if (!response.ok) throw new Error('Failed to fetch schools');
-      
-      let schoolsData = await response.json();
-      
-      // Filter by city if needed
-      if (cityFilter) {
-        schoolsData = schoolsData.filter((school: School) => 
-          school.city.toLowerCase() === cityFilter.toLowerCase()
-        );
-      }
-      
-      console.log('✅ Schools loaded:', schoolsData);
-      setSchools(schoolsData);
-    } catch (error) {
-      console.error('❌ Error loading schools:', error);
-      setSchools([]);
-    } finally {
-      console.log('🏁 Loading complete');
-      setLoading(false);
-    }
+      const res = await fetch(`${API}/api/emergency/schools`, { headers: { Accept: 'application/json' } });
+      if (!res.ok) throw new Error('Failed');
+      setSchools(await res.json());
+    } catch { setSchools([]); }
+    finally { setLoading(false); }
   };
 
-  const cities = ['София', 'Пловдив', 'Варна', 'Бургас', 'Русе', 'Стара Загора', 'Плевен', 'Добрич'];
+  const filtered = schools.filter(s => {
+    if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
+    if (category && s.category !== category) return true; // TODO: match when schools have category field
+    return true;
+  });
 
-  // Prevent hydration mismatch - show loading on server
-  if (!mounted) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Партньорски организации
-          </h1>
-          <p className="text-xl text-gray-600">
-            Проверени образователни институции в цяла България
-          </p>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <div className="animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const cities = [...new Set(schools.map(s => s.city).filter(Boolean))].sort();
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-gray-500">Зареждане...</div>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Партньорски организации
-        </h1>
-        <p className="text-xl text-gray-600">
-          Проверени образователни институции в цяла България
-        </p>
-      </div>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">Организации</h1>
+      <p className="text-gray-600 mb-8">Проверени образователни институции в цяла България</p>
 
-      {/* City Filter */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-        <div className="flex items-center space-x-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Филтър по град:
-          </label>
-          <select
-            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            value={cityFilter}
-            onChange={(e) => setCityFilter(e.target.value)}
+      {/* Category pills */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {CATEGORIES.map(c => (
+          <button
+            key={c.slug}
+            onClick={() => setCategory(c.slug)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              category === c.slug ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
           >
-            <option value="">Всички градове</option>
-            {cities.map(city => (
-              <option key={city} value={city}>{city}</option>
-            ))}
-          </select>
-        </div>
+            {c.name}
+          </button>
+        ))}
       </div>
 
-      {/* Schools Grid */}
-      {loading ? (
+      {/* City filter */}
+      <div className="mb-8">
+        <select
+          className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          value={cityFilter}
+          onChange={e => setCityFilter(e.target.value)}
+        >
+          <option value="">Всички градове</option>
+          {cities.map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </div>
+
+      {/* Grid */}
+      {filtered.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <div className="animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-2/3 mb-4"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
+          {filtered.map(s => (
+            <div key={s.id} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between mb-3">
+                <h3 className="font-bold text-lg text-gray-900 line-clamp-2">{s.name}</h3>
+                {s.verified && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">✓ Проверено</span>}
               </div>
-            </div>
-          ))}
-        </div>
-      ) : schools.length > 0 ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {schools.map((school) => (
-            <div key={school.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="font-bold text-xl text-gray-900 line-clamp-2">
-                  {school.name}
-                </h3>
-                {school.verified && (
-                  <div className="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs ml-2">
-                    <span className="mr-1">✓</span>
-                    Проверено
-                  </div>
-                )}
+              {s.description && <p className="text-gray-600 text-sm mb-4 line-clamp-3">{s.description}</p>}
+              <div className="space-y-1 text-sm text-gray-500 mb-4">
+                <div>📍 {s.city}</div>
+                {s.phone && <div>📞 {s.phone}</div>}
+                {s.email && <div>✉️ {s.email}</div>}
               </div>
-
-              <div className="space-y-2 mb-4 text-sm text-gray-600">
-                <div className="flex items-center">
-                  <span className="mr-2">📍</span>
-                  <span>{school.city}</span>
-                  {school.address && <span>, {school.address}</span>}
-                </div>
-
-                {school.phone && (
-                  <div className="flex items-center">
-                    <span className="mr-2">📞</span>
-                    <span>{school.phone}</span>
-                  </div>
-                )}
-
-                {school.email && (
-                  <div className="flex items-center">
-                    <span className="mr-2">✉️</span>
-                    <span className="truncate">{school.email}</span>
-                  </div>
-                )}
-
-                {school.activities_count && (
-                  <div className="flex items-center">
-                    <span className="mr-2">🎯</span>
-                    <span>{school.activities_count} дейности</span>
-                  </div>
-                )}
-              </div>
-
-              {school.description && (
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {school.description}
-                </p>
+              {s.website && (
+                <a href={s.website} target="_blank" rel="noopener noreferrer"
+                  className="block w-full text-center bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg text-sm font-medium transition-colors">
+                  Посети сайт
+                </a>
               )}
-
-              <div className="space-y-2">
-                <button className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                  Виж дейности
-                </button>
-                
-                <div className="flex space-x-2">
-                  <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                    Контакт
-                  </button>
-                  
-                  {school.website && (
-                    <a
-                      href={school.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-center"
-                    >
-                      Сайт
-                    </a>
-                  )}
-                </div>
-              </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <div className="text-gray-400 text-6xl mb-4">🏫</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            Няма намерени организации
-          </h3>
-          <p className="text-gray-600 mb-6">
-            {cityFilter 
-              ? `Няма регистрирани организации в ${cityFilter}`
-              : 'Все още няма регистрирани организации'
-            }
-          </p>
-          <Link
-            href="/register?role=school"
-            className="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-          >
-            <span className="mr-2">🏫</span>
-            Регистрирайте организацията си
-          </Link>
+        <div className="text-center py-16 text-gray-500">
+          <div className="text-5xl mb-4">🏫</div>
+          <p className="text-lg">Няма намерени организации</p>
         </div>
       )}
 
-      {/* Call to action */}
-      <div className="mt-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl p-8 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">
-          Имате организация или организирате курсове?
-        </h2>
-        <p className="text-xl mb-6 opacity-90">
-          Присъединете се към нашата мрежа от партньори и достигнете до повече семейства.
-        </p>
-        <Link
-          href="/register?role=school"
-          className="inline-flex items-center bg-white text-blue-600 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
-        >
-          <span className="mr-2">🚀</span>
+      {/* CTA */}
+      <div className="mt-16 bg-green-700 rounded-2xl p-8 text-white text-center">
+        <h2 className="text-2xl font-bold mb-3">Имате организация?</h2>
+        <p className="mb-6 opacity-90">Присъединете се и достигнете до повече семейства.</p>
+        <Link href="/register?role=school" className="bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
           Започнете сега
         </Link>
       </div>

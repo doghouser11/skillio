@@ -91,6 +91,12 @@ export default function Navbar() {
                   </>
                 )}
                 
+                <Link
+                  href="/profile/settings"
+                  className="hidden sm:block text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 text-sm"
+                >
+                  ⚙️
+                </Link>
                 <button
                   onClick={logout}
                   className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 text-sm md:text-base"

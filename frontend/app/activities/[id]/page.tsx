@@ -145,7 +145,7 @@ export default function ActivityDetailsPage() {
                   {activity.price_monthly && (
                     <div className="text-right">
                       <div className="text-2xl font-bold text-green-600">
-                        {activity.price_monthly} лв.
+                        {activity.price_monthly} €
                       </div>
                       <div className="text-sm text-gray-500">месечно</div>
                     </div>

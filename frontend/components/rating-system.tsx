@@ -47,22 +47,21 @@ export function RatingSystem({
     
     setSubmitting(true)
     try {
-      console.log('📝 Review submission (emergency mode):', {
-        schoolId,
-        rating: newReview.rating,
-        comment: newReview.comment
-      });
-      
-      // Emergency mode: just simulate success
-      setTimeout(() => {
-        setNewReview({ rating: 0, comment: '' });
-        setIsAddingReview(false);
-        onReviewAdded?.();
-        setSubmitting(false);
-      }, 1000);
+      const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live'
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const res = await fetch(`${API}/api/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        body: JSON.stringify({ school_id: schoolId, rating: newReview.rating, comment: newReview.comment || undefined }),
+      })
+      if (!res.ok) throw new Error('Failed to submit review')
+      setNewReview({ rating: 0, comment: '' })
+      setIsAddingReview(false)
+      onReviewAdded?.()
     } catch (error) {
-      console.error('Error submitting review:', error);
-      setSubmitting(false);
+      console.error('Error submitting review:', error)
+    } finally {
+      setSubmitting(false)
     }
   }
 

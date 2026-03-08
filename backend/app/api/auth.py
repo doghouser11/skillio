@@ -60,3 +60,17 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/me")
 def me(current_user: User = Depends(get_current_user)):
     return {"id": str(current_user.id), "email": current_user.email, "role": current_user.role, "created_at": str(current_user.created_at)}
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+@router.post("/change-password")
+def change_password(data: ChangePasswordRequest, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if not verify_password(data.current_password, current_user.password_hash):
+        raise HTTPException(status_code=400, detail="Грешна текуща парола")
+    current_user.password_hash = get_password_hash(data.new_password)
+    db.commit()
+    return {"message": "Password changed"}

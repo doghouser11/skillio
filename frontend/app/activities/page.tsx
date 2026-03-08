@@ -107,7 +107,7 @@ export default function ActivitiesPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Макс. цена (лв./мес)
+              Макс. цена (€/мес)
             </label>
             <input
               type="number"
@@ -158,7 +158,7 @@ export default function ActivitiesPage() {
                     {activity.category}
                   </span>
                   <span className="text-gray-600 font-medium">
-                    {activity.price_monthly ? `${activity.price_monthly} лв./мес` : 'Безплатно'}
+                    {activity.price_monthly ? `${activity.price_monthly} €/мес` : 'Безплатно'}
                   </span>
                 </div>
 

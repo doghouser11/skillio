@@ -274,7 +274,7 @@ export default function SchoolDashboard() {
                       </div>
                       {activity.price_monthly && (
                         <div>
-                          <strong>Цена:</strong> {activity.price_monthly} лв/месец
+                          <strong>Цена:</strong> {activity.price_monthly} €/месец
                         </div>
                       )}
                       <div>
