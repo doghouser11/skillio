@@ -87,40 +87,33 @@ def get_school(school_id: uuid.UUID, db: Session = Depends(get_db)):
     return school
 
 
-@router.post("/", response_model=SchoolResponse)
+@router.post("/")
 def create_school(
     school_data: SchoolCreate,
-    current_user: User = Depends(get_current_school),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Create a new school (school users only)."""
-    # Check if user already has a school
-    existing_school = db.query(School).filter(School.created_by == current_user.id).first()
-    if existing_school:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User already has a school"
-        )
+    """Create a new school/teacher/org (any logged-in user)."""
     
-    # Create school
     db_school = School(
         name=school_data.name,
         description=school_data.description,
         phone=school_data.phone,
         email=school_data.email,
+        website=school_data.website,
         city=school_data.city,
         address=school_data.address,
         neighborhood_id=school_data.neighborhood_id,
         lat=school_data.lat,
         lng=school_data.lng,
-        created_by=current_user.id
+        created_by=current_user.id,
+        verified=False,
     )
-    
     db.add(db_school)
     db.commit()
     db.refresh(db_school)
     
-    return db_school
+    return {"id": str(db_school.id), "name": db_school.name, "city": db_school.city, "status": "pending"}
 
 
 @router.get("/my/school", response_model=SchoolResponse)

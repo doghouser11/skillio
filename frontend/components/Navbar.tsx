@@ -64,10 +64,10 @@ export default function Navbar() {
                 {/* Role-specific links - Hidden on small mobile */}
                 {isParent && (
                   <Link 
-                    href="/parent/dashboard" 
+                    href="/add-organization" 
                     className="hidden sm:block text-[#1A1A1A] hover:text-white font-semibold transition-all duration-300 px-3 py-2 rounded-3xl hover:bg-[#2D5A27] border border-[#2D5A27] text-sm"
                   >
-                    Табло
+                    ➕ Добави
                   </Link>
                 )}
                 
