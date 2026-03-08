@@ -9,7 +9,7 @@ const API = 'https://api.skillio.live';
 export default function AddOrganizationPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', description: '', phone: '', email: '', website: '', city: 'София', price: '' });
+  const [form, setForm] = useState({ name: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -34,7 +34,7 @@ export default function AddOrganizationPage() {
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.detail || 'Грешка'); }
       setMsg('✅ Изпратено за одобрение! Ще се появи след преглед от администратор.');
-      setForm({ name: '', description: '', phone: '', email: '', website: '', city: 'София', price: '' });
+      setForm({ name: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
     } catch (e: any) { setMsg('❌ ' + e.message); }
     finally { setLoading(false); }
   };
@@ -71,6 +71,11 @@ export default function AddOrganizationPage() {
               <input value={form.phone} onChange={e => set('phone', e.target.value)} placeholder="+359..."
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Квартал</label>
+            <input value={form.neighborhood} onChange={e => set('neighborhood', e.target.value)} placeholder="напр. Лозенец, Младост 1..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Имейл</label>

@@ -66,7 +66,7 @@ class SchoolCreate(BaseModel):
     website: Optional[str] = None
     city: str
     address: Optional[str] = None
-    neighborhood_id: Optional[uuid.UUID] = None
+    neighborhood: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
 
@@ -80,7 +80,7 @@ class SchoolResponse(BaseModel):
     website: Optional[str] = None
     city: str
     address: Optional[str] = None
-    neighborhood_id: Optional[uuid.UUID] = None
+    neighborhood: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
     verified: bool  # Legacy field
