@@ -88,7 +88,7 @@ def get_current_user(
 
 def get_current_parent(current_user: User = Depends(get_current_user)) -> User:
     """Get current user if they are a parent."""
-    if current_user.role != UserRole.PARENT:
+    if str(current_user.role) != "parent":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
@@ -98,7 +98,7 @@ def get_current_parent(current_user: User = Depends(get_current_user)) -> User:
 
 def get_current_school(current_user: User = Depends(get_current_user)) -> User:
     """Get current user if they are a school."""
-    if current_user.role != UserRole.SCHOOL:
+    if str(current_user.role) != "school":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
@@ -108,7 +108,7 @@ def get_current_school(current_user: User = Depends(get_current_user)) -> User:
 
 def get_current_admin(current_user: User = Depends(get_current_user)) -> User:
     """Get current user if they are an admin."""
-    if current_user.role != UserRole.ADMIN:
+    if str(current_user.role) != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
