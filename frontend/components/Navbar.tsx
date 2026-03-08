@@ -81,12 +81,14 @@ export default function Navbar() {
                 )}
                 
                 {isAdmin && (
-                  <Link 
-                    href="/admin/dashboard" 
-                    className="hidden sm:block text-[#1A1A1A] hover:text-white font-semibold transition-all duration-300 px-3 py-2 rounded-3xl hover:bg-[#FFB1B1] border border-[#FFB1B1] text-sm"
-                  >
-                    Админ
-                  </Link>
+                  <>
+                    <Link 
+                      href="/admin/approve" 
+                      className="hidden sm:block text-[#1A1A1A] hover:text-white font-semibold transition-all duration-300 px-3 py-2 rounded-3xl hover:bg-[#FFB1B1] border border-[#FFB1B1] text-sm"
+                    >
+                      Админ
+                    </Link>
+                  </>
                 )}
                 
                 <button

@@ -4,131 +4,93 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
-interface PendingUser {
+const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+
+interface School {
   id: string;
+  name: string;
   email: string;
-  full_name: string;
-  role: 'school' | 'teacher';
-  phone?: string;
+  phone: string;
+  city: string;
+  website: string;
   verified: boolean;
-  created_at: string;
+  status: string;
 }
 
 export default function AdminApprovePage() {
   const { user, isAdmin } = useAuth();
   const router = useRouter();
-  const [pendingUsers, setPendingUsers] = useState<PendingUser[]>([]);
+  const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
+  const [msg, setMsg] = useState('');
 
   useEffect(() => {
-    if (!isAdmin) {
-      router.push('/');
-      return;
-    }
-    loadPendingUsers();
-  }, [isAdmin, router]);
+    if (!isAdmin) { router.push('/'); return; }
+    loadSchools();
+  }, [isAdmin]);
 
-  const loadPendingUsers = async () => {
+  const loadSchools = async () => {
     try {
-      console.log('📋 Loading pending users for approval...');
-      
-      // Emergency mock data for pending users
-      const mockPendingUsers: PendingUser[] = [
-        {
-          id: '1',
-          email: 'school@example.com',
-          full_name: 'Тест Организация',
-          role: 'school',
-          phone: '+359888123456',
-          verified: false,
-          created_at: new Date().toISOString()
-        }
-      ];
-
-      setPendingUsers(mockPendingUsers);
-      setLoading(false);
-      console.log('✅ Pending users loaded');
-    } catch (error) {
-      console.error('Error loading pending users:', error);
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API}/api/admin/schools`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      const data = await res.json();
+      // Show unverified first
+      setSchools(data.filter((s: School) => !s.verified));
+    } catch (e: any) {
+      console.error('Load error:', e);
+      setMsg('Грешка при зареждане');
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleApprove = async (userId: string) => {
+  const approve = async (id: string) => {
     try {
-      console.log('✅ Approving user:', userId);
-      // Remove from pending list
-      setPendingUsers(prev => prev.filter(u => u.id !== userId));
-    } catch (error) {
-      console.error('Error approving user:', error);
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API}/api/admin/schools/${id}/approve`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status: 'approved' }),
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      setSchools(prev => prev.filter(s => s.id !== id));
+      setMsg('✅ Одобрена!');
+      setTimeout(() => setMsg(''), 2000);
+    } catch (e: any) {
+      setMsg('❌ Грешка: ' + e.message);
     }
   };
 
-  const handleReject = async (userId: string) => {
-    try {
-      console.log('❌ Rejecting user:', userId);
-      // Remove from pending list
-      setPendingUsers(prev => prev.filter(u => u.id !== userId));
-    } catch (error) {
-      console.error('Error rejecting user:', error);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 p-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-slate-200 rounded mb-6 w-1/3"></div>
-            <div className="space-y-4">
-              {[1,2,3].map(i => (
-                <div key={i} className="h-24 bg-slate-200 rounded"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Зареждане...</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-slate-800 mb-8">
-          📋 Одобряване на Потребители
-        </h1>
+        <h1 className="text-2xl font-bold mb-6">📋 Одобряване на организации</h1>
+        {msg && <div className="mb-4 p-3 bg-blue-50 rounded text-sm">{msg}</div>}
 
-        {pendingUsers.length === 0 ? (
-          <div className="bg-white rounded-lg p-8 text-center">
-            <p className="text-slate-600">Няма чакащи за одобрение потребители</p>
+        {schools.length === 0 ? (
+          <div className="bg-white rounded-lg p-8 text-center text-gray-500">
+            Няма чакащи организации
           </div>
         ) : (
           <div className="space-y-4">
-            {pendingUsers.map(user => (
-              <div key={user.id} className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-lg">{user.full_name}</h3>
-                    <p className="text-slate-600">{user.email}</p>
-                    <p className="text-sm text-slate-500">
-                      Роля: {user.role} | Дата: {new Date(user.created_at).toLocaleDateString('bg-BG')}
-                    </p>
-                  </div>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => handleReject(user.id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                    >
-                      ❌ Отхвърли
-                    </button>
-                    <button
-                      onClick={() => handleApprove(user.id)}
-                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                    >
-                      ✅ Одобри
-                    </button>
-                  </div>
+            {schools.map(s => (
+              <div key={s.id} className="bg-white rounded-lg p-5 shadow-sm flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-lg">{s.name}</h3>
+                  <p className="text-gray-600 text-sm">{s.email} · {s.phone} · {s.city}</p>
+                  {s.website && <a href={s.website} target="_blank" className="text-blue-600 text-sm hover:underline">{s.website}</a>}
                 </div>
+                <button
+                  onClick={() => approve(s.id)}
+                  className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold text-sm"
+                >
+                  ✅ Одобри
+                </button>
               </div>
             ))}
           </div>
