@@ -83,11 +83,10 @@ class SchoolResponse(BaseModel):
     neighborhood: Optional[str] = None
     lat: Optional[float] = None
     lng: Optional[float] = None
-    verified: bool  # Legacy field
-    status: SchoolStatus  # New approval status
-    created_by: uuid.UUID
-    created_at: datetime
-    neighborhood: Optional[NeighborhoodResponse] = None
+    verified: bool = False
+    status: Optional[str] = "PENDING"
+    created_by: Optional[uuid.UUID] = None
+    created_at: Optional[datetime] = None
     average_rating: Optional[float] = None
     review_count: int = 0
     
