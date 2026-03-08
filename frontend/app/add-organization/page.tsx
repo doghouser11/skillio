@@ -9,7 +9,7 @@ const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
 export default function AddOrganizationPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', description: '', phone: '', email: '', website: '', city: 'София' });
+  const [form, setForm] = useState({ name: '', description: '', phone: '', email: '', website: '', city: 'София', price: '' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -26,14 +26,15 @@ export default function AddOrganizationPage() {
     setLoading(true); setMsg('');
     try {
       const token = localStorage.getItem('token');
+      const payload = { ...form, description: [form.description, form.price ? `💰 Цена: ${form.price}` : ''].filter(Boolean).join('\n') };
       const res = await fetch(`${API}/api/schools`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.detail || 'Грешка'); }
       setMsg('✅ Изпратено за одобрение! Ще се появи след преглед от администратор.');
-      setForm({ name: '', description: '', phone: '', email: '', website: '', city: 'София' });
+      setForm({ name: '', description: '', phone: '', email: '', website: '', city: 'София', price: '' });
     } catch (e: any) { setMsg('❌ ' + e.message); }
     finally { setLoading(false); }
   };
@@ -74,6 +75,11 @@ export default function AddOrganizationPage() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Имейл</label>
             <input type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="email@example.com"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Цена (ориентировъчна)</label>
+            <input value={form.price} onChange={e => set('price', e.target.value)} placeholder="напр. 30-50 €/час, 80 €/месец, По договаряне"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
           <div>
