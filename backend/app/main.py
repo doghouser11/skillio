@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import PlainTextResponse
 from app.api import auth, activities, schools, leads, neighborhoods, reviews, admin, dev, migrate, temp_seed, working_seed, debug, simple, emergency, admin_setup
 
 # Create FastAPI app
@@ -9,19 +10,39 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configure CORS
+# ===== CORS — FIRST MIDDLEWARE =====
+ALLOWED_ORIGINS = [
+    "https://www.skillio.live",
+    "https://skillio.live",
+    "https://skillio-three.vercel.app",
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",           # Development
-        "https://skillio-three.vercel.app", # Production Vercel
-        "https://skillio.live",            # Production custom domain
-        "https://www.skillio.live",        # Production with www
-    ],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# Fallback: ensures CORS headers even on 500 errors (where CORSMiddleware won't fire)
+@app.middleware("http")
+async def cors_on_error(request: Request, call_next):
+    origin = request.headers.get("origin", "")
+    if request.method == "OPTIONS" and origin in ALLOWED_ORIGINS:
+        return PlainTextResponse("OK", headers={
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true",
+        })
+    response = await call_next(request)
+    if origin in ALLOWED_ORIGINS and "access-control-allow-origin" not in response.headers:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 # Include routers
 app.include_router(auth.router, prefix="/api")
