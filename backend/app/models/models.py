@@ -58,7 +58,7 @@ class Neighborhood(Base):
     lng = Column(Float, nullable=False)
     
     # Relationships
-    schools = relationship("School", back_populates="neighborhood")
+    # schools = relationship("School", back_populates="neighborhood")
 
 
 class School(Base):
@@ -81,7 +81,6 @@ class School(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Relationships
-    neighborhood = relationship("Neighborhood", back_populates="schools")
     created_by_user = relationship("User", back_populates="created_schools")
     activities = relationship("Activity", back_populates="school")
     reviews = relationship("Review", back_populates="school")
