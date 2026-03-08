@@ -27,7 +27,7 @@ export default function AddOrganizationPage() {
     try {
       const token = localStorage.getItem('token');
       const payload = { ...form, description: [form.description, form.price ? `💰 Цена: ${form.price}` : ''].filter(Boolean).join('\n') };
-      const res = await fetch(`${API}/api/schools`, {
+      const res = await fetch(`${API}/api/schools/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),
