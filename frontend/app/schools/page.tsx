@@ -129,8 +129,22 @@ export default function SchoolsPage() {
     })();
   }, []);
 
+  // Category keyword mapping for filtering
+  const CATEGORY_KEYWORDS: Record<string, string[]> = {
+    'outdoor-sports': ['спорт', 'тенис', 'футбол', 'атлетик', 'плуване', 'открит', 'outdoor'],
+    'indoor-sports': ['гимнастик', 'баскетбол', 'волейбол', 'фитнес', 'закрит', 'зала', 'indoor'],
+    'languages': ['език', 'english', 'англий', 'немски', 'испански', 'френски', 'language', 'езиков'],
+    'science': ['наук', 'робот', 'програмиран', 'science', 'stem', 'математик', 'IT', 'технолог'],
+    'art': ['изкуств', 'рисуван', 'керамик', 'фотограф', 'art', 'творческ', 'арт'],
+    'music-dance': ['музик', 'танц', 'пиано', 'китар', 'балет', 'dance', 'music', 'пеене'],
+  };
+
   const filtered = schools.filter(s => {
     if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
+    if (category && CATEGORY_KEYWORDS[category]) {
+      const text = `${s.name} ${s.description || ''}`.toLowerCase();
+      return CATEGORY_KEYWORDS[category].some(kw => text.includes(kw.toLowerCase()));
+    }
     return true;
   });
 

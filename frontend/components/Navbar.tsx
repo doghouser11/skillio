@@ -7,145 +7,49 @@ export default function Navbar() {
   const { user, logout, isParent, isSchool, isAdmin, loading } = useAuth();
 
   return (
-    <nav className="sticky top-2 md:top-4 z-50 mx-2 md:mx-6">
-      <div className="comic-navbar container mx-auto px-4 md:px-8">
-        <div className="flex flex-wrap justify-between items-center py-4 md:py-6">
-          {/* Logo - Mobile Friendly */}
+    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex justify-between items-center h-14">
+          {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-2xl md:text-3xl">🎓</span>
-            <span className="text-2xl md:text-3xl font-bold text-[#1A1A1A]">
-              Skillio
-            </span>
+            <span className="text-xl">🎓</span>
+            <span className="text-xl font-bold text-gray-900">Skillio</span>
           </Link>
 
-          {/* Navigation Links - Hidden on Mobile */}
-          <div className="hidden lg:flex space-x-1">
-            <Link 
-              href="/activities" 
-              className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-4 py-2 rounded-3xl hover:bg-[#FFB1B1]/30 text-base"
-            >
-              Дейности
-            </Link>
-            <Link 
-              href="/schools" 
-              className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-4 py-2 rounded-3xl hover:bg-[#FFB1B1]/30 text-base"
-            >
-              Организации
-            </Link>
-            <Link 
-              href="/about" 
-              className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-4 py-2 rounded-3xl hover:bg-[#FFB1B1]/30 text-base"
-            >
-              За нас
-            </Link>
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link href="/activities" className="text-gray-600 hover:text-green-700 text-sm font-medium">Дейности</Link>
+            <Link href="/schools" className="text-gray-600 hover:text-green-700 text-sm font-medium">Организации</Link>
+            <Link href="/about" className="text-gray-600 hover:text-green-700 text-sm font-medium">За нас</Link>
           </div>
 
-          {/* User Menu - Mobile Responsive */}
-          <div className="flex items-center space-x-2 md:space-x-4">
+          {/* User area */}
+          <div className="flex items-center space-x-3">
             {loading ? (
-              <div className="flex space-x-2">
-                <div className="w-16 h-8 bg-[#FFB1B1] rounded-3xl animate-pulse"></div>
-                <div className="w-20 h-8 bg-[#FFB1B1] rounded-3xl animate-pulse"></div>
-              </div>
+              <div className="w-16 h-8 bg-gray-100 rounded animate-pulse" />
             ) : user ? (
-              <div className="flex items-center space-x-2 md:space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-10 h-10 md:w-12 md:h-12 bg-[#2D5A27] border-2 border-black rounded-full flex items-center justify-center text-white font-bold text-sm md:text-lg">
-                    {user.email[0].toUpperCase()}
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="text-[#1A1A1A] font-bold text-sm md:text-base">{user.email.split('@')[0]}</div>
-                    <div className="text-xs md:text-sm text-[#1A1A1A] font-medium">
-                      {user.role === 'parent' ? 'Родител' : user.role === 'school' ? 'Организация' : 'Админ'}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Role-specific links - Hidden on small mobile */}
-                {isParent && (
-                  <Link 
-                    href="/add-organization" 
-                    className="hidden sm:block text-[#1A1A1A] hover:text-white font-semibold transition-all duration-300 px-3 py-2 rounded-3xl hover:bg-[#2D5A27] border border-[#2D5A27] text-sm"
-                  >
-                    ➕ Добави
-                  </Link>
-                )}
-                
-                {isSchool && (
-                  <Link 
-                    href="/school/dashboard" 
-                    className="hidden sm:block text-[#1A1A1A] hover:text-white font-semibold transition-all duration-300 px-3 py-2 rounded-3xl hover:bg-[#2D5A27] border border-[#2D5A27] text-sm"
-                  >
-                    Табло
-                  </Link>
-                )}
-                
-                {isAdmin && (
-                  <>
-                    <Link 
-                      href="/admin/approve" 
-                      className="hidden sm:block text-[#1A1A1A] hover:text-white font-semibold transition-all duration-300 px-3 py-2 rounded-3xl hover:bg-[#FFB1B1] border border-[#FFB1B1] text-sm"
-                    >
-                      Админ
-                    </Link>
-                  </>
-                )}
-                
-                <Link
-                  href="/profile/settings"
-                  className="hidden sm:block text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 text-sm"
-                >
-                  ⚙️
-                </Link>
-                <button
-                  onClick={logout}
-                  className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 text-sm md:text-base"
-                >
-                  Изход
-                </button>
-              </div>
+              <>
+                <span className="hidden sm:inline text-sm text-gray-600">{user.email.split('@')[0]}</span>
+                {isParent && <Link href="/add-organization" className="text-sm text-green-700 font-medium">➕</Link>}
+                {isAdmin && <Link href="/admin/approve" className="text-sm text-red-600 font-medium">Админ</Link>}
+                <Link href="/profile/settings" className="text-sm">⚙️</Link>
+                <button onClick={logout} className="text-sm text-gray-500 hover:text-gray-700">Изход</button>
+              </>
             ) : (
-              <div className="flex items-center space-x-2 md:space-x-4">
-                <Link
-                  href="/login"
-                  className="hidden sm:block text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-3 py-2 text-sm md:text-base"
-                >
-                  Вход
-                </Link>
-                <Link
-                  href="/register"
-                  className="bg-[#2D5A27] hover:bg-[#1f3d1a] text-white px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-semibold rounded-full transition-all duration-300 border-2 border-black"
-                >
-                  Регистрация
-                </Link>
-              </div>
+              <>
+                <Link href="/login" className="text-sm text-gray-600 hover:text-green-700 font-medium">Вход</Link>
+                <Link href="/register" className="bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-green-800">Регистрация</Link>
+              </>
             )}
           </div>
-          
         </div>
-        
-        {/* Mobile Navigation Menu - Full width on mobile */}
-        <div className="lg:hidden border-t border-[#1A1A1A]/20 pt-4 pb-2">
-          <div className="flex justify-center space-x-6">
-            <Link 
-              href="/activities" 
-              className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-4 py-2 rounded-3xl hover:bg-[#FFB1B1]/30 text-base"
-            >
-              🎨 Дейности
-            </Link>
-            <Link 
-              href="/schools" 
-              className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-4 py-2 rounded-3xl hover:bg-[#FFB1B1]/30 text-base"
-            >
-              🏢 Организации
-            </Link>
-            <Link 
-              href="/about" 
-              className="text-[#1A1A1A] hover:text-[#2D5A27] font-semibold transition-colors duration-300 px-4 py-2 rounded-3xl hover:bg-[#FFB1B1]/30 text-base"
-            >
-              💫 За нас
-            </Link>
-          </div>
+
+        {/* Mobile nav */}
+        <div className="md:hidden border-t border-gray-100 py-2 flex justify-center space-x-6">
+          <Link href="/activities" className="text-gray-600 hover:text-green-700 text-sm font-medium">Дейности</Link>
+          <Link href="/schools" className="text-gray-600 hover:text-green-700 text-sm font-medium">Организации</Link>
+          {user && isParent && <Link href="/add-organization" className="text-green-700 text-sm font-medium">➕ Добави</Link>}
+          {user && <Link href="/profile/settings" className="text-gray-600 text-sm font-medium">⚙️ Профил</Link>}
         </div>
       </div>
     </nav>
