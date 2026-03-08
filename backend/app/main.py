@@ -1,22 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
 from app.api import auth, activities, schools, leads, neighborhoods, reviews, admin, dev, migrate, temp_seed, working_seed, debug, simple, emergency, admin_setup
 
-app = FastAPI(title="Skillio API", version="1.0.0")
+app = FastAPI(title="Skillio API", version="1.0.0", redirect_slashes=False)
 
-
-# Fix redirects behind reverse proxy — force https in Location headers
-class HttpsRedirectFixMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        location = response.headers.get("location", "")
-        if location.startswith("http://api.skillio.live"):
-            response.headers["location"] = location.replace("http://", "https://", 1)
-        return response
-
-# CORS — allow everything for now (must be added LAST so it runs FIRST)
+# CORS — allow everything for now
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,8 +12,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.add_middleware(HttpsRedirectFixMiddleware)
 
 # Routers
 app.include_router(auth.router, prefix="/api")
