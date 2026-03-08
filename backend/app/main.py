@@ -16,9 +16,7 @@ class HttpsRedirectFixMiddleware(BaseHTTPMiddleware):
             response.headers["location"] = location.replace("http://", "https://", 1)
         return response
 
-app.add_middleware(HttpsRedirectFixMiddleware)
-
-# CORS — allow everything for now
+# CORS — allow everything for now (must be added LAST so it runs FIRST)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(HttpsRedirectFixMiddleware)
 
 # Routers
 app.include_router(auth.router, prefix="/api")
