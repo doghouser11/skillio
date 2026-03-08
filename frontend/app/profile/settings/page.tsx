@@ -16,7 +16,10 @@ export default function ProfileSettingsPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  if (!user) { router.push('/login'); return null; }
+  if (!user) {
+    if (typeof window !== 'undefined') router.push('/login');
+    return <div className="min-h-screen flex items-center justify-center text-gray-500">Пренасочване...</div>;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
