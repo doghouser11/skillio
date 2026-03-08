@@ -70,6 +70,7 @@ class School(Base):
     phone = Column(String)
     email = Column(String)
     website = Column(String)  # External website URL
+    category = Column(String, nullable=True)
     city = Column(String, nullable=False)
     address = Column(String)
     neighborhood = Column(String, nullable=True)

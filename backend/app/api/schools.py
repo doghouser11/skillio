@@ -13,7 +13,8 @@ router = APIRouter(prefix="/schools", tags=["Schools"])
 
 def school_to_dict(s):
     return {
-        "id": str(s.id), "name": s.name, "description": s.description,
+        "id": str(s.id), "name": s.name, "category": getattr(s, 'category', None),
+        "description": s.description,
         "phone": s.phone, "email": s.email, "website": s.website,
         "city": s.city, "address": s.address, "neighborhood": getattr(s, 'neighborhood', None),
         "lat": s.lat, "lng": s.lng, "verified": s.verified,
@@ -109,6 +110,7 @@ def create_school(
     
     db_school = School(
         name=school_data.name,
+        category=school_data.category,
         description=school_data.description,
         phone=school_data.phone,
         email=school_data.email,

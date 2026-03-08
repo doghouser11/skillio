@@ -17,7 +17,16 @@ const CATEGORIES = [
   { name: 'Музика и танци', slug: 'music-dance' },
 ];
 
-interface School { id: string; name: string; description?: string; city: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; }
+interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; }
+
+const CATEGORY_LABELS: Record<string, string> = {
+  'outdoor-sports': '⚽ Спорт на открито',
+  'indoor-sports': '🏀 Закрит спорт',
+  'languages': '🌍 Езици',
+  'science': '🔬 Науки / IT',
+  'art': '🎨 Изкуство',
+  'music-dance': '🎵 Музика и танци',
+};
 interface Review { id: string; rating: number; comment?: string; created_at: string; parent: { id: string; email: string }; }
 
 function StarRating({ rating, onClick }: { rating: number; onClick?: (n: number) => void }) {
@@ -134,22 +143,9 @@ export default function SchoolsPage() {
     })();
   }, []);
 
-  // Category keyword mapping for filtering
-  const CATEGORY_KEYWORDS: Record<string, string[]> = {
-    'outdoor-sports': ['спорт', 'тенис', 'футбол', 'атлетик', 'плуване', 'открит', 'outdoor'],
-    'indoor-sports': ['гимнастик', 'баскетбол', 'волейбол', 'фитнес', 'закрит', 'зала', 'indoor'],
-    'languages': ['език', 'english', 'англий', 'немски', 'испански', 'френски', 'language', 'езиков'],
-    'science': ['наук', 'робот', 'програмиран', 'science', 'stem', 'математик', 'IT', 'технолог'],
-    'art': ['изкуств', 'рисуван', 'керамик', 'фотограф', 'art', 'творческ', 'арт'],
-    'music-dance': ['музик', 'танц', 'пиано', 'китар', 'балет', 'dance', 'music', 'пеене'],
-  };
-
   const filtered = schools.filter(s => {
     if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
-    if (category && CATEGORY_KEYWORDS[category]) {
-      const text = `${s.name} ${s.description || ''}`.toLowerCase();
-      return CATEGORY_KEYWORDS[category].some(kw => text.includes(kw.toLowerCase()));
-    }
+    if (category && s.category !== category) return false;
     return true;
   });
 
@@ -186,9 +182,10 @@ export default function SchoolsPage() {
                 <h3 className="font-bold text-lg text-gray-900 line-clamp-2">{s.name}</h3>
                 {s.verified && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">✓</span>}
               </div>
+              {s.category && <span className="inline-block text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full mb-2">{CATEGORY_LABELS[s.category] || s.category}</span>}
               {s.description && <p className="text-gray-600 text-sm mb-4 line-clamp-3">{s.description}</p>}
               <div className="space-y-1 text-sm text-gray-500 mb-4">
-                <div>📍 {s.city}</div>
+                <div>📍 {s.city}{s.neighborhood ? `, ${s.neighborhood}` : ''}</div>
                 {s.phone && <div>📞 {s.phone}</div>}
                 {s.email && <div>✉️ {s.email}</div>}
               </div>

@@ -9,7 +9,7 @@ const API = 'https://api.skillio.live';
 export default function AddOrganizationPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
+  const [form, setForm] = useState({ name: '', category: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -22,7 +22,7 @@ export default function AddOrganizationPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.city) { setMsg('Име и град са задължителни'); return; }
+    if (!form.name || !form.city || !form.category) { setMsg('Име, дейност и град са задължителни'); return; }
     setLoading(true); setMsg('');
     try {
       const token = localStorage.getItem('token');
@@ -34,7 +34,7 @@ export default function AddOrganizationPage() {
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.detail || 'Грешка'); }
       setMsg('✅ Изпратено за одобрение! Ще се появи след преглед от администратор.');
-      setForm({ name: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
+      setForm({ name: '', category: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
     } catch (e: any) { setMsg('❌ ' + e.message); }
     finally { setLoading(false); }
   };
@@ -52,6 +52,19 @@ export default function AddOrganizationPage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Име *</label>
             <input value={form.name} onChange={e => set('name', e.target.value)} required placeholder="напр. Учител Иван — Английски език"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Дейност *</label>
+            <select value={form.category} onChange={e => set('category', e.target.value)} required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+              <option value="">— Изберете дейност —</option>
+              <option value="outdoor-sports">⚽ Спорт на открито</option>
+              <option value="indoor-sports">🏀 Закрит спорт</option>
+              <option value="languages">🌍 Езици</option>
+              <option value="science">🔬 Природни науки / IT</option>
+              <option value="art">🎨 Изкуство</option>
+              <option value="music-dance">🎵 Музика и танци</option>
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Описание</label>

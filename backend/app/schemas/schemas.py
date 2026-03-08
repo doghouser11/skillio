@@ -60,6 +60,7 @@ class NeighborhoodResponse(BaseModel):
 # School schemas
 class SchoolCreate(BaseModel):
     name: str
+    category: str
     description: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None
