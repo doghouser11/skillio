@@ -1,4 +1,18 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 export default function AboutPage() {
+  const [schoolCount, setSchoolCount] = useState(0);
+  const [activityCount, setActivityCount] = useState(0);
+  const familyCount = 30; // Starting seed
+
+  useEffect(() => {
+    const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
+    fetch(`${API}/api/emergency/schools`).then(r => r.json()).then(d => setSchoolCount(Array.isArray(d) ? d.length : 0)).catch(() => {});
+    fetch(`${API}/api/emergency/activities`).then(r => r.json()).then(d => setActivityCount(Array.isArray(d) ? d.length : 0)).catch(() => {});
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 max-w-full overflow-x-hidden">
       <div className="text-center mb-12 md:mb-16">
@@ -62,13 +76,13 @@ export default function AboutPage() {
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">🌱</div>
                 <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Дейности</h3>
-                <div className="text-3xl font-bold text-[#2D5A27] mb-1">24 / 500</div>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{activityCount} / 500</div>
                 <div className="text-sm text-gray-600">цели за годината</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
                 <div 
                   className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
-                  style={{width: '4.8%'}}
+                  style={{width: `${Math.max((activityCount / 500) * 100, 1)}%`}}
                 ></div>
               </div>
               <div className="text-center text-xs text-gray-500 mt-2">Растем всеки ден!</div>
@@ -79,13 +93,13 @@ export default function AboutPage() {
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">🏫</div>
                 <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Партньори</h3>
-                <div className="text-3xl font-bold text-[#2D5A27] mb-1">12 / 200</div>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{schoolCount} / 200</div>
                 <div className="text-sm text-gray-600">цели за годината</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
                 <div 
                   className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
-                  style={{width: '6%'}}
+                  style={{width: `${Math.max((schoolCount / 200) * 100, 1)}%`}}
                 ></div>
               </div>
               <div className="text-center text-xs text-gray-500 mt-2">Качествени връзки</div>
@@ -96,13 +110,13 @@ export default function AboutPage() {
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">❤️</div>
                 <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Семейства</h3>
-                <div className="text-3xl font-bold text-[#2D5A27] mb-1">86 / 5000</div>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{familyCount} / 5000</div>
                 <div className="text-sm text-gray-600">цели за годината</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
                 <div 
                   className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
-                  style={{width: '1.7%'}}
+                  style={{width: `${Math.max((familyCount / 5000) * 100, 1)}%`}}
                 ></div>
               </div>
               <div className="text-center text-xs text-gray-500 mt-2">Общността расте!</div>
