@@ -7,6 +7,7 @@ const CATEGORIES = [
   { name: 'Природни науки', slug: 'science', icon: '🔬', desc: 'Експерименти, роботика, програмиране' },
   { name: 'Изкуство', slug: 'art', icon: '🎨', desc: 'Рисуване, керамика, фотография' },
   { name: 'Музика и танци', slug: 'music-dance', icon: '🎵', desc: 'Пиано, китара, балет, модерни танци' },
+  { name: 'Бойни изкуства', slug: 'martial-arts', icon: '🥋', desc: 'Карате, джудо, таекуондо, бойни спортове' },
 ];
 
 export default function ActivitiesPage() {

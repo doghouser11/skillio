@@ -15,6 +15,7 @@ const CATEGORIES = [
   { name: 'Природни науки', slug: 'science' },
   { name: 'Изкуство', slug: 'art' },
   { name: 'Музика и танци', slug: 'music-dance' },
+  { name: 'Бойни изкуства', slug: 'martial-arts' },
 ];
 
 interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; }
@@ -26,6 +27,12 @@ const CATEGORY_LABELS: Record<string, string> = {
   'science': '🔬 Науки / IT',
   'art': '🎨 Изкуство',
   'music-dance': '🎵 Музика и танци',
+  'dance': '🎵 Музика и танци',
+  'martial-arts': '🥋 Бойни изкуства',
+  'stem': '🔬 Науки / IT',
+  'education': '🔬 Образование',
+  'arts': '🎨 Изкуство',
+  'music': '🎵 Музика',
 };
 interface Review { id: string; rating: number; comment?: string; created_at: string; parent: { id: string; email: string }; }
 
@@ -143,9 +150,23 @@ export default function SchoolsPage() {
     })();
   }, []);
 
+  // Map UI categories to DB categories (one UI category can match multiple DB values)
+  const CATEGORY_MAP: Record<string, string[]> = {
+    'outdoor-sports': ['outdoor-sports'],
+    'indoor-sports': ['indoor-sports'],
+    'languages': ['languages'],
+    'science': ['science', 'stem', 'education'],
+    'art': ['art', 'arts'],
+    'music-dance': ['music-dance', 'dance', 'music'],
+    'martial-arts': ['martial-arts'],
+  };
+
   const filtered = schools.filter(s => {
     if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
-    if (category && s.category !== category) return false;
+    if (category) {
+      const allowed = CATEGORY_MAP[category] || [category];
+      if (!allowed.includes(s.category || '')) return false;
+    }
     return true;
   });
 
