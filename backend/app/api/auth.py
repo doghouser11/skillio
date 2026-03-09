@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import Optional
-import httpx
 from app.database.base import get_db
 from app.models.models import User
 from app.core.auth import get_password_hash, verify_password, create_access_token, create_refresh_token, get_current_user, verify_token
@@ -76,59 +74,3 @@ def change_password(data: ChangePasswordRequest, current_user: User = Depends(ge
     current_user.password_hash = get_password_hash(data.new_password)
     db.commit()
     return {"message": "Password changed"}
-
-
-# --- OAuth ---
-
-class OAuthRequest(BaseModel):
-    provider: str  # 'google' or 'facebook'
-    token: str
-    role: Optional[str] = "parent"
-
-
-async def _verify_google_token(token: str) -> dict:
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(f"https://oauth2.googleapis.com/tokeninfo?id_token={token}")
-    if resp.status_code != 200:
-        raise HTTPException(status_code=401, detail="Invalid Google token")
-    data = resp.json()
-    if "email" not in data:
-        raise HTTPException(status_code=401, detail="Google token missing email")
-    return {"email": data["email"], "name": data.get("name", "")}
-
-
-async def _verify_facebook_token(token: str) -> dict:
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(f"https://graph.facebook.com/me?fields=email,name&access_token={token}")
-    if resp.status_code != 200:
-        raise HTTPException(status_code=401, detail="Invalid Facebook token")
-    data = resp.json()
-    if "email" not in data:
-        raise HTTPException(status_code=401, detail="Facebook token missing email")
-    return {"email": data["email"], "name": data.get("name", "")}
-
-
-@router.post("/oauth")
-async def oauth_login(oauth_data: OAuthRequest, db: Session = Depends(get_db)):
-    if oauth_data.provider == "google":
-        user_info = await _verify_google_token(oauth_data.token)
-    elif oauth_data.provider == "facebook":
-        user_info = await _verify_facebook_token(oauth_data.token)
-    else:
-        raise HTTPException(status_code=400, detail="Unsupported provider")
-
-    email = user_info["email"]
-    user = db.query(User).filter(User.email == email).first()
-    if not user:
-        role = oauth_data.role if oauth_data.role in ("parent", "school") else "parent"
-        user = User(email=email, password_hash=None, role=role, auth_provider=oauth_data.provider)
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-
-    access_token = create_access_token(data={"sub": user.email, "role": user.role})
-    refresh_token = create_refresh_token(data={"sub": user.email, "role": user.role})
-    user.refresh_token = refresh_token
-    db.commit()
-
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
-import OAuthButtons from '../../components/OAuthButtons';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -97,8 +96,6 @@ export default function LoginPage() {
             </button>
           </div>
           
-          <OAuthButtons onError={(msg) => setError(msg)} />
-
           <div className="text-center">
             <Link href="/" className="text-blue-600 hover:text-blue-500 text-sm">
               ← Обратно към началото
