@@ -36,7 +36,8 @@ class User(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False)
+    password_hash = Column(String, nullable=True)  # Nullable for OAuth users
+    auth_provider = Column(String, nullable=True)  # 'google', 'facebook', or None for email
     role = Column(String, nullable=False)  # plain string: 'parent', 'school', 'admin'
     refresh_token = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

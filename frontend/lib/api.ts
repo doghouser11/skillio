@@ -29,6 +29,9 @@ export const authAPI = {
   refresh: (refreshToken: string) => {
     return api.post('/api/auth/refresh', { refresh_token: refreshToken });
   },
+  oauth: (data: { provider: string; token: string; role?: string }) => {
+    return api.post('/api/auth/oauth', data);
+  },
 };
 
 // Emergency schools API

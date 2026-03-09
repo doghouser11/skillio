@@ -17,8 +17,13 @@ export default function Footer() {
           <Link href="/about" className="hover:text-white transition-colors">За нас</Link>
           <Link href="/register" className="hover:text-white transition-colors">Регистрация</Link>
         </div>
-        <div className="border-t border-gray-800 pt-6 text-xs">
-          © {new Date().getFullYear()} Skillio. Направено с ❤️ в България
+        <div className="border-t border-gray-800 pt-6 text-xs space-y-3">
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/terms" className="hover:text-white transition-colors">Условия за ползване</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Поверителност</Link>
+            <a href="mailto:nikol_93_bg@proton.me" className="hover:text-white transition-colors">📧 Контакт</a>
+          </div>
+          <div>© {new Date().getFullYear()} Skillio. Направено с ❤️ в България</div>
         </div>
       </div>
     </footer>

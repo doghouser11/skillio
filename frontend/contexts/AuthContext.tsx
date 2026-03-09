@@ -15,6 +15,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, role: string) => Promise<void>;
+  oauthLogin: (provider: string, token: string, role?: string) => Promise<void>;
   logout: () => Promise<void>;
   isParent: boolean;
   isSchool: boolean;
@@ -96,6 +97,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const oauthLogin = async (provider: string, token: string, role?: string) => {
+    try {
+      const response = await authAPI.oauth({ provider, token, role });
+      const { access_token, refresh_token } = response.data;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', access_token);
+        if (refresh_token) localStorage.setItem('refresh_token', refresh_token);
+      }
+      const payload = JSON.parse(atob(access_token.split('.')[1]));
+      setUser({ id: payload.sub || 'unknown', email: payload.sub || 'unknown', role: payload.role || 'parent', created_at: new Date().toISOString() });
+    } catch (error: any) {
+      throw new Error(error.response?.data?.detail || 'OAuth login failed');
+    }
+  };
+
   const logout = async () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
@@ -116,6 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loading,
         login,
         register,
+        oauthLogin,
         logout,
         isParent,
         isSchool,
