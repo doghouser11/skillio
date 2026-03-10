@@ -74,6 +74,9 @@ def get_schools(
     """Get all schools with optional filters."""
     query = db.query(School)
     
+    # Only show approved schools publicly
+    query = query.filter(School.status == SchoolStatus.APPROVED)
+    
     # Apply filters
     if city:
         query = query.filter(School.city.ilike(f"%{city}%"))
