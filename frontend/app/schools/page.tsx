@@ -148,7 +148,7 @@ export default function SchoolsPage() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(searchParams.get('category') || '');
-  const [cityFilter, setCityFilter] = useState('');
+  const [cityFilter, setCityFilter] = useState(searchParams.get('city') || '');
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
