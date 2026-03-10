@@ -85,8 +85,8 @@ export default function AddOrganizationPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Описание</label>
-            <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3} placeholder="Какво предлага, за какви възрасти, опит..."
+            <label className="block text-sm font-medium text-gray-700 mb-1">Описание и лични впечатления</label>
+            <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={3} placeholder="Какво предлага, за какви възрасти, вашите лични впечатления..."
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
           <div className="grid grid-cols-2 gap-4">
