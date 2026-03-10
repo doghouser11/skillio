@@ -65,12 +65,12 @@ export default function HomePage() {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
           Разгледайте по категория
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.slug}
               href={`/schools?category=${cat.slug}`}
-              className={`${cat.color} border rounded-xl p-6 text-center transition-all duration-200 hover:shadow-md`}
+              className={`${cat.color} border rounded-xl p-6 text-center transition-all duration-200 hover:shadow-md w-[calc(50%-0.5rem)] md:w-[calc(25%-1.125rem)]`}
             >
               <div className="text-4xl md:text-5xl mb-3">{cat.icon}</div>
               <div className="font-semibold text-gray-800 text-sm md:text-base">{cat.name}</div>
