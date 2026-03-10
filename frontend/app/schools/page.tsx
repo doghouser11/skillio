@@ -20,6 +20,17 @@ const CATEGORIES = [
   { name: 'Образование', slug: 'education' },
 ];
 
+const CATEGORY_NAMES_MAP: Record<string, string> = {
+  'outdoor-sports': 'Спорт на открито',
+  'indoor-sports': 'Закрит спорт',
+  'languages': 'Езици',
+  'science': 'Природни науки',
+  'art': 'Изкуство',
+  'music-dance': 'Музика и танци',
+  'martial-arts': 'Бойни изкуства',
+  'education': 'Образование',
+};
+
 interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; created_by?: string; }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -154,6 +165,22 @@ export default function SchoolsPage() {
     })();
   }, []);
 
+  // SEO meta tags - update document title based on filters
+  useEffect(() => {
+    const categoryName = category ? CATEGORY_NAMES_MAP[category] : null;
+    let title = 'Организации за деца | Skillio';
+    
+    if (categoryName && cityFilter) {
+      title = `${categoryName} в ${cityFilter} | Skillio`;
+    } else if (categoryName) {
+      title = `${categoryName} | Skillio`;
+    } else if (cityFilter) {
+      title = `Дейности за деца в ${cityFilter} | Skillio`;
+    }
+    
+    document.title = title;
+  }, [category, cityFilter]);
+
   const filtered = schools.filter(s => {
     if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
     if (category && s.category !== category) return false;
@@ -207,10 +234,28 @@ export default function SchoolsPage() {
                     Сайт
                   </a>
                 )}
+                {!s.website && !s.phone && s.email && (
+                  <a href={`mailto:${s.email}`}
+                    className="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition-colors">
+                    ✉️ Свържете се
+                  </a>
+                )}
                 <button onClick={() => setExpanded(expanded === s.id ? null : s.id)}
                   className="flex-1 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium transition-colors">
                   ⭐ Отзиви
                 </button>
+              </div>
+              {/* Share buttons */}
+              <div className="flex justify-center gap-3 mt-3">
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://skillio.live/schools?search=${s.name}`)}`}
+                   target="_blank" rel="noopener noreferrer"
+                   className="text-blue-600 hover:text-blue-800 text-xs font-medium transition-colors">
+                  f Споделяне
+                </a>
+                <a href={`viber://forward?text=${encodeURIComponent(`Виж ${s.name} в Skillio: https://skillio.live/schools`)}`}
+                   className="text-purple-600 hover:text-purple-800 text-xs font-medium transition-colors">
+                  📱 Viber
+                </a>
               </div>
               {expanded === s.id && <ReviewPanel schoolId={s.id} createdBy={s.created_by} />}
             </div>
@@ -224,10 +269,10 @@ export default function SchoolsPage() {
       )}
 
       <div className="mt-16 bg-green-700 rounded-2xl p-8 text-white text-center">
-        <h2 className="text-2xl font-bold mb-3">Имате организация?</h2>
-        <p className="mb-6 opacity-90">Присъединете се и достигнете до повече семейства.</p>
-        <Link href="/register?role=school" className="bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-          Започнете сега
+        <h2 className="text-2xl font-bold mb-3">Познавате страхотен учител?</h2>
+        <p className="mb-6 opacity-90">Добавете го и помогнете на други родители да го намерят!</p>
+        <Link href="/add-organization" className="bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+          Добавете организация
         </Link>
       </div>
     </div>

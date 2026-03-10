@@ -30,7 +30,7 @@ export default function Navbar() {
             ) : user ? (
               <>
                 <span className="hidden sm:inline text-sm text-gray-600">{user.email.split('@')[0]}</span>
-                {isParent && <Link href="/add-organization" className="text-sm text-green-700 font-medium">➕</Link>}
+                {isParent && <Link href="/add-organization" className="text-sm text-green-700 font-medium">➕ Добави</Link>}
                 {isSchool && <Link href="/profile/organization" className="text-sm text-green-700 font-medium">🏢</Link>}
                 {isAdmin && <Link href="/admin/approve" className="text-sm text-red-600 font-medium">Админ</Link>}
                 <Link href="/profile/settings" className="text-sm">⚙️</Link>

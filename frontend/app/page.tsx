@@ -80,6 +80,24 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Search by city */}
+      <div className="max-w-5xl mx-auto px-4 py-16">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">
+          Търси по град
+        </h2>
+        <div className="flex flex-wrap justify-center gap-3">
+          {['София', 'Пловдив', 'Варна', 'Бургас', 'Стара Загора', 'Русе'].map((city) => (
+            <Link
+              key={city}
+              href={`/schools?city=${encodeURIComponent(city)}`}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-full text-sm font-medium transition-colors"
+            >
+              {city}
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* Trust */}
       <div className="bg-white py-16 px-4">
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
