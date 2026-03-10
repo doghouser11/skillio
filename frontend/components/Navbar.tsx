@@ -31,6 +31,7 @@ export default function Navbar() {
               <>
                 <span className="hidden sm:inline text-sm text-gray-600">{user.email.split('@')[0]}</span>
                 {isParent && <Link href="/add-organization" className="text-sm text-green-700 font-medium">➕</Link>}
+                {isSchool && <Link href="/profile/organization" className="text-sm text-green-700 font-medium">🏢</Link>}
                 {isAdmin && <Link href="/admin/approve" className="text-sm text-red-600 font-medium">Админ</Link>}
                 <Link href="/profile/settings" className="text-sm">⚙️</Link>
                 <button onClick={logout} className="text-sm text-gray-500 hover:text-gray-700">Изход</button>
@@ -50,6 +51,7 @@ export default function Navbar() {
           <Link href="/schools" className="text-gray-600 hover:text-green-700 text-sm font-medium">Организации</Link>
           <Link href="/about" className="text-gray-600 hover:text-green-700 text-sm font-medium">Защо?</Link>
           {user && isParent && <Link href="/add-organization" className="text-green-700 text-sm font-medium">➕ Добави</Link>}
+          {user && isSchool && <Link href="/profile/organization" className="text-green-700 text-sm font-medium">🏢 Моя организация</Link>}
           {user && <Link href="/profile/settings" className="text-gray-600 text-sm font-medium">⚙️ Профил</Link>}
         </div>
       </div>

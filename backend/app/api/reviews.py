@@ -25,6 +25,10 @@ def create_review(
     if not school:
         raise HTTPException(status_code=404, detail="School not found")
     
+    # Prevent reviewing own organization
+    if school.created_by == current_user.id:
+        raise HTTPException(status_code=403, detail="Не можете да оценявате организация, която сте добавили")
+    
     existing = db.query(Review).filter(
         and_(Review.school_id == review_data.school_id, Review.parent_id == current_user.id)
     ).first()

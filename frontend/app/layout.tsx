@@ -14,6 +14,9 @@ const quicksand = Quicksand({
 export const metadata: Metadata = {
   title: 'Skillio - Детски дейности и курсове',
   description: 'Намерете най-добрите извънкласни дейности за вашето дете в България',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

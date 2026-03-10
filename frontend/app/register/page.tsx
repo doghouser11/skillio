@@ -28,7 +28,12 @@ export default function RegisterPage() {
 
     try {
       await register(email, password, role);
-      router.push('/');
+      // Redirect based on role
+      if (role === 'school') {
+        router.push('/profile/organization');
+      } else {
+        router.push('/');
+      }
     } catch (error: any) {
       setError(error.message);
     } finally {

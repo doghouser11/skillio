@@ -1,0 +1,19 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Graduation cap base -->
+  <ellipse cx="50" cy="65" rx="35" ry="8" fill="#2D7D32"/>
+  <!-- Graduation cap top -->
+  <ellipse cx="50" cy="60" rx="30" ry="6" fill="#4CAF50"/>
+  <!-- Graduation cap button -->
+  <circle cx="50" cy="60" r="2" fill="#1B5E20"/>
+  <!-- Tassel -->
+  <path d="M60 55 L65 50 L67 52 L62 57 Z" fill="#FFC107"/>
+  <path d="M65 50 L70 45 L71 46 L66 51 Z" fill="#FFC107"/>
+  <path d="M70 45 L72 40 L73 41 L71 46 Z" fill="#FFC107"/>
+  <!-- Book/education symbol -->
+  <rect x="42" y="70" width="16" height="12" rx="1" fill="#1976D2"/>
+  <rect x="44" y="72" width="12" height="1" fill="white"/>
+  <rect x="44" y="75" width="12" height="1" fill="white"/>
+  <rect x="44" y="78" width="8" height="1" fill="white"/>
+  <!-- Success star -->
+  <path d="M25 25 L27 31 L33 31 L28 35 L30 41 L25 37 L20 41 L22 35 L17 31 L23 31 Z" fill="#FFD700"/>
+</svg>

@@ -64,6 +64,7 @@ export default function AddOrganizationPage() {
               <option value="science">🔬 Природни науки / IT</option>
               <option value="art">🎨 Изкуство</option>
               <option value="music-dance">🎵 Музика и танци</option>
+              <option value="martial-arts">🥋 Бойни изкуства</option>
             </select>
           </div>
           <div>

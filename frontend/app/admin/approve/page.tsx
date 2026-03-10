@@ -61,7 +61,7 @@ export default function AdminApprovePage() {
         body: JSON.stringify({ status: 'approved' }),
       });
       if (!res.ok) throw new Error(`${res.status}`);
-      setSchools(prev => prev.map(s => s.id === id ? { ...s, status: 'APPROVED', verified: true } : s));
+      setSchools(prev => prev.map(s => s.id === id ? { ...s, status: 'approved', verified: true } : s));
       setMsg('✅ Одобрена!');
       setTimeout(() => setMsg(''), 2000);
     } catch (e: any) {
@@ -78,7 +78,7 @@ export default function AdminApprovePage() {
         body: JSON.stringify({ status: 'rejected' }),
       });
       if (!res.ok) throw new Error(`${res.status}`);
-      setSchools(prev => prev.map(s => s.id === id ? { ...s, status: 'REJECTED', verified: false } : s));
+      setSchools(prev => prev.map(s => s.id === id ? { ...s, status: 'rejected', verified: false } : s));
       setMsg('❌ Отхвърлена');
       setTimeout(() => setMsg(''), 2000);
     } catch (e: any) {
@@ -87,19 +87,20 @@ export default function AdminApprovePage() {
   };
 
   const filtered = schools.filter(s => {
-    if (tab === 'pending') return s.status === 'PENDING';
-    if (tab === 'approved') return s.status === 'APPROVED';
+    if (tab === 'pending') return s.status.toLowerCase() === 'pending';
+    if (tab === 'approved') return s.status.toLowerCase() === 'approved';
     return true;
   });
 
   const statusLabel = (s: string) => {
-    if (s === 'APPROVED') return <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">✅ Одобрена</span>;
-    if (s === 'REJECTED') return <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">❌ Отхвърлена</span>;
+    const status = s.toLowerCase();
+    if (status === 'approved') return <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">✅ Одобрена</span>;
+    if (status === 'rejected') return <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">❌ Отхвърлена</span>;
     return <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">⏳ Чака</span>;
   };
 
-  const pendingCount = schools.filter(s => s.status === 'PENDING').length;
-  const approvedCount = schools.filter(s => s.status === 'APPROVED').length;
+  const pendingCount = schools.filter(s => s.status.toLowerCase() === 'pending').length;
+  const approvedCount = schools.filter(s => s.status.toLowerCase() === 'approved').length;
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Зареждане...</div>;
 
@@ -152,7 +153,7 @@ export default function AdminApprovePage() {
                   {s.email && <div>✉️ {s.email}</div>}
                   {s.website && <div>🔗 <a href={s.website} target="_blank" className="text-blue-600 hover:underline">{s.website}</a></div>}
                 </div>
-                {s.status === 'PENDING' && (
+                {s.status.toLowerCase() === 'pending' && (
                   <div className="flex gap-2">
                     <button onClick={() => approve(s.id)}
                       className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold text-sm">

@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { Shield, Heart, MessageCircle } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const CATEGORIES = [
   { name: 'Спорт на открито', slug: 'outdoor-sports', icon: '⚽', color: 'bg-green-50 hover:bg-green-100 border-green-200' },
@@ -8,9 +11,17 @@ const CATEGORIES = [
   { name: 'Природни науки', slug: 'science', icon: '🔬', color: 'bg-yellow-50 hover:bg-yellow-100 border-yellow-200' },
   { name: 'Изкуство', slug: 'art', icon: '🎨', color: 'bg-pink-50 hover:bg-pink-100 border-pink-200' },
   { name: 'Музика и танци', slug: 'music-dance', icon: '🎵', color: 'bg-orange-50 hover:bg-orange-100 border-orange-200' },
+  { name: 'Бойни изкуства', slug: 'martial-arts', icon: '🥋', color: 'bg-red-50 hover:bg-red-100 border-red-200' },
 ];
 
 export default function HomePage() {
+  const { user, loading, isParent, isSchool } = useAuth();
+
+  if (loading) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-lg text-gray-600">Зареждане...</div>
+    </div>;
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -26,9 +37,25 @@ export default function HomePage() {
             <Link href="/schools" className="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
               Вижте организации
             </Link>
-            <Link href="/register?role=school" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
-              Регистрирайте се
-            </Link>
+            {user ? (
+              isParent ? (
+                <Link href="/add-organization" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                  Добави организация
+                </Link>
+              ) : isSchool ? (
+                <Link href="/profile/organization" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                  Моят профил
+                </Link>
+              ) : (
+                <Link href="/admin" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                  Админ панел
+                </Link>
+              )
+            ) : (
+              <Link href="/register?role=school" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                Регистрирайте се
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -76,11 +103,32 @@ export default function HomePage() {
       {/* CTA */}
       <div className="bg-green-700 py-16 px-4">
         <div className="max-w-3xl mx-auto text-center text-white">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4">Предлагате дейности за деца?</h2>
-          <p className="text-lg mb-8 opacity-90">Присъединете се безплатно и достигнете до повече семейства.</p>
-          <Link href="/register?role=school" className="bg-white text-green-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
-            Регистрирайте се безплатно
-          </Link>
+          {!user ? (
+            <>
+              <h2 className="text-2xl md:text-4xl font-bold mb-4">Предлагате дейности за деца?</h2>
+              <p className="text-lg mb-8 opacity-90">Присъединете се безплатно и достигнете до повече семейства.</p>
+              <Link href="/register?role=school" className="bg-white text-green-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+                Регистрирайте се безплатно
+              </Link>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl md:text-4xl font-bold mb-4">Добре дошли в Skillio!</h2>
+              <p className="text-lg mb-8 opacity-90">
+                {isParent ? 'Намерете най-добрите дейности за вашето дете.' : 
+                 isSchool ? 'Управлявайте вашата организация и достигнете до повече семейства.' :
+                 'Добре дошли в админ панела.'}
+              </p>
+              <Link 
+                href={isParent ? '/schools' : isSchool ? '/profile/organization' : '/admin'} 
+                className="bg-white text-green-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors"
+              >
+                {isParent ? 'Разглеждане на организации' : 
+                 isSchool ? 'Моят профил' :
+                 'Админ панел'}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

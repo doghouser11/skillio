@@ -1,8 +1,13 @@
 'use client';
 
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+
 export default function TermsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-50 to-white">
+      <Navbar />
+      <main className="flex-1 max-w-4xl mx-auto px-6 py-16">
         <h1 className="text-3xl font-bold text-slate-800 mb-2">Общи условия за ползване</h1>
         <p className="text-slate-500 mb-10">Последна актуализация: март 2026 г.</p>
 
@@ -66,6 +71,8 @@ export default function TermsPage() {
             </p>
           </section>
         </div>
+      </main>
+      <Footer />
     </div>
   );
 }

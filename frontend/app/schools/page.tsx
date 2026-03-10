@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Star } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const API = 'https://api.skillio.live';
 
@@ -18,7 +19,7 @@ const CATEGORIES = [
   { name: 'Бойни изкуства', slug: 'martial-arts' },
 ];
 
-interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; }
+interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; created_by?: string; }
 
 const CATEGORY_LABELS: Record<string, string> = {
   'outdoor-sports': '⚽ Спорт на открито',
@@ -27,12 +28,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   'science': '🔬 Науки / IT',
   'art': '🎨 Изкуство',
   'music-dance': '🎵 Музика и танци',
-  'dance': '🎵 Музика и танци',
   'martial-arts': '🥋 Бойни изкуства',
-  'stem': '🔬 Науки / IT',
-  'education': '🔬 Образование',
-  'arts': '🎨 Изкуство',
-  'music': '🎵 Музика',
 };
 interface Review { id: string; rating: number; comment?: string; created_at: string; parent: { id: string; email: string }; }
 
@@ -47,7 +43,9 @@ function StarRating({ rating, onClick }: { rating: number; onClick?: (n: number)
   );
 }
 
-function ReviewPanel({ schoolId }: { schoolId: string }) {
+function ReviewPanel({ schoolId, createdBy }: { schoolId: string; createdBy?: string }) {
+  const { user } = useAuth();
+  const isOwner = user && createdBy && user.id === createdBy;
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
@@ -107,6 +105,9 @@ function ReviewPanel({ schoolId }: { schoolId: string }) {
           )}
 
           {/* Add review */}
+          {isOwner ? (
+            <p className="text-sm text-gray-400 italic">Вие добавихте тази организация и не можете да я оценявате.</p>
+          ) : (
           <div className="space-y-2">
             <p className="text-sm font-medium text-gray-700">Оставете отзив:</p>
             <StarRating rating={rating} onClick={setRating} />
@@ -122,6 +123,7 @@ function ReviewPanel({ schoolId }: { schoolId: string }) {
             )}
             {msg && <p className="text-sm">{msg}</p>}
           </div>
+          )}
         </>
       )}
     </div>
@@ -150,23 +152,9 @@ export default function SchoolsPage() {
     })();
   }, []);
 
-  // Map UI categories to DB categories (one UI category can match multiple DB values)
-  const CATEGORY_MAP: Record<string, string[]> = {
-    'outdoor-sports': ['outdoor-sports'],
-    'indoor-sports': ['indoor-sports'],
-    'languages': ['languages'],
-    'science': ['science', 'stem', 'education'],
-    'art': ['art', 'arts'],
-    'music-dance': ['music-dance', 'dance', 'music'],
-    'martial-arts': ['martial-arts'],
-  };
-
   const filtered = schools.filter(s => {
     if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
-    if (category) {
-      const allowed = CATEGORY_MAP[category] || [category];
-      if (!allowed.includes(s.category || '')) return false;
-    }
+    if (category && s.category !== category) return false;
     return true;
   });
 
@@ -222,7 +210,7 @@ export default function SchoolsPage() {
                   ⭐ Отзиви
                 </button>
               </div>
-              {expanded === s.id && <ReviewPanel schoolId={s.id} />}
+              {expanded === s.id && <ReviewPanel schoolId={s.id} createdBy={s.created_by} />}
             </div>
           ))}
         </div>
