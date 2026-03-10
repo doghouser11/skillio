@@ -108,6 +108,17 @@ def create_school(
 ):
     """Create a new school/teacher/org (any logged-in user)."""
     
+    # Check for duplicate by name + city
+    existing = db.query(School).filter(
+        func.lower(School.name) == school_data.name.lower().strip(),
+        func.lower(School.city) == school_data.city.lower().strip()
+    ).first()
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Организация с име '{existing.name}' в {existing.city} вече съществува"
+        )
+    
     db_school = School(
         name=school_data.name,
         category=school_data.category,

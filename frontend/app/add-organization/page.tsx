@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
@@ -12,6 +12,21 @@ export default function AddOrganizationPage() {
   const [form, setForm] = useState({ name: '', category: '', description: '', phone: '', email: '', website: '', city: 'София', neighborhood: '', price: '' });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
+  const [existingNames, setExistingNames] = useState<string[]>([]);
+  const [duplicateWarning, setDuplicateWarning] = useState('');
+
+  useEffect(() => {
+    fetch(`${API}/api/schools/`).then(r => r.json()).then(d => {
+      if (Array.isArray(d)) setExistingNames(d.map((s: any) => s.name?.toLowerCase().trim()).filter(Boolean));
+    }).catch(() => {});
+  }, []);
+
+  const checkDuplicate = (name: string) => {
+    const n = name.toLowerCase().trim();
+    if (n.length < 3) { setDuplicateWarning(''); return; }
+    const match = existingNames.find(e => e === n || e.includes(n) || n.includes(e));
+    setDuplicateWarning(match ? `⚠️ Вече има подобна организация: "${match}". Проверете дали не е същата.` : '');
+  };
 
   if (!user) {
     if (typeof window !== 'undefined') router.push('/login');
@@ -50,8 +65,9 @@ export default function AddOrganizationPage() {
         <form onSubmit={submit} className="bg-white rounded-xl p-6 border border-gray-200 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Име *</label>
-            <input value={form.name} onChange={e => set('name', e.target.value)} required placeholder="напр. Учител Иван — Английски език"
+            <input value={form.name} onChange={e => { set('name', e.target.value); checkDuplicate(e.target.value); }} required placeholder="напр. Учител Иван — Английски език"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
+            {duplicateWarning && <p className="text-xs text-orange-600 mt-1">{duplicateWarning}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Дейност *</label>

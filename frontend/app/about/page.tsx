@@ -8,9 +8,15 @@ export default function AboutPage() {
   const familyCount = 30; // Starting seed
 
   useEffect(() => {
-    const API = process.env.NEXT_PUBLIC_API_URL || 'https://api.skillio.live';
-    fetch(`${API}/api/emergency/schools`).then(r => r.json()).then(d => setSchoolCount(Array.isArray(d) ? d.length : 0)).catch(() => {});
-    fetch(`${API}/api/emergency/activities`).then(r => r.json()).then(d => setActivityCount(Array.isArray(d) ? d.length : 0)).catch(() => {});
+    const API = 'https://api.skillio.live';
+    fetch(`${API}/api/schools/`).then(r => r.json()).then(d => setSchoolCount(Array.isArray(d) ? d.length : 0)).catch(() => {});
+    fetch(`${API}/api/schools/`).then(r => r.json()).then(d => {
+      // Count unique categories as "activities"
+      if (Array.isArray(d)) {
+        const cats = new Set(d.map((s: any) => s.category).filter(Boolean));
+        setActivityCount(cats.size);
+      }
+    }).catch(() => {});
   }, []);
 
   return (
