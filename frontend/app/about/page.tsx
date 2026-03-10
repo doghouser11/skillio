@@ -10,13 +10,7 @@ export default function AboutPage() {
   useEffect(() => {
     const API = 'https://api.skillio.live';
     fetch(`${API}/api/schools/`).then(r => r.json()).then(d => setSchoolCount(Array.isArray(d) ? d.length : 0)).catch(() => {});
-    fetch(`${API}/api/schools/`).then(r => r.json()).then(d => {
-      // Count unique categories as "activities"
-      if (Array.isArray(d)) {
-        const cats = new Set(d.map((s: any) => s.category).filter(Boolean));
-        setActivityCount(cats.size);
-      }
-    }).catch(() => {});
+    setActivityCount(8); // 8 категории дейности
   }, []);
 
   return (
@@ -82,13 +76,13 @@ export default function AboutPage() {
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">🌱</div>
                 <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Дейности</h3>
-                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{activityCount} / 500</div>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{activityCount} / 12</div>
                 <div className="text-sm text-gray-600">цели за годината</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
                 <div 
                   className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
-                  style={{width: `${Math.max((activityCount / 500) * 100, 1)}%`}}
+                  style={{width: `${Math.max((activityCount / 12) * 100, 1)}%`}}
                 ></div>
               </div>
               <div className="text-center text-xs text-gray-500 mt-2">Растем всеки ден!</div>
