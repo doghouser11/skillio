@@ -17,6 +17,7 @@ const CATEGORIES = [
   { name: 'Изкуство', slug: 'art' },
   { name: 'Музика и танци', slug: 'music-dance' },
   { name: 'Бойни изкуства', slug: 'martial-arts' },
+  { name: 'Образование', slug: 'education' },
 ];
 
 interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; created_by?: string; }
@@ -29,6 +30,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   'art': '🎨 Изкуство',
   'music-dance': '🎵 Музика и танци',
   'martial-arts': '🥋 Бойни изкуства',
+  'education': '📚 Образование',
 };
 interface Review { id: string; rating: number; comment?: string; created_at: string; parent: { id: string; email: string }; }
 

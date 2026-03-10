@@ -8,6 +8,7 @@ const CATEGORIES = [
   { name: 'Изкуство', slug: 'art', icon: '🎨', desc: 'Рисуване, керамика, фотография' },
   { name: 'Музика и танци', slug: 'music-dance', icon: '🎵', desc: 'Пиано, китара, балет, модерни танци' },
   { name: 'Бойни изкуства', slug: 'martial-arts', icon: '🥋', desc: 'Карате, джудо, таекуондо, кикбокс' },
+  { name: 'Образование', slug: 'education', icon: '📚', desc: 'Ментална аритметика, занимални, развитие' },
 ];
 
 export default function ActivitiesPage() {
@@ -16,12 +17,12 @@ export default function ActivitiesPage() {
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Дейности</h1>
       <p className="text-gray-600 mb-10">Изберете категория и вижте организациите, които я предлагат.</p>
 
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {CATEGORIES.map(cat => (
           <Link
             key={cat.slug}
             href={`/schools?category=${cat.slug}`}
-            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md hover:border-green-300 transition-all group w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
+            className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md hover:border-green-300 transition-all group"
           >
             <div className="text-4xl mb-4">{cat.icon}</div>
             <h3 className="font-semibold text-lg text-gray-900 mb-1 group-hover:text-green-700 transition-colors">{cat.name}</h3>
