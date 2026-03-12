@@ -25,6 +25,12 @@ class LeadStatus(str, enum.Enum):
     CLOSED = "closed"
 
 
+class InquiryStatus(str, enum.Enum):
+    NEW = "NEW"
+    CONTACTED = "CONTACTED"
+    CLOSED = "CLOSED"
+
+
 class SchoolStatus(str, enum.Enum):
     PENDING = "pending"
     APPROVED = "approved" 
@@ -42,7 +48,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Relationships
-    created_schools = relationship("School", back_populates="created_by_user")
+    created_schools = relationship("School", back_populates="created_by_user", foreign_keys="[School.created_by]")
     created_activities = relationship("Activity", back_populates="created_by_user")
     leads = relationship("Lead", back_populates="parent")
     reviews = relationship("Review", back_populates="parent")
@@ -81,10 +87,14 @@ class School(Base):
     created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
+    claimed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    claimed_at = Column(DateTime(timezone=True), nullable=True)
+    
     # Relationships
-    created_by_user = relationship("User", back_populates="created_schools")
+    created_by_user = relationship("User", back_populates="created_schools", foreign_keys=[created_by])
     activities = relationship("Activity", back_populates="school")
     reviews = relationship("Review", back_populates="school")
+    inquiries = relationship("Inquiry", back_populates="school")
     
     @property
     def average_rating(self):
@@ -141,6 +151,23 @@ class Lead(Base):
     # Relationships
     activity = relationship("Activity", back_populates="leads")
     parent = relationship("User", back_populates="leads")
+
+
+class Inquiry(Base):
+    __tablename__ = "inquiries"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    school_id = Column(UUID(as_uuid=True), ForeignKey("schools.id"), nullable=False)
+    parent_name = Column(String, nullable=False)
+    parent_email = Column(String, nullable=False)
+    parent_phone = Column(String, nullable=True)
+    child_age = Column(Integer, nullable=True)
+    message = Column(Text, nullable=False)
+    status = Column(Enum(InquiryStatus), default=InquiryStatus.NEW)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # Relationships
+    school = relationship("School", back_populates="inquiries")
 
 
 class Review(Base):

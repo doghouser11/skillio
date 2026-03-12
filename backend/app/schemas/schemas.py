@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
 import uuid
-from app.models.models import UserRole, ActivitySource, LeadStatus, SchoolStatus
+from app.models.models import UserRole, ActivitySource, LeadStatus, SchoolStatus, InquiryStatus
 
 
 # User schemas
@@ -159,6 +159,31 @@ class LeadUpdateStatus(BaseModel):
 
 
 # Review schemas
+# Inquiry schemas
+class InquiryCreate(BaseModel):
+    school_id: uuid.UUID
+    parent_name: str
+    parent_email: EmailStr
+    parent_phone: Optional[str] = None
+    child_age: Optional[int] = None
+    message: str
+
+
+class InquiryResponse(BaseModel):
+    id: uuid.UUID
+    school_id: uuid.UUID
+    parent_name: str
+    parent_email: str
+    parent_phone: Optional[str] = None
+    child_age: Optional[int] = None
+    message: str
+    status: InquiryStatus
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
 class ReviewCreate(BaseModel):
     school_id: uuid.UUID
     rating: int  # 1-5

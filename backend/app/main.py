@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from app.api import auth, activities, schools, leads, neighborhoods, reviews, admin, dev, migrate, temp_seed, working_seed, debug, simple, emergency, admin_setup
+from app.api import auth, activities, schools, leads, neighborhoods, reviews, admin, dev, migrate, temp_seed, working_seed, debug, simple, emergency, admin_setup, inquiries
 import traceback
 
 app = FastAPI(title="Skillio API", version="1.0.0", redirect_slashes=False)
@@ -41,6 +41,7 @@ app.include_router(debug.router, prefix="/api")
 app.include_router(simple.router, prefix="/api")
 app.include_router(emergency.router, prefix="/api")
 app.include_router(admin_setup.router, prefix="/api")
+app.include_router(inquiries.router, prefix="/api")
 
 
 @app.get("/")

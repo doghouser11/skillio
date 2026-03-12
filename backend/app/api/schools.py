@@ -6,6 +6,7 @@ import uuid
 from app.database.base import get_db
 from app.schemas.schemas import SchoolCreate, SchoolResponse
 from app.models.models import School, User, UserRole, SchoolStatus, Review
+from datetime import datetime
 from app.core.auth import get_current_user, get_current_school, get_current_admin
 
 router = APIRouter(prefix="/schools", tags=["Schools"])
@@ -21,6 +22,8 @@ def school_to_dict(s):
         "status": s.status.value if s.status else "PENDING",
         "created_by": str(s.created_by) if s.created_by else None,
         "created_at": str(s.created_at) if s.created_at else None,
+        "claimed_by": str(s.claimed_by) if getattr(s, 'claimed_by', None) else None,
+        "claimed_at": str(s.claimed_at) if getattr(s, 'claimed_at', None) else None,
     }
 
 
@@ -157,6 +160,34 @@ def get_my_school(
             detail="School not found"
         )
     return school_to_dict(school)
+
+
+@router.get("/unclaimed")
+def get_unclaimed_count(
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    """Admin only — count of unclaimed schools."""
+    count = db.query(School).filter(School.claimed_by == None).count()
+    return {"unclaimed_count": count}
+
+
+@router.post("/{school_id}/claim")
+def claim_school(
+    school_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Claim a school profile. Requires auth."""
+    school = db.query(School).filter(School.id == school_id).first()
+    if not school:
+        raise HTTPException(status_code=404, detail="Организацията не е намерена")
+    if school.claimed_by is not None:
+        raise HTTPException(status_code=400, detail="Този профил вече е заявен")
+    school.claimed_by = current_user.id
+    school.claimed_at = datetime.utcnow()
+    db.commit()
+    return {"success": True, "message": "Профилът е заявен успешно"}
 
 
 @router.put("/{school_id}/verify")

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /setup-admin/
+Disallow: /test/
+
+Sitemap: https://skillio.live/sitemap.xml

@@ -31,7 +31,7 @@ const CATEGORY_NAMES_MAP: Record<string, string> = {
   'education': 'Образование',
 };
 
-interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; created_by?: string; }
+interface School { id: string; name: string; description?: string; city: string; neighborhood?: string; phone?: string; email?: string; website?: string; verified: boolean; category?: string; created_at?: string; created_by?: string; claimed_by?: string | null; claimed_at?: string | null; }
 
 const CATEGORY_LABELS: Record<string, string> = {
   'outdoor-sports': '⚽ Спорт на открито',
@@ -143,6 +143,91 @@ function ReviewPanel({ schoolId, createdBy }: { schoolId: string; createdBy?: st
   );
 }
 
+function InquiryModal({ school, onClose }: { school: School; onClose: () => void }) {
+  const [form, setForm] = useState({ parent_name: '', parent_email: '', parent_phone: '', child_age: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${API}/api/inquiries/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          school_id: school.id,
+          parent_name: form.parent_name,
+          parent_email: form.parent_email,
+          parent_phone: form.parent_phone || undefined,
+          child_age: form.child_age ? parseInt(form.child_age) : undefined,
+          message: form.message,
+        }),
+      });
+      if (!res.ok) { const d = await res.json(); throw new Error(d.detail || 'Грешка'); }
+      setResult('success');
+    } catch (e: any) {
+      setResult('error:' + e.message);
+    } finally { setSubmitting(false); }
+  };
+
+  if (result === 'success') {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center" onClick={e => e.stopPropagation()}>
+          <div className="text-5xl mb-4">✅</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Запитването е изпратено!</h3>
+          <p className="text-gray-600 mb-6">Организацията ще се свърже с вас.</p>
+          <button onClick={onClose} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium">Затвори</button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold text-gray-900">📩 Запитване към {school.name}</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+        </div>
+        {result?.startsWith('error:') && <p className="text-red-600 text-sm mb-3">❌ {result.slice(6)}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Вашето име *</label>
+            <input required value={form.parent_name} onChange={e => setForm({...form, parent_name: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+            <input required type="email" value={form.parent_email} onChange={e => setForm({...form, parent_email: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Телефон</label>
+            <input value={form.parent_phone} onChange={e => setForm({...form, parent_phone: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Възраст на детето</label>
+            <input type="number" min="1" max="18" value={form.child_age} onChange={e => setForm({...form, child_age: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Съобщение *</label>
+            <textarea required rows={3} value={form.message} onChange={e => setForm({...form, message: e.target.value})}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none" placeholder="Какво ви интересува?" />
+          </div>
+          <button type="submit" disabled={submitting}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-sm disabled:opacity-50 transition-colors">
+            {submitting ? 'Изпращане...' : '📩 Изпрати запитване'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 export default function SchoolsPage() {
   const searchParams = useSearchParams();
   const [schools, setSchools] = useState<School[]>([]);
@@ -150,6 +235,8 @@ export default function SchoolsPage() {
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [cityFilter, setCityFilter] = useState(searchParams.get('city') || '');
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [inquirySchool, setInquirySchool] = useState<School | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     (async () => {
@@ -217,7 +304,7 @@ export default function SchoolsPage() {
           {filtered.map(s => (
             <div key={s.id} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
-                <h3 className="font-bold text-lg text-gray-900 line-clamp-2">{s.name}</h3>
+                <Link href={`/schools/${s.id}`} className="font-bold text-lg text-gray-900 line-clamp-2 hover:text-green-700 transition-colors">{s.name}</Link>
                 {s.verified && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">✓</span>}
               </div>
               {s.category && <span className="inline-block text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full mb-2">{CATEGORY_LABELS[s.category] || s.category}</span>}
@@ -228,16 +315,14 @@ export default function SchoolsPage() {
                 {s.email && <div>✉️ {s.email}</div>}
               </div>
               <div className="flex gap-2">
+                <button onClick={() => setInquirySchool(s)}
+                  className="flex-1 text-center bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-bold transition-colors">
+                  📩 Запитване
+                </button>
                 {s.website && (
                   <a href={s.website} target="_blank" rel="noopener noreferrer"
-                    className="flex-1 text-center bg-green-700 hover:bg-green-800 text-white py-2 rounded-lg text-sm font-medium transition-colors">
+                    className="flex-1 text-center bg-gray-700 hover:bg-gray-800 text-white py-2 rounded-lg text-sm font-medium transition-colors">
                     Сайт
-                  </a>
-                )}
-                {!s.website && !s.phone && s.email && (
-                  <a href={`mailto:${s.email}`}
-                    className="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-sm font-medium transition-colors">
-                    ✉️ Свържете се
                   </a>
                 )}
                 <button onClick={() => setExpanded(expanded === s.id ? null : s.id)}
@@ -257,6 +342,32 @@ export default function SchoolsPage() {
                   📱 Viber
                 </a>
               </div>
+              {/* Claim badge or CTA */}
+              {s.claimed_by ? (
+                <div className="mt-2 text-center"><span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Потвърден профил</span></div>
+              ) : (
+                <div className="mt-2 text-center">
+                  <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">👤 Добавено от родител</span>
+                  <br />
+                  {user ? (
+                    <button onClick={async () => {
+                      if (!confirm('Потвърждавате ли, че това е вашата организация?')) return;
+                      try {
+                        const token = localStorage.getItem('token');
+                        const res = await fetch(`${API}/api/schools/${s.id}/claim`, {
+                          method: 'POST', headers: { Authorization: `Bearer ${token}` },
+                        });
+                        if (!res.ok) { const d = await res.json(); alert(d.detail || 'Грешка'); return; }
+                        alert('✓ Профилът е заявен успешно!');
+                        // Update local state
+                        setSchools(prev => prev.map(sc => sc.id === s.id ? {...sc, claimed_by: user.id} : sc));
+                      } catch { alert('Грешка при заявяване'); }
+                    }} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</button>
+                  ) : (
+                    <Link href={`/register?redirect=/schools`} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</Link>
+                  )}
+                </div>
+              )}
               {expanded === s.id && <ReviewPanel schoolId={s.id} createdBy={s.created_by} />}
             </div>
           ))}
@@ -275,6 +386,8 @@ export default function SchoolsPage() {
           Добавете организация
         </Link>
       </div>
+
+      {inquirySchool && <InquiryModal school={inquirySchool} onClose={() => setInquirySchool(null)} />}
     </div>
   );
 }
