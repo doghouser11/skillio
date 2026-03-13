@@ -305,7 +305,7 @@ export default function SchoolsPage() {
             <div key={s.id} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <Link href={`/schools/${s.id}`} className="font-bold text-lg text-gray-900 line-clamp-2 hover:text-green-700 transition-colors">{s.name}</Link>
-                {s.claimed_by && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">✓</span>}
+                {(s.claimed_by || (s.created_by && s.created_by !== '4a212536-a4ea-4b97-ac67-d38ef23ebc59')) && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">✓</span>}
               </div>
               {s.category && <span className="inline-block text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full mb-2">{CATEGORY_LABELS[s.category] || s.category}</span>}
               {s.description && <p className="text-gray-600 text-sm mb-4 line-clamp-3">{s.description}</p>}
@@ -345,9 +345,9 @@ export default function SchoolsPage() {
               {/* Claim badge or CTA */}
               {s.claimed_by ? (
                 <div className="mt-2 text-center"><span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Потвърден профил</span></div>
-              ) : (
+              ) : s.created_by && s.created_by !== '4a212536-a4ea-4b97-ac67-d38ef23ebc59' ? (
                 <div className="mt-2 text-center">
-                  <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">👤 Добавено от родител</span>
+                  <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">👤 Добавено от родител</span>
                   <br />
                   {user ? (
                     <button onClick={async () => {
@@ -360,6 +360,25 @@ export default function SchoolsPage() {
                         if (!res.ok) { const d = await res.json(); alert(d.detail || 'Грешка'); return; }
                         alert('✓ Профилът е заявен успешно!');
                         // Update local state
+                        setSchools(prev => prev.map(sc => sc.id === s.id ? {...sc, claimed_by: user.id} : sc));
+                      } catch { alert('Грешка при заявяване'); }
+                    }} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</button>
+                  ) : (
+                    <Link href={`/register?redirect=/schools`} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</Link>
+                  )}
+                </div>
+              ) : (
+                <div className="mt-2 text-center">
+                  {user ? (
+                    <button onClick={async () => {
+                      if (!confirm('Потвърждавате ли, че това е вашата организация?')) return;
+                      try {
+                        const token = localStorage.getItem('token');
+                        const res = await fetch(`${API}/api/schools/${s.id}/claim`, {
+                          method: 'POST', headers: { Authorization: `Bearer ${token}` },
+                        });
+                        if (!res.ok) { const d = await res.json(); alert(d.detail || 'Грешка'); return; }
+                        alert('✓ Профилът е заявен успешно!');
                         setSchools(prev => prev.map(sc => sc.id === s.id ? {...sc, claimed_by: user.id} : sc));
                       } catch { alert('Грешка при заявяване'); }
                     }} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</button>
