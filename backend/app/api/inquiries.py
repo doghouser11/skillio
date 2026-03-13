@@ -7,6 +7,7 @@ from app.database.base import get_db
 from app.models.models import Inquiry, InquiryStatus, School, User
 from app.schemas.schemas import InquiryCreate, InquiryResponse
 from app.core.auth import get_current_user, get_current_admin
+from app.core.email import send_inquiry_notification
 
 router = APIRouter(prefix="/inquiries", tags=["Inquiries"])
 
@@ -30,6 +31,20 @@ def create_inquiry(data: InquiryCreate, db: Session = Depends(get_db)):
     db.add(inquiry)
     db.commit()
     db.refresh(inquiry)
+
+    # Send email notification
+    try:
+        send_inquiry_notification(
+            school_name=school.name,
+            school_email=school.email if school.email else None,
+            parent_name=data.parent_name,
+            parent_email=data.parent_email,
+            parent_phone=data.parent_phone,
+            child_age=data.child_age,
+            message=data.message,
+        )
+    except Exception as e:
+        print(f"[INQUIRY] Email notification failed: {e}")
 
     return {"success": True, "id": str(inquiry.id), "message": "Запитването е изпратено успешно"}
 

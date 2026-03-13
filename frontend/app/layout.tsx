@@ -25,11 +25,13 @@ export const metadata: Metadata = {
     siteName: 'Skillio',
     locale: 'bg_BG',
     type: 'website',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630 }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Skillio - Детски дейности и курсове',
     description: 'Свързваме семейства с качествени извънкласни дейности за деца.',
+    images: ['/opengraph-image'],
   },
   alternates: {
     canonical: 'https://skillio.live',

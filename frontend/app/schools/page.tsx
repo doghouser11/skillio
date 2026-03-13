@@ -245,7 +245,14 @@ export default function SchoolsPage() {
         if (res.ok) {
           const data = await res.json();
           // Sort newest first
-          data.sort((a: any, b: any) => (b.created_at || '').localeCompare(a.created_at || ''));
+          // Claimed and parent-added first, then by date
+          const SEED_UUID = '4a212536-a4ea-4b97-ac67-d38ef23ebc59';
+          data.sort((a: any, b: any) => {
+            const aScore = a.claimed_by ? 2 : (a.created_by && a.created_by !== SEED_UUID) ? 1 : 0;
+            const bScore = b.claimed_by ? 2 : (b.created_by && b.created_by !== SEED_UUID) ? 1 : 0;
+            if (aScore !== bScore) return bScore - aScore;
+            return (b.created_at || '').localeCompare(a.created_at || '');
+          });
           setSchools(data);
         }
       } catch {} finally { setLoading(false); }
