@@ -342,51 +342,14 @@ export default function SchoolsPage() {
                   📱 Viber
                 </a>
               </div>
-              {/* Claim badge or CTA */}
+              {/* Claim badge - only for claimed or parent-added */}
               {s.claimed_by ? (
                 <div className="mt-2 text-center"><span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Потвърден профил</span></div>
               ) : s.created_by && s.created_by !== '4a212536-a4ea-4b97-ac67-d38ef23ebc59' ? (
                 <div className="mt-2 text-center">
                   <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">👤 Добавено от родител</span>
-                  <br />
-                  {user ? (
-                    <button onClick={async () => {
-                      if (!confirm('Потвърждавате ли, че това е вашата организация?')) return;
-                      try {
-                        const token = localStorage.getItem('token');
-                        const res = await fetch(`${API}/api/schools/${s.id}/claim`, {
-                          method: 'POST', headers: { Authorization: `Bearer ${token}` },
-                        });
-                        if (!res.ok) { const d = await res.json(); alert(d.detail || 'Грешка'); return; }
-                        alert('✓ Профилът е заявен успешно!');
-                        // Update local state
-                        setSchools(prev => prev.map(sc => sc.id === s.id ? {...sc, claimed_by: user.id} : sc));
-                      } catch { alert('Грешка при заявяване'); }
-                    }} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</button>
-                  ) : (
-                    <Link href={`/register?redirect=/schools`} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</Link>
-                  )}
                 </div>
-              ) : (
-                <div className="mt-2 text-center">
-                  {user ? (
-                    <button onClick={async () => {
-                      if (!confirm('Потвърждавате ли, че това е вашата организация?')) return;
-                      try {
-                        const token = localStorage.getItem('token');
-                        const res = await fetch(`${API}/api/schools/${s.id}/claim`, {
-                          method: 'POST', headers: { Authorization: `Bearer ${token}` },
-                        });
-                        if (!res.ok) { const d = await res.json(); alert(d.detail || 'Грешка'); return; }
-                        alert('✓ Профилът е заявен успешно!');
-                        setSchools(prev => prev.map(sc => sc.id === s.id ? {...sc, claimed_by: user.id} : sc));
-                      } catch { alert('Грешка при заявяване'); }
-                    }} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</button>
-                  ) : (
-                    <Link href={`/register?redirect=/schools`} className="text-xs text-blue-600 hover:underline">Това вашата организация ли е?</Link>
-                  )}
-                </div>
-              )}
+              ) : null}
               {expanded === s.id && <ReviewPanel schoolId={s.id} createdBy={s.created_by} />}
             </div>
           ))}
