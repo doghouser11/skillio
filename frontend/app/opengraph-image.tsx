@@ -18,36 +18,69 @@ export default async function Image() {
           alignItems: 'center',
           justifyContent: 'center',
           fontFamily: 'sans-serif',
+          position: 'relative',
         }}
       >
-        <div style={{ fontSize: 120, marginBottom: 20 }}>🎓</div>
-        <div
-          style={{
-            fontSize: 72,
-            fontWeight: 'bold',
+        {/* Decorative circles */}
+        <div style={{ position: 'absolute', top: -60, right: -60, width: 300, height: 300, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex' }} />
+        <div style={{ position: 'absolute', bottom: -80, left: -80, width: 400, height: 400, borderRadius: '50%', background: 'rgba(255,255,255,0.03)', display: 'flex' }} />
+        
+        {/* Logo area */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 32 }}>
+          <div style={{ fontSize: 100, display: 'flex' }}>🎓</div>
+          <div style={{
+            fontSize: 96,
+            fontWeight: 900,
             color: 'white',
-            marginBottom: 16,
-          }}
-        >
-          Skillio
+            letterSpacing: '-2px',
+          }}>
+            Skillio
+          </div>
         </div>
-        <div
-          style={{
-            fontSize: 32,
-            color: 'rgba(255,255,255,0.9)',
-            textAlign: 'center',
-            maxWidth: 800,
-          }}
-        >
+
+        {/* Tagline */}
+        <div style={{
+          fontSize: 36,
+          color: 'rgba(255,255,255,0.95)',
+          textAlign: 'center',
+          maxWidth: 900,
+          fontWeight: 600,
+          lineHeight: 1.3,
+        }}>
           Детски дейности и курсове в България
         </div>
-        <div
-          style={{
-            fontSize: 24,
-            color: 'rgba(255,255,255,0.7)',
-            marginTop: 24,
-          }}
-        >
+
+        {/* Categories */}
+        <div style={{
+          display: 'flex',
+          gap: 16,
+          marginTop: 40,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}>
+          {['⚽ Спорт', '🎨 Изкуство', '🌍 Езици', '🎵 Музика', '🔬 Науки', '🥋 Бойни изкуства'].map((cat) => (
+            <div key={cat} style={{
+              background: 'rgba(255,255,255,0.15)',
+              borderRadius: 24,
+              padding: '8px 20px',
+              fontSize: 22,
+              color: 'white',
+              fontWeight: 500,
+              display: 'flex',
+            }}>
+              {cat}
+            </div>
+          ))}
+        </div>
+
+        {/* URL */}
+        <div style={{
+          position: 'absolute',
+          bottom: 30,
+          fontSize: 22,
+          color: 'rgba(255,255,255,0.6)',
+          fontWeight: 500,
+        }}>
           skillio.live
         </div>
       </div>

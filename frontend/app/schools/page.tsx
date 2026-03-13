@@ -309,7 +309,7 @@ export default function SchoolsPage() {
       {filtered.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map(s => (
-            <div key={s.id} className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition-shadow">
+            <div key={s.id} className={`rounded-xl p-6 hover:shadow-md transition-shadow ${s.claimed_by ? 'bg-green-50 border-2 border-green-200' : (s.created_by && s.created_by !== '4a212536-a4ea-4b97-ac67-d38ef23ebc59') ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
               <div className="flex items-start justify-between mb-3">
                 <Link href={`/schools/${s.id}`} className="font-bold text-lg text-gray-900 line-clamp-2 hover:text-green-700 transition-colors">{s.name}</Link>
                 {(s.claimed_by || (s.created_by && s.created_by !== '4a212536-a4ea-4b97-ac67-d38ef23ebc59')) && <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full ml-2 whitespace-nowrap">✓</span>}
