@@ -93,13 +93,13 @@ export default function AboutPage() {
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">🏫</div>
                 <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Партньори</h3>
-                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{schoolCount} / 200</div>
+                <div className="text-3xl font-bold text-[#2D5A27] mb-1">{schoolCount} / 500</div>
                 <div className="text-sm text-gray-600">цели за годината</div>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3 border border-black">
                 <div 
                   className="bg-[#2D5A27] h-3 rounded-full border-r border-black" 
-                  style={{width: `${Math.max((schoolCount / 200) * 100, 1)}%`}}
+                  style={{width: `${Math.max((schoolCount / 500) * 100, 1)}%`}}
                 ></div>
               </div>
               <div className="text-center text-xs text-gray-500 mt-2">Качествени връзки</div>
