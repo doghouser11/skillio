@@ -59,7 +59,7 @@ function ReviewPanel({ schoolId, createdBy }: { schoolId: string; createdBy?: st
     try {
       const token = localStorage.getItem('token');
       if (!token) { setMsg('Влезте в профила си, за да оставите отзив'); setSubmitting(false); return; }
-      const res = await fetch(`${API}/api/reviews`, {
+      const res = await fetch(`${API}/api/reviews/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ school_id: schoolId, rating, comment: comment || undefined }),
