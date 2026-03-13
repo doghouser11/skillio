@@ -240,3 +240,41 @@ def update_school(
     db.refresh(school)
     
     return school_to_dict(school)
+
+
+@router.patch("/{school_id}")
+def patch_school(
+    school_id: uuid.UUID,
+    updates: dict,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    """Partially update a school (admin only)."""
+    school = db.query(School).filter(School.id == school_id).first()
+    if not school:
+        raise HTTPException(status_code=404, detail="School not found")
+    
+    allowed_fields = {"name", "city", "description", "phone", "email", "website", "category", "neighborhood", "address"}
+    for field, value in updates.items():
+        if field in allowed_fields:
+            setattr(school, field, value)
+    
+    db.commit()
+    db.refresh(school)
+    return school_to_dict(school)
+
+
+@router.delete("/{school_id}")
+def delete_school(
+    school_id: uuid.UUID,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db)
+):
+    """Delete a school (admin only)."""
+    school = db.query(School).filter(School.id == school_id).first()
+    if not school:
+        raise HTTPException(status_code=404, detail="School not found")
+    
+    db.delete(school)
+    db.commit()
+    return {"message": "School deleted successfully"}
