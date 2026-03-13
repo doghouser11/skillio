@@ -131,7 +131,7 @@ def get_pending_schools(
 @router.get("/schools", )
 def get_all_schools(
     status: Optional[SchoolStatus] = Query(None),
-    limit: int = Query(50, le=100),
+    limit: int = Query(500, le=1000),
     offset: int = Query(0, ge=0),
     current_admin: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
