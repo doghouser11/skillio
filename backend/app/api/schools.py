@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, func, desc, or_
 from typing import List, Optional
@@ -245,7 +245,7 @@ def update_school(
 @router.patch("/{school_id}")
 def patch_school(
     school_id: uuid.UUID,
-    updates: dict,
+    updates: dict = Body(...),
     current_user: User = Depends(get_current_admin),
     db: Session = Depends(get_db)
 ):
