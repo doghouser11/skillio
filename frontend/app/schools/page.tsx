@@ -332,19 +332,19 @@ export default function SchoolsPage() {
                     Сайт
                   </a>
                 )}
-                <button onClick={() => setExpanded(expanded === s.id ? null : s.id)}
+                <Link href={`/schools/${s.id}`}
                   className="flex-1 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium transition-colors">
                   ⭐ Отзиви
-                </button>
+                </Link>
               </div>
               {/* Share buttons */}
               <div className="flex justify-center gap-3 mt-3">
-                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://skillio.live/schools?search=${s.name}`)}`}
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://skillio.live/schools/${s.id}`)}`}
                    target="_blank" rel="noopener noreferrer"
                    className="text-blue-600 hover:text-blue-800 text-xs font-medium transition-colors">
                   f Споделяне
                 </a>
-                <a href={`viber://forward?text=${encodeURIComponent(`Виж ${s.name} в Skillio: https://skillio.live/schools`)}`}
+                <a href={`viber://forward?text=${encodeURIComponent(`Виж ${s.name} в Skillio: https://skillio.live/schools/${s.id}`)}`}
                    className="text-purple-600 hover:text-purple-800 text-xs font-medium transition-colors">
                   📱 Viber
                 </a>
@@ -357,7 +357,6 @@ export default function SchoolsPage() {
                   <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">👤 Добавено от родител</span>
                 </div>
               ) : null}
-              {expanded === s.id && <ReviewPanel schoolId={s.id} createdBy={s.created_by} />}
             </div>
           ))}
         </div>
