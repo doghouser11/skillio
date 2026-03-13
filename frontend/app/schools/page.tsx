@@ -177,7 +177,7 @@ function InquiryModal({ school, onClose }: { school: School; onClose: () => void
         <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center" onClick={e => e.stopPropagation()}>
           <div className="text-5xl mb-4">✅</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Запитването е изпратено!</h3>
-          <p className="text-gray-600 mb-6">Организацията ще се свърже с вас.</p>
+          <p className="text-gray-600 mb-6">Запитването ви беше изпратено. Ако организацията има регистриран профил в Skillio, ще получи вашето съобщение по имейл.</p>
           <button onClick={onClose} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium">Затвори</button>
         </div>
       </div>
