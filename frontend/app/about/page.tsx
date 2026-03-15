@@ -92,7 +92,7 @@ export default function AboutPage() {
             <div className="bg-white rounded-3xl p-6 border-2 border-black shadow-lg">
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">🏫</div>
-                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Партньори</h3>
+                <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">Организации</h3>
                 <div className="text-3xl font-bold text-[#2D5A27] mb-1">{schoolCount} / 500</div>
                 <div className="text-sm text-gray-600">цели за годината</div>
               </div>
