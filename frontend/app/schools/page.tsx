@@ -228,12 +228,16 @@ function InquiryModal({ school, onClose }: { school: School; onClose: () => void
   );
 }
 
+const ITEMS_PER_PAGE = 24;
+
 export default function SchoolsPage() {
   const searchParams = useSearchParams();
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [cityFilter, setCityFilter] = useState(searchParams.get('city') || '');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [inquirySchool, setInquirySchool] = useState<School | null>(null);
   const { user } = useAuth();
@@ -275,11 +279,24 @@ export default function SchoolsPage() {
     document.title = title;
   }, [category, cityFilter]);
 
+  // Reset page when filters change
+  useEffect(() => { setCurrentPage(1); }, [category, cityFilter, searchQuery]);
+
   const filtered = schools.filter(s => {
     if (cityFilter && s.city?.toLowerCase() !== cityFilter.toLowerCase()) return false;
     if (category && s.category !== category) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const nameMatch = s.name?.toLowerCase().includes(q);
+      const descMatch = s.description?.toLowerCase().includes(q);
+      const neighborhoodMatch = s.neighborhood?.toLowerCase().includes(q);
+      if (!nameMatch && !descMatch && !neighborhoodMatch) return false;
+    }
     return true;
   });
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedSchools = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const cities = [...new Set(schools.map(s => s.city).filter(Boolean))].sort();
 
@@ -287,8 +304,26 @@ export default function SchoolsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Организации</h1>
-      <p className="text-gray-600 mb-8">Проверени образователни институции в цяла България</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-1">Организации</h1>
+          <p className="text-gray-600">Проверени образователни институции в цяла България</p>
+        </div>
+        <Link href="/add-organization" className="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-colors whitespace-nowrap shrink-0">
+          ➕ Добави организация
+        </Link>
+      </div>
+
+      {/* Search bar */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="🔍 Търсене по име, описание или квартал..."
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        />
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
         {CATEGORIES.map(c => (
@@ -306,9 +341,11 @@ export default function SchoolsPage() {
         </select>
       </div>
 
+      <div className="mb-4 text-sm text-gray-500">{filtered.length} организации{searchQuery && ` за "${searchQuery}"`}</div>
+
       {filtered.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map(s => (
+          {paginatedSchools.map(s => (
             <div key={s.id} className={`rounded-xl p-6 hover:shadow-md transition-shadow ${s.claimed_by ? 'bg-green-50 border-2 border-green-200' : (s.created_by && s.created_by !== '4a212536-a4ea-4b97-ac67-d38ef23ebc59') ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
               <div className="flex items-start justify-between mb-3">
                 <Link href={`/schools/${s.id}`} className="font-bold text-lg text-gray-900 line-clamp-2 hover:text-green-700 transition-colors">{s.name}</Link>
@@ -364,6 +401,37 @@ export default function SchoolsPage() {
         <div className="text-center py-16 text-gray-500">
           <div className="text-5xl mb-4">🏫</div>
           <p className="text-lg">Няма намерени организации</p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-10">
+          <button onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            disabled={currentPage === 1}
+            className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+            ← Назад
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+            .reduce((acc: (number | string)[], p, i, arr) => {
+              if (i > 0 && typeof arr[i-1] === 'number' && (p as number) - (arr[i-1] as number) > 1) acc.push('...');
+              acc.push(p);
+              return acc;
+            }, [])
+            .map((p, i) => typeof p === 'string' ? (
+              <span key={`dot-${i}`} className="px-2 text-gray-400">...</span>
+            ) : (
+              <button key={p} onClick={() => { setCurrentPage(p as number); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${currentPage === p ? 'bg-green-700 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}>
+                {p}
+              </button>
+            ))}
+          <button onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+            Напред →
+          </button>
         </div>
       )}
 

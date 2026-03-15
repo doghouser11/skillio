@@ -38,25 +38,9 @@ export default function HomePage() {
             <Link href="/schools" className="bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
               Вижте организации
             </Link>
-            {user ? (
-              isParent ? (
-                <Link href="/add-organization" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
-                  Добави организация
-                </Link>
-              ) : isSchool ? (
-                <Link href="/profile/organization" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
-                  Моят профил
-                </Link>
-              ) : (
-                <Link href="/admin" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
-                  Админ панел
-                </Link>
-              )
-            ) : (
-              <Link href="/register?role=school" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
-                Регистрирайте се
-              </Link>
-            )}
+            <Link href="/add-organization" className="border-2 border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+              ➕ Добави организация
+            </Link>
           </div>
         </div>
       </div>
